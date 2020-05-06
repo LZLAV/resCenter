@@ -1,0 +1,8 @@
+# libraries and tools downloaded
+tools/
+
+# all the build artifacts
+output/
+
+# ide stuff
+.vscode

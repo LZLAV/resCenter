@@ -1,0 +1,1200 @@
+调用关系：
+    startStack()
+        libCreate():Endpoint.cpp
+            pjsua_create():pjsua_core.c
+                //Init pjsua data
+                init_date():pjsua_core.c
+                    初始化全局变量 pjsua_var
+                        acc ---(max 4)
+                        transport -----(max 8)
+                        vid_win -----(max 16)
+                
+                //Init PJLIB
+                pj_init():os_core_unix.c
+
+                //Init random seed
+                init_random_seed()
+
+                //Init PJLIB-UTIL
+                pjlib_util_init()
+
+                //Init PJNATH
+                pjnath_init()
+
+                //set default sound device ID 
+                //set default video device ID
+
+                //Init caching pool
+                pj_caching_pool_init()
+
+                //Create memory pool for application
+                pjsua_var.pool =  pjsua_pool_craete("pjsua",1000,1000)
+
+                //create mutex
+                pj_mutex_create_recursive()
+
+                //Create SIP endpoint
+                pjsip_endpt_create():sip_endpoint.c
+
+                    //Create pool
+                    pj_pool_create()
+
+                    //Create endpoint
+                    PJ_POOL_ZALLOC_T(pjsip_endpoint)
+
+                    //Init modules list
+                    pj_list_init(endpt->module_list)
+
+                    //Init exit callback list
+                    pj_list_init(endpt->exit_cb_list)
+
+                    //Create R/W mutex for module
+                    pj_rwmutex_create()
+
+                    //Init parser
+                    init_sip_parser()
+
+                    //Init tel:uri
+                    pjsip_tel_uri_subsys_init()
+
+                    //Create mutex for the events
+                    pj_mutex_create_recursive()
+
+                    //Create timer heap to manage all timers
+                    pj_timer_heap_create()
+
+                    //Set recursive lock for the timer heap
+                    pj_lock_create_recursive_mutex()
+
+                    //Set maximum timed out entries to process in a single poll
+                    pj_timer_heap_set_max_timed_out_per_poll()
+
+                    //create ioqueue
+                    pj_ioqueue_create()
+
+                    //Create transport manager
+                    pjsip_tpmgr_create()
+
+                    //Create asynchronous DNS resolver
+                    pjsip_resolver_create()
+
+                    //Initialize request headers
+                    pj_list_init(&endpt->req_hdr)
+
+                    //Add "Max-Forwards" for request header
+                    pjsip_max_fwd_hdr_create(70)
+
+                    //Initialize capability header list
+                    pj_list_init(&endpt->cap_hdr)
+
+
+                //Init timer entry list
+                pj_list_init()
+
+                //Create time mutex
+                pj_mutex_create_recursive()
+
+                PJSUA_STATE_CREATED
+
+        libInit(EpConfig):Endpoint.cpp
+            //配置 or default ua_config、log_config、media_config
+
+            //Setup log callback
+
+            //Setup UA callbacks
+
+            //Setup Call callback
+            
+
+            //init 
+            pjsua_init():pjsua_core.c
+
+                //Create default configurations when the config is not supplied
+                ua cofing、log config、media config 
+
+                //resolver
+                    //Create DNS resolver
+                    //Configure nameserver for the DNS resolver
+                    //Set this DNS resolver to be used by the SIP resolver
+
+                //Init SIP UA 
+                    //Initialize transaction layer  初始化事务module
+                    pjsip_tsx_layer_init_module()
+
+                    //Initialize UA layer module
+                    pjsip_ua_init_module()
+
+                //init replaces support
+                pjsip_replaces_init_module()
+
+                //init 100rel support
+                pjsip_100rel_init_module()
+
+                //init session timer support
+                pjsip_timer_init_module()
+
+                //init and register PJSUA application module
+                    on_rx_request =  mod_pjsua_on_rx_request
+                    on_rx_response = mod_pjsua_on_rx_response
+
+                    pjsip_endpt_register_module()
+                
+                //parse outbound proxies
+
+
+                //init PJSUA call subsystem
+                pjsua_call_subsys_init():pjsua_call.c
+
+                    //init calls array  
+                        分配  4 个 call对象的存储空间，进行初始化，同时每个 call 可对应 16个 media
+
+                    //Copy config(Ua config)
+
+                    //Check the route URI's and force loose route if required
+                    normalize_route_uri(&pjsua_var.ua_cfg.outbound_proxy[i])
+
+                    //init invite session callback
+
+                    //init invite session module
+                    pjsip_inv_usage_init(pjsua_var.endpt,&inv_cb):sip_inv.c
+                        //Some callbacks are mandatory(强制)
+                            on_state_changed
+                            on_new_session
+
+                        //Copy param
+                        copy pjsip_inv_callback to mod_inv.cb
+
+                        //register the module
+                        pjsip_endpt_register_module(&mod_inv.mod)
+
+                    //Add "norefersub" in Supported header
+                    pjsip_endpt_add_capability(PJSIP_H_SUPPORTED,&str_norefersub)
+
+                    //Add "INFO" in Allow header, for DTMF and video key frame request
+                    pjsip_endpt_add_capability(PJSIP_H_ALLOW,&pjsip_info_method.name)
+
+                //Convert deprecated STUN settings
+
+
+                //Start resolving STUN server
+                resolve_stun_server()
+
+                //init PJSUA media subsystem
+                pjsua_media_subsys_init():pjsua_media.c
+
+                    //copy configuration
+                    copy media config to pjsua_var.media_cfg
+
+                    max media ports < max_call
+                        max media ports = max call +2
+                    
+                    //create media endpoint
+                    pjmedia_endpt_create()：endpoint.h  
+                        创建  pjsua_var.med_endpt
+                        内联函数 （PJ_INLINE）
+
+                        //sound
+                        pjmedia_aud_subsys_init(pf):audiodev.c
+                            init the audio subsystem
+
+                            //get aud subsys(struct)
+
+                            init 
+
+                            //register creation functions
+                            aud_subsys->drv[aud_subsys->drv_cnt++].create = &pjmedia_android_factory
+
+                            //init each factory and build the device ID list
+                            pjmedia_aud_driver_init():audiodev.c
+                                //init driver
+
+                                //create the factory
+                                (*drv->create)(aud_subsys.pf)
+
+                                //call factory->init
+                                f->op->init(f)
+
+                                //get number of devices
+                                f->op->get_dev_count(f)
+                                    max devs = 64
+                                
+                                //fill in default devices
+                                f->op->get_dev_info()
+
+                                //set default capture and playback device
+
+                                //register the factory
+
+                                //register devices to global list
+
+
+
+
+                        pjmedia_endpt_create2():endpoint.c
+                            //init and get the instance of media endpoint
+                            //max worker threads = 16 
+
+                            //alloc pjmedia_endpt
+
+                            //init codec manager
+                            pjmedia_codec_mgr_init()
+
+                            //init exit callback list
+                            pj_list_init(&endpt->exit_cb_list)
+
+                            //craete ioqueue if none specified
+                            pj_ioqueue_create()
+                                //pj_ioqueue_max_handles = 64
+                                
+                            //create worker threads if asked
+                            pj_thread_create("media",&worker_proc)
+                    
+                    //init aud subsys
+                    pjsua_aud_subsys_init():pjsua_aud.c
+
+                        //Register all codecs
+                        pjmedia_codec_register_audio_codecs(pjsua_var.med_endpt,&codec_cfg)
+                        
+                        //set speex/16000 to higher priority
+                        //Set speex/8000 to next higher priority
+                        pjmedia_codec_mgr_set_codec_priority(）
+                        
+                        //init conference bridge
+                            //Save additional conference bridge parameters for future reference (全局变量：pjsua_var.mconf_cfg)
+                            //Init options for conference bridge
+                            opt = PJMEDIA_CONF_NO_DEVICE | (PJMEDIA_CONF_SMALL_FILTER or PJMEDIA_CONF_USE_LINEAR)
+
+                            //init conference bridge
+                            pjmedia_conf_create():conference.c
+                            (存储为全局变量 pjsua_var.mconf)
+
+                                //Create and init conf
+                                PJ_POOL_ZALLOC_T(pjmedia_conf)
+
+                                //create and init the master port(全局变量:pjsua_var.mconf)
+                                PJ_POOL_ZALLOC_T(pjmedia_port)
+                                    master port:
+                                        get_frame = &get_frame:conference.c
+                                        put_frame = & put_frame:conference.c
+                                        on_destroy = &destroy : conference.c
+                                
+                                //create port zero for sound device
+                                create_sound_port(pool,conf):conference.c
+
+                                    //Add passive port
+                                    create_pasv_port():conference.c
+                                        //create port
+                                        create_conf_port(）:conference.c
+                                            create (struct conf_port)
+
+                                            //Create port adn set perporty value
+
+                                            //create transmit flag array(存放数组)
+                                            conf_port->listener_slots
+
+                                            //crate adjustment level array（存放数组）
+                                            conf_port->listener_adj_level
+
+                                            //create adjustment level buffer
+                                            conf_port->adj_level_buf = sample_per_frame * sizeof(pj_int16_t)
+
+                                            //If port's clock rate is different than conference's clock rate, create a resample sessions.
+                                                //create resample for rx buffer
+                                                pjmedia_resample_create(&conf_port->rx_resample)
+
+                                                //create resample for tx buffer
+                                                pjmedia_resample_create(&conf_port->tx_resample)
+
+                                            //create RX buffer
+
+                                            //create TX buffer
+
+                                            //create mix buffer
+
+                                        
+                                        //passive port has delay buf (8帧数据)
+                                        pjmedia_delay_buf_create(8*ptime,&conf_port->delay_buf):delaybuf.c
+                                            8 = (140+20)/20
+
+                                            //create delay_buf（变量：conf_port->delay_buf）
+                                            PJ_POOL_ZALLOC_T(pjmedia_delay_buf)
+
+                                            //Create circular buffer
+                                            pjmedia_circ_buf_create()
+
+                                            //create wsola
+                                            pjmedia_wsola_create()
+
+                                            //create mutex
+                                            pj_lock_create_recursive_mutex()
+
+
+                                    //Create sound device port
+                                        //If capture is disable then create player only port.Otherwise create bidirectional sound device port 
+                                        //create sound player port
+                                        pjmedia_snd_port_create_player(&conf->snd_dev_port):sound_port.c
+
+                                            //init pjmedia_snd_port_param
+                                            dir = PJMEDIA_DIR_PLAYBACK
+
+                                            //create sound port
+                                            pjmedia_snd_port_create2():sound_port.c
+
+                                                //alloc pjmedia_snd_port（变量 conf->snd_dev_port）
+
+                                                pjmedia_clock_src_init(&snd_port->cap_clocksrc)
+
+                                                pjmedia_clock_src_init(&snd_port->play_clocksrc)
+
+                                                //start sound device
+                                                //if here's no port connected, the sound callback will return empty signal
+                                                start_sound_device(snd_port):sound_port.c
+                                                    //start the sound stream
+                                                    //This may be called even when the sound stream has already been start_sound_device
+                                                    
+                                                    //check if sound has been started,done ->return
+
+                                                    //get device caps
+                                                    pjmedia_aud_dev_get_info(snd_port->aud_param.rec_id,&dev_info)
+
+                                                    //process ec settings
+                                                        //device supports ec,nothing to do ---> pjmedia_aud_param.flags & PJMEDIA_AUD_DEV_CAP_EC
+
+                                                        //software EC or device doesn't support EC,remove EC settings from device parameters
+                                                        param_copy.flags &= ~(PJMEDIA_AUD_DEV_CAP_EC |PJMEDIA_AUD_DEV_CAP_EC_TAIL)
+                                                    
+                                                    //use different callback if format is not PCM
+                                                        PCM：
+                                                            snd_rec_cb = &rec_cb :sound_port.c
+                                                            snd_play_cb = &play_cb
+                                                        EXT:
+                                                            snd_rec_cb = &rec_cb_ext
+                                                            snd_play_cb = &play_cb_ext
+                                                    
+                                                    //Open the device
+                                                    pjmedia_aud_stream_create(snd_rec_cb,snd_play_cb,&snd_port->aud_stream):audiodev.c
+                                                        //open audio stream object using the specified parameters
+                                                        
+                                                        //Normalize rec_id
+                                                        //Normalize play_id
+
+                                                        //create the stream
+                                                        f->op->create_stream(rec_cb,play_cb,p_aud_strm) ----- snd_port->aud_stream = p_aud_strm
+
+                                                        //Assign factory id to the stream
+                                                        (*p_aud_strm)->sys.drv_idx = f->sys.drv_idx
+
+                                                    
+                                                    //EC
+                                                        //inactivity limit before EC is suspended (5s)
+                                                        snd_port->ec_suspend_limit = AEC_SUSPEND_LIMIT *(snd_port->clock_rate /snd_port->samples_per_frame)
+
+                                                        //create software EC if parameter specifies EC and (app specifically requests software EC or device doesn't support EC). Only do this if the format is PCM
+                                                            dev_cap_tail = 128
+
+                                                        pjmedia_snd_port_set_ec(snd_port,snd_port->aud_param.ec_tail_ms,snd_port->prm_ec_options)
+
+                                                    //start sound stream
+                                                    if(!(snd_port->options & PJMEDIA_SND_PORT_NO_AUTO_START))
+                                                        pjmedia_aud_stream_start(snd_port->aud_stream):audiodev.c
+                                                            //start the stream
+                                                            strm->op->start(strm)
+
+
+                                        
+                                        //create bidirectional port
+                                        pjmedia_snd_port_create(&conf->snd_dev_port) 
+                                            dir = PJMEDIA_DIR_CAPTURE_PLAYBACK
+
+                                            pjmedia_snd_port_create2()  
+
+                                    pjmedia_snd_port_get_snd_stream(conf->snd_dev_port)
+
+                                        snd_port->aud_stream
+
+                                    pjmedia_aud_stream_get_param(strm, &param)
+                                        //get running parameters for the specified audio stream
+
+                                        strm->op->get_param(strm,param)
+
+                                        //Normalize device id's
+                                        make_global_index(strm->sys.drv_idx,&param->rec_id)
+                                        make_global_index(strm->sys.drv_idx,&param->play_id)
+
+                                    pjmedia_aud_dev_get_info(param.play_id, &snd_dev_info)
+                                        //get device information
+
+                                        lookup_dev(id,&f,&index)
+
+                                        f->op->get_dev_info(f,index,info)
+
+                                    pjmedia_aud_dev_get_info(param.rec_id, &snd_dev_info)
+
+                                        lookup_dev(id,&f,&index)
+
+                                        f->op->get_dev_info(f,index,info)
+
+                                    //add the port to the bridge
+                                    conf->ports[0] = conf_port (pass_port  conf_port->delay_buf = pass port pjmedia_delay_buf)
+
+                                    conf-> snd_dev_port = sound port（pjmedia_snd_port）
+
+                                //Create mutex
+                                pj_mutex_create_recursive("conf")
+
+                                //If sound device was created, connect sound device to the master port
+                                pjmedia_snd_port_connect(conf->snd_dev_port,conf->master_port):sound_port.c
+                                    //connect a port （con->snd_dev_port->port = master_port）
+
+                                    pjmedia_format_get_audio_format_detail(&master_port->info.fmt,PJ_TRUE):format.c
+
+                                    //check that port has the same configuration as the sound device
+
+                        //Are we using the audio switchboard
+                        pjsua_var.is_mswitch = pjmedia_conf_get_master_port(pjsua_var.mconf):conference.c
+                            //get port zero interface
+                            return conf->master_port
+
+                        //Create null port just in case user wants to use null sound
+                        pjmedia_null_port_create():null_port.c
+                            (全局变量 pjsua_var.null_port)
+
+                            //alloc pjmedia_port
+
+                            pjmedia_port_info_init()
+
+                            //init pjmedia_port
+                            port->get_frame = &null_get_frame
+                            port->put_frame = &null_put_frame
+                            port->on_destroy = &null_on_destroy
+
+
+                    //如果含有 srtp  则初始化 srtp
+                    pjmedia_srtp_init_lib(pjsua_var.med_endpt)
+
+                    //init vid subsys
+                    pjsua_vid_subsys_init():pjsua_vid.c
+                        //pjsua video subsystem
+
+                        pjmedia_video_format_mgr_create(64):format.c
+
+                            //alloc pjmedia_video_format_mgr(分配存储 format 的空间)
+
+                            //register format in format_mgr
+                            pjmedia_register_video_format_info()
+                                插入到数组中或替换原有format，并进行数组移动
+
+                        pjmedia_converter_mgr_create():converter.c
+
+                            //alloc pjmedia_converter_mgr
+
+                            //if has libswscale
+                            pjmedia_libswscale_converter_init()
+
+                            //if has libyuv
+                            pjmedia_libyuv_converter_init(mgr):converter_libyuv.c
+                                libyuv_factory.op = &libyuv_factory_op;
+                                pjmedia_converter_mgr_register_factory(mgr,libyuv_factory):converter.c
+                                    //将 converter factory 插入到链表中存储
+
+                        pjmedia_vid_codec_mgr_create():vid_codec.c
+                            //init codec manager
+
+                            //alloc pjmedia_vid_codec_mgr
+
+                            //create mutex
+                            pj_mutex_create_recursive("vid-codec-mgr")
+
+                        //init openh264
+                        pjmedia_codec_openh264_vid_init():openh264.cpp
+
+                            //already init,return
+
+                            //create openh264 codec factory
+                            oh264_factory.base.op = &oh264_factory_op;
+                            oh264_factory.base.factory_data = NULL
+                            oh264_factory.mgr = mgr
+                            oh264_factory.pf = pf (pjsua_var.cp)
+                            oh264_factory.pool = pj_pool_create()
+
+                            //register format match for SDP negotiation
+                            pjmedia_sdp_neg_register_fmt_match_cb(&h264_name,&pjmedia_vid_codec_h264_match_sdp):sdp_neg.c
+                                //register customized SDP format negotiation callback function
+
+                                //check if the callback for the format name has been registered
+
+                                //如果没有，则添加到 fmt_match_cb数组中
+
+
+                            //register codec factory to codec manager
+                            pjmedia_vid_codec_mgr_register_factory(mgr,&oh264_factory.base):vid_codec.c
+                                //register a codec factory
+
+                                max codec count : 32
+
+                                //Enum codecs 
+                                factory->op->enum_info(&count)
+
+                                //save the codecs
+                                mgr->codec_desc
+
+                                //Re-sort coder based on priorities
+                                sort_codecs(mgr)
+
+                                //add factory to the list
+                                pj_list_push_back(&mgr->factory_list,factory)   factory = &oh264_factory.base
+
+
+
+                        //if has ffmpeg vid codec
+                        pjmedia_codec_ffmpeg_vid_init()
+
+                        pjmedia_vid_dev_subsys_init(&pjsua_var.cp.factory):videodev.c
+                            //init the video device subsystem
+
+                            //get vid subsystem
+                                pjmedia_vid_subsys
+                                    init_count :How many times init() is called
+                                    pf 
+                                    drv_cnt:Number of drivers
+                                    drv[8]:Array of drivers
+                                    dev_cnt:Total number of devices
+                                    dev_list[16]:array of devIDs
+
+                            //allow init() to be called multiple times as long as there is matching number of shutdown, 超过初始化1次，直接返回
+
+                            //register creation functions
+                                //V4L2
+
+                                //QT
+
+                                //OPENGL
+                                    vid_subsys->drv[vid_subsys->drv_cnt++].create = &pjmedia_opengl_factory
+
+
+                                //DRAWIN
+
+                                //DSHOW
+
+                                //FFMPEG
+
+                                //SDL
+
+                                //ANDROID
+                                    vid_subsys->drv[vid_subsys->drv_cnt++].create = &pjmedia_and_factory
+
+
+                                //CBAR_SRC
+                                    vid_subsys->drv[vid_subsys->drv_cnt++].create = &pjmedia_cbar_factory
+                                
+                            //init each factory and build the device ID list
+                            pjmedia_vid_driver_init(i,PJ_FALSE):videodev.c
+                                //init driver
+
+                                //create the factory 
+                                (*drv->create)(vid_subsys.pf)
+
+                                //call factory->init()
+                                f->op->init(f)
+
+                                //get the number of devices
+                                f->op->get_dev_count(f)
+
+                                //fill in default devices
+                                for : get_dev_cnt
+                                    f->op->get_dev_info(f,info)
+
+                                    //set driver name 
+
+                                    //set default render device
+
+                                    //set default capture device
+
+                                //register the factory
+
+                                //register devices to global list
+
+
+
+                        //init pjsua_var.vid_win[i](max win:16)
+                        pjsua_var.win[i].pool = pjsua_pool_create("win")
+
+                    //init record subsys
+                    pjsua_media_rec_subsys_init()
+
+                        //init jni method 
+
+                    //create event manager
+                    pjmedia_event_mgr_create():event.c
+
+                        //alloc pjmedia_event_mgr
+
+                        //create pool
+                        pj_pool_crate("evt mgr")
+
+                        //存在多线程
+                        pj_sem_create("ev_sem")
+                            max event sem : 17
+                        
+                        //pj_thread_create("ev_thread",&event_worker_thread)
+
+                        //create mutex
+                        pj_mutex_create_recursive("ev_mutex")
+
+
+
+                //Init core SIMPLE module
+                pjsip_evsub_init_module()
+
+                //init presence module
+                pjsip_pres_init_module()
+
+                //init MWI support
+                pjsip_mwi_init_module()
+                
+                //Init publish module
+                pjsip_publishc_init_module()
+
+                //init xfer/REFER module
+                pjsip_xfer_init_module()
+
+                //Init pjsua presence handler
+                pjsua_pres_init()
+
+                //Init out-of-dialog MESSAGE request handler
+                pjsua_im_init()
+
+                //Register OPTIONS handler
+                pjsip_endpt_register_module(&pjsua_options_handler）
+                    on_rx_request= options_on_rx_request
+
+                //Add OPTIONS in Allow header
+                pjsip_endpt_add_capability(PJSIP_H_ALLOW)
+
+                //start worker thread if need
+                pj_thread_create(&worker_thread)
+
+                PJSUA_STATE_INIT
+
+            //Register worker threads
+
+
+            //Register media endpoint worker thread
+
+        libStart():Endpoint.cpp
+
+            pjsua_start():pjsua_core.c
+
+                PJSUA_STATE_STARTING
+
+                pjsua_call_subsys_start():pjsua_call.c
+                    //Nothing to do
+
+                pjsua_media_subsys_start():pjsua_media.c
+
+                    //Audio
+                    pjsua_aud_subsys_start():pjsua_aud.c
+
+                        pj_timer_entry_init(&pjsua_var.snd_idle_timer,PJ_FALSE,NULL,&close_snd_timer_cb)
+                            //close_snd_timer_cb ---> Timer callback to close sound device
+
+                        pjsua_check_snd_dev_idle():pjsua_aud.c
+                            //check if sound device is idle
+
+                            //check if the sound device auto-close feature is disabled
+
+                            //check if the sound device is currently closed
+
+                            //Get the all count,we shouldn't close the sound device when there is any calls active
+
+                            //Active sound device auto-close timer if sound device is idle.
+                            //It is idle when there is no port connection in the bridge and there is no active call
+                            pjmedia_conf_get_connect_count(pjsua_var.mconf) == 0
+
+                            pjsip_endpt_schedule_timer(pjsua_var.endpt,&pjsua_var.snd_idle_timer,&delay):sip_endpoint.c
+
+                                pj_timer_heap_schedule(endpt->timer_heap,entry,delay):timer.c
+
+
+                    //Video
+                    pjsua_vid_subsys_start():pjsua_vid.c
+                        nothing to do
+                    
+
+                pjsua_pres_start():pjsua_pres.c
+                    //start presence subsystem
+
+                    //start presence timer to re-subscribe to buddy's presence when subscription has failed
+
+                    pjsip_endpt_schedule_timer(&pjsua_var.pres_timer)
+
+                PJSUA_STATE_RUNNING
+
+
+    register:
+        //发送 register
+        Account::create():account.cpp
+
+            //init pjsua_acc_config
+            acc_cfg.toPj(pj_acc_cfg):account.cpp
+
+                //convert to pjsip
+
+                    //global
+
+                    //AccountRegConfig
+
+                    //AccountSipConfig
+                        authCreds
+                        proxy
+
+                    //AccountCallConfig
+
+                    //AccountPresConfig
+
+                    //AccountMwiConfig
+
+                    //AccountNatConfig
+
+                    //AccountMediaConfig
+
+                    //AccountVideoConfig
+
+                    //AccountIpChangeConfig
+
+
+            //add account 
+            pjsua_acc_add(&pj_acc_cfg):pjsua_acc.c
+                //Add a new account to pjsua
+                    max account count:4
+
+                //Must have a transport
+
+                //Find empty account id
+
+                //Expect to find a slot
+
+                //create pool for this account
+
+                //copy config
+
+                //Normalize registration timeout and refresh delay
+                pjsua_var.acc[id].cfg.reg_timeout = 300
+                pjsua_var.acc[id].cfg.reg_delay_before_refresh = 5
+
+                //check the route URI's and force route if required
+                normalize_route_uri():pjsua_core.c
+
+                    pj_strdup_with_null()
+
+                    pjsip_parse_uri()
+
+                    uri 包含 “sip:” 或 “sips:” 字段
+
+                    pjsip_uri_get_uri()
+
+                    加入 lr;
+
+                //Get CRC of account proxy setting
+
+                //Get CRC of global outbound proxy setting
+
+                //init acc
+                initialize_acc(id):pjsua_aac.c
+                    //init a new account(after configuration is set)
+
+                    //need to parse local_uri to get the elements
+
+                    //Local URI MUST be a SIP or SIPS
+
+                    //parse register URI,if any
+
+                    //Create Contact header if not present
+
+                    //(route-set)Build account route-set from outbound proxies and route set from account configuration
+
+                    //proxy_cnt
+
+                    //(credentials)Concatenate credentials from account config and global config 
+
+                    //ICE and TURN 
+                        ICE tag
+
+                    pjsua_pres_init_acc(acc_id)
+
+                    //If SIP outbound is enabled,generate instance and reg ID if they are not specified
+
+                        pj_gethostname():sock_bsd.c
+                            //Get hostname
+
+                            gethostname():
+
+
+                    //Mark account as valid
+                    pjsua_var.acc[acc_id].vaild = PJ_TRUE
+
+                    //Insert account ID into account ID array,sorted by priority 
+
+
+
+
+
+                //If accounts has registration enabled,start registration
+                pjsua_acc_set_registration(id,PJ_TRUE):pjsua_acc.c
+                    //update registration or perform unregistration
+
+                    //Cancel any re-registration timer
+
+                    //register 
+
+                        pjsua_regc_init():pjsua_acc.c
+                            //init client registration
+
+                            //Destroy existing session,if any
+
+                            //create SIP registration if registrar is configured
+                            pjsip_regc_create(pjsua_var.endpt,acc,&regc_cb,&acc->regc)
+
+                            //create uac contact
+                            pjsua_acc_create_uac_contact(&tmp_contact,acc_id,&acc->cfg.reg_uri)
+
+                            //init SIP registration
+                            pjsip_regc_init()
+
+                            pjsip_regc_set_reg_tsx_cb(acc->regc,&regc_tsx_cb)
+
+
+                            //If account is locked to specific transport,then set transport to the client registration
+                                pjsua_init_tpselector()
+                                pjsip_regc_set_transport()
+                            
+                            //set credentials
+                            pjsip_regc_set_credentials()
+
+                            //set delay before registration refresh
+                            pjsip_regc_set_delay_before_refresh()
+
+                            //set authentication preference
+                            pjsip_regc_set_prefs()
+
+                            //set route-set
+                            pjsip_regc_set_route_set()
+
+                            //add custom request headers specified in the account config
+
+                            //add custom request headers specified in the account config
+
+                            //add other request headers
+
+                            //If SIP outbound is used,add "Supported:outbound"
+
+                        
+                        pjsip_regc_register(pjsua_var.acc[acc_id].regc,1,&tdata):sip_reg.c
+
+                            regc->expires_requested =1
+
+                            create_request(regc,&tdata)
+
+                            //add Contact headers
+                            pjsip_msg_add_hdr()
+
+                            Also add bindings which are to be removed
+
+                            //add regc expires header
+
+                            //add Allow header
+
+
+
+                        //cred
+                            pjsip_authorization_hdr_create()
+                            pjsip_msg_add_hdr()
+
+                    //unregistration
+                        pjsua_pres_unpublish()
+
+                        pjsip_regc_unregister()
+                    
+                    //vid_addr
+                        pjsip_regc_set_vid_sent_by()
+                    
+                    //not using stun,choose loca interface to use
+                        pjsua_acc_get_uac_addr()
+                    
+                    //send msg
+                    pjsip_regc_send(pjsua_var.acc[acc_id].regc,tdata):sip_reg.c
+
+                        //Make sure we have pending transaction
+
+                        //invalidete message buffer
+
+                        //increment CSeq
+
+                        //Find Expires header,and update value
+
+                        //set current operation based on the value of Expires header
+
+                        //usr vid header
+
+                        //now send the message
+                        pjsip_endpt_send_request(regc->endpt,tdata,REGC_TSX_TIMEOUT,regc, &regc_tsx_callback):sip_util_statefull.c
+                            cb = regc_tsx_callback
+
+                            //create uac transaction
+                            pjsip_tsx_create_uac(&mod_stateful_util,tdata,&tsx):sip_transaction.c
+                                //create,init,and register UAC transaction
+
+                                pjsip_tsx_create_uac2()
+
+                                    Method must not be ack
+
+                                    keep shortcut
+
+                                    make sure cseq header is present
+
+                                    create transaction instance
+                                    tsx_create()
+
+                                    //save  
+                                        method
+                                        CSeq
+                                        Via header
+                                        branch
+                                        transaction key
+                                        hashed key
+
+                                    tsx->state = tdata
+                                    tsx->state_handler = &tsx_on_state_null
+                                    
+                                    //Register transaction to hash table
+                                    mod_tsx_layer_register_tsx(tsx)
+
+
+
+                            pjsip_tsx_set_transport(tsx,&tdata->tp_sel):sip_transaction.c
+                                //bind transaction to a specific transport/listener
+
+                                //Decrement reference counter of previous transport selector
+                                pjsip_tpselector_dec_ref()
+
+                                //copy transport selector structure
+                                pj_memcpy()
+
+                                //Increment reference counter
+                                pjsip_tpselector_add_ref()
+
+                            //alloc tsx_data
+                            tsx_data->cb = cb;
+                            tsx->mod_date[mod_stateful_util.id] = tsx_data
+
+                            pjsip_tsx_send_msg(tsx,NULL):sip_transaction.c
+                                //this function is called by TU to send a message
+
+                                PJSIP_EVENT_INIT_TX_MSG(event,tdata):sip_event.h
+                                    //init tx msg event
+
+                                    (event).type  = PJSIP_EVENT_INIT_TX_MSG
+                                    (event).body.tx_msg.tdata = ptdata
+                                
+                                //Dispatch to transaction
+                                pj_grp_lock_acquire(tsx->grp_lock)
+
+                                //set transport selector to tdata
+                                pjsip_tx_data_set_transport(tdata,&tsx->tp_sel)
+
+                                //Dispatch to state handler
+                                (*tsx->state_handler)(tsx,&event)  ---->txs_on_state_null:sip_transport.c
+                                    //Handler for events in state null
+
+                                    //UAS
+
+                                        set state to trying
+                                            type == PJSIP_EVENT_RX_MSG && msg->type == PJSIP_REQUEST_MSG
+                                            tsx_set_state(tsx,PJSIP_TSX_STATE_TRYING,PJSIP_EVENT_RX_MSG)
+                                            
+                                    //UAC
+                                        msg->type = PJSIP_EVENT_TX_MSG
+
+                                        //get the txdata
+
+                                        //save the message for retransmission
+
+                                        //send the message
+                                        tsx_send_message(tsx,tdata):sip_transaction.c
+
+                                            //send later if transport is still pending
+
+                                            //Skip send if previous tdata transmission is pending
+
+                                            if(has_transport){
+                                                //If we have the transport,send the message using that transport.Otherwise perform full transport resolution
+                                                pjsip_transport_send(tsx->transport,tdata,&tsx->addr,tsx->addr_len,tsx,&transport_callback):sip_transport.c
+                                                    //Send a SIP message using the specified transport
+
+                                                    //Fill in tp_info
+                                                    pj_inet_ntop()
+
+                                                    //mod_msg_print
+                                                    (tr->tpmgr->on_tx_msg)(tr->endpt,tdata)
+                                                        endpt_on_rx_msg (sip_endpoint.c)
+                                                            (*mod->on_tx_request)(tdata)
+                                                                mod_on_tx_msg() (sip_transport.c)
+
+
+                                                    //send to transport
+                                                    (tr->send_msg)(tr,tdata,addr,addr_len,(void*)tdata,&transport_send_callback)
+                                                            
+                                                        //transport_send_callback
+                                                            (*tdata->cb)(tdata->token,tdata,size)
+
+                                                        udp_send_msg()  (transport.c)
+                                                            1. 立即发送     udp socket 
+                                                            2. 异步发送（添加到 write_list 然后发送 event）
+                                                                event: worker_thread()
+                                                                    write_event -> udp socket sendto()
+
+                                            }else{
+                                                //Begin resolving destination etc to send the message
+                                                    //REQUEST_MSG
+                                                    pjsip_endpt_send_request_stateless(tsx->endpt,tdata,tsx,&send_msg_callback)
+
+                                                    //RESPONSE_MSG
+                                                    pjsip_endpt_send_response(tsx->endpt,&tsx->res_addr,tdata,tsx,&send_msg_callback)
+                                            }
+
+
+
+                                        //超时定时器
+                                        //Start Timer B (or called timer F for non-INVITE) for transaction timeout
+                                        tsx_cancel_timer(tsx,&tsx->timeout_timer)
+                                        tsx_schedule_timer(tsx,&tsx->timeout_timer,&timeout_timer_val,TIMEOUT_TIMER(2))
+
+
+                                        //重传定时器
+                                        //start timer A (or timer E) for retransmission only if unreliable transport is being used
+                                        tsx_schedule_timer(tsx,&tsx->retransmit_timer,&t1_timer_val,1)
+
+                                        //move state
+                                        tsx_set_state(tsx,PJSIP_TSX_STATE_CALLING,PJSIP_EVENT_TX_MSG,tdate,0)
+
+
+
+
+                                
+
+
+
+
+
+
+
+
+                    //Update pointer to registration transport
+
+                        pjsua_var.ua_cfg.cb.on_reg_started()
+
+                        pjsua_var.ua_cfg.cb.on_reg_started2()
+
+
+
+
+
+                //Otherwise subscribe to MWI,if it's enabled
+                pjsua_start_mwi(id,PJ_TRUE)
+
+                //start publish too
+                pjsua_pres_init_publish_acc(id)
+            
+
+        //注册 response
+        worker_thread()
+            pjsip_endpt_handle_event2()
+                背压式传输 write_list socket
+                
+                udp:    sock_recvfrom()/sock_recv() -->on_read_complete()
+                    write_event
+                    read_event
+                
+                tcp:    accept() -->on_accept_complete()
+                    Exception_event
+                
+                on_read_complete()
+                    udp_on_read_complete():sip_transport_udp.c
+                        pjsip_tpmgr_receive_packet()
+                            (mgr->on_rx_msg)(mgr->endpt,PJ_SUCCESS,rdata)
+                                endpt_on_rx_msg():sip_endpoint.c
+                                    pjsip_endpt_process_rx_data()
+                                        (*mod->on_rx_response)(rdata)
+                                            endpt modules:
+                                                0           mod_msg_print       8           mod_on_tx_msg                   sip_transport.c
+                                                1           mod_pjsua_log       7           logging_on_rx_msg               pjsua_core.c
+                                                2           mod_tsx_layer       16          mod_tsx_layer_on_rx_request     sip_transaction.c
+                                                3           mod_stateful_util   64          mod_util_on_tsx_state           sip_util_stateful.c 
+                                                4           mod_ua              32          mod_ua_on_rx_request            sip_ua_layer.c
+                                                5           mod_100rel          48          mod_100rel_load                 sip_100rel.c
+                                                6           mod_pjsua           64          mod_pjsua_on_rx_msg             pjsua_core.c
+                                                7           mod_invite          48          mod_inv_on_rx_request           pjsua_inv.c
+                                                8           mod_evsub           48          mod_evsub_unload                evsub.c
+                                                9           mod_presence        48          
+                                                10          mod_mwi             48
+                                                11          mod_refer           48
+                                                12          mod_pjsua_pres      64          pres_on_rx_request              pjsua_pres.c
+                                                13          mod_pjsua_im        64          im_on_rx_request                pjsua_im.c
+                                                14          mod_pjsua_options   64          options_on_rx_request           pjsua_core.c
+                                                15          mod_unsolicited     64          unsolicited_mwi_on_rx_request   pjsua_pres.c
+
+                                            --->
+                                                on_rx_response
+                                                on_rx_request
+
+                                            mod_tsx_layer_on_rx_response
+                                                1. pjsip_tsx_create_key()
+                                                    //create transaction key
+                                                2. pjsip_tsx_recv_msg()
+                                                    (tsx->state_handler)(tsx,&event)
+                                                        event:
+                                                            PJSIP_EVENT_UNKNOWN
+                                                            PJSIP_ENENT_TIMER
+                                                            PJSIP_EVENT_TX_MSG
+                                                            PJSIP_EVENT_RX_MSG
+                                                            PJSIP_EVENT_TRANSPORT_ERROR
+
+
+
+                                                        tsx_on_state_calling
+
+                                                        tsx_set_state:
+                                                            1xx:    PROCEDING
+                                                            2xx:
+                                                                    invite      PJSIP_TSX_STATE_TERMINATED
+                                                                    no invite   PJSIP_TSX_STATE_COMPLETED
+                                                            300-699
+                                                                    invite      send ACK
+                                                                    no invite   PJSIP_TSX_STATE_COMPLETED
+                                                                
+
+                                                                (*tsx_data->cb)(tsx_data->token,event):sip_reg.c   send request,传入 cb
+                                                                    regc_tsx_callback():sip_reg.c
+
+                                                                        1. regc_tsx_cb:pjsua_acc.c
+                                                                        2. 
+                                                                            !=2xx   update contact address
+                                                                            401/407 pjsip_auth_clt_reinit_req()
+                                                                                Add "Authorizetion/Proxy-Authorization" header
+                                                                            423
+                                                                                Min Expires     太小
+                                                                            pjsip_regc_send()
+                                                                        
+                                                                        2xx
+                                                                            schedule_next_registration(regc,expiration)
+                                                                            call_callback(regc,PJ_SUCCESS,...):sip_reg.c
+                                                                                (*regc->cb)(&cbparam)
+                                                                                    regc_cb():pjsua_acc.c
+                                                                                        2xx：
+                                                                                            1. update state
+                                                                                            2. update_keep_alive(true)
+                                                                                            3. callback() ----->调用 java 的回调接口
+
+    
+    makeCall:
+        
