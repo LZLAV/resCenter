@@ -1,0 +1,2 @@
+include ':common', ':native-libjpeg-turbo', ':native-libpng', ':native-yuv2rgb', ':native-yuv2image', ':native-libyuv'
+include ':native-gauss'

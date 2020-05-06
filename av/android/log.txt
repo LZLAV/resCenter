@@ -1,0 +1,2 @@
+weihuvideo-master
+	录制文件存储为 h264，并且使用 mediamexur封装成 mp4

@@ -1,0 +1,39 @@
+apply plugin: 'com.android.application'
+
+android {
+    signingConfigs {
+        database {
+            keyAlias 'database'
+            keyPassword 'isol43wq'
+            storeFile file('D:/Android/ws_studio/p/Database/Shayan/key_database.jks')
+            storePassword 'isol43wq'
+        }
+    }
+    compileSdkVersion 23
+    buildToolsVersion "24.0.1"
+    defaultConfig {
+        applicationId "com.database"
+        minSdkVersion 7
+        targetSdkVersion 23
+        versionCode 2
+        versionName "2.0"
+        signingConfig signingConfigs.database
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            debuggable true
+            signingConfig signingConfigs.database
+        }
+    }
+    productFlavors {
+    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    testCompile 'junit:junit:4.12'
+    compile 'com.android.support:appcompat-v7:23.4.0'
+    compile 'com.android.support:design:23.4.0'
+}

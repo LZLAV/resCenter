@@ -1,0 +1,21 @@
+
+Build libpng for Android
+
+	https://wanghonglin.github.io/android/2017/03/20/build-libpng-for-android.html
+	
+编译出问题
+	1. 报错日志：/pngrtran.c:4782: undefined reference to png_riffle_palette_neon
+		最关键的地方就在于在根项目的Application.mk中的APP_CFLAGS += -DPNG_ARM_NEON_OPT=0，因为如果不关闭neon在编译过
+		程中会报错，网上资源相对较少，且有的会用APP_CPPFLAGS += -DPNG_ARM_NEON_OPT=0，导致问题一致的不到解决
+		
+
+libpng使用：
+	1. 读、写png文件讲解
+		https://www.bbsmax.com/A/x9J2Xvgd6o/
+		实例程序：
+	
+	2. 写文件讲解(ffmpeg->AVFrame)
+		https://blog.csdn.net/peng_apple/article/details/54632628?utm_source=blogxgwz9
+
+	
+	

@@ -1,0 +1,2 @@
+子module引用 aar 的问题
+	https://www.jianshu.com/p/db33f4850005
