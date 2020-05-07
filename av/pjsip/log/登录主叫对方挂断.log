@@ -1,0 +1,603 @@
+// 登录、主叫以及对方挂断
+
+2020-05-06 22:16:33.643 10150-10405/com.ruixun.test1 D/sipstack: 22:16:33.642 sip_endpoint.c  .Module "mod-pjsua-log" registered
+2020-05-06 22:16:33.644 10150-10405/com.ruixun.test1 D/sipstack: 22:16:33.644 sip_endpoint.c  .Module "mod-tsx-layer" registered
+2020-05-06 22:16:33.644 10150-10405/com.ruixun.test1 D/sipstack: 22:16:33.644 sip_endpoint.c  .Module "mod-stateful-util" registered
+2020-05-06 22:16:33.644 10150-10405/com.ruixun.test1 D/sipstack: 22:16:33.644 sip_endpoint.c  .Module "mod-ua" registered
+2020-05-06 22:16:33.645 10150-10405/com.ruixun.test1 D/sipstack: 22:16:33.644 sip_endpoint.c  .Module "mod-100rel" registered
+2020-05-06 22:16:33.645 10150-10405/com.ruixun.test1 D/sipstack: 22:16:33.645 sip_endpoint.c  .Module "mod-pjsua" registered
+2020-05-06 22:16:33.645 10150-10405/com.ruixun.test1 D/sipstack: 22:16:33.645 sip_endpoint.c  .Module "mod-invite" registered
+2020-05-06 22:16:33.645 10150-10405/com.ruixun.test1 D/sipstack: 22:16:33.645 android_jni_de  ..Android JNI sound library initialized
+2020-05-06 22:16:33.646 10150-10405/com.ruixun.test1 D/sipstack: 22:16:33.646          pjlib  ..select() I/O Queue created (0x9b5c9814)
+2020-05-06 22:16:33.647 10150-10405/com.ruixun.test1 D/sipstack: 22:16:33.647   conference.c  ..Creating conference bridge with 12 ports
+2020-05-06 22:16:33.648 10150-10405/com.ruixun.test1 D/sipstack: 22:16:33.647   Master/sound  ..Using delay buffer with WSOLA.
+2020-05-06 22:16:33.652 10150-10405/com.ruixun.test1 D/sipstack: 22:16:33.652    pjsua_vid.c  ..Initializing video subsystem..
+2020-05-06 22:16:33.652 10150-10405/com.ruixun.test1 D/sipstack: 22:16:33.652    pjsua_vid.c  ...@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@PJMEDIA_HAS_OPENH264_CODEC: Success
+2020-05-06 22:16:33.652 10150-10405/com.ruixun.test1 D/sipstack: 22:16:33.652   openh264.cpp  ...OpenH264 codec initialized
+2020-05-06 22:16:33.653 10150-10405/com.ruixun.test1 D/sipstack: 22:16:33.652   opengl_dev.c  ...OpenGL device initialized
+2020-05-06 22:16:33.753 10150-10405/com.ruixun.test1 D/sipstack: 22:16:33.753  android_dev.c  ...Android video capture initialized with 1 device(s):
+2020-05-06 22:16:33.754 10150-10405/com.ruixun.test1 D/sipstack: 22:16:33.753  android_dev.c  ... 0: Front camera
+2020-05-06 22:16:33.754 10150-10405/com.ruixun.test1 D/sipstack: 22:16:33.754  android_dev.c  ...     supported format = I420/1920x1080 I420/1080x1920 I420/1280x720 I420/720x1280 I420/640x480 I420/480x640 I420/352x288 I420/288x352 I420/320x240 I420/240x320 YV12/1920x1080 YV12/1080x1920 YV12/1280x720 YV12/720x1280 YV12/640x480 YV12/480x640 YV12/352x288 YV12/288x352 YV12/320x240 YV12/240x320 NV21/1920x1080 NV21/1080x1920 NV21/1280x720 NV21/720x1280 NV21/640x480 NV21/480x640 NV21/352x288 NV21/288x352 NV21/320x240 NV21/240x320 
+2020-05-06 22:16:33.754 10150-10405/com.ruixun.test1 D/sipstack: 22:16:33.754 colorbar_dev.c  ...Colorbar video src initialized with 2 device(s):
+2020-05-06 22:16:33.754 10150-10405/com.ruixun.test1 D/sipstack: 22:16:33.754 colorbar_dev.c  ... 0: Colorbar generator
+2020-05-06 22:16:33.755 10150-10405/com.ruixun.test1 D/sipstack: 22:16:33.754 colorbar_dev.c  ... 1: Colorbar-active
+2020-05-06 22:16:33.756 10150-10405/com.ruixun.test1 D/sipstack: 22:16:33.756 sip_endpoint.c  .Module "mod-evsub" registered
+2020-05-06 22:16:33.756 10150-10405/com.ruixun.test1 D/sipstack: 22:16:33.756 sip_endpoint.c  .Module "mod-presence" registered
+2020-05-06 22:16:33.756 10150-10405/com.ruixun.test1 D/sipstack: 22:16:33.756        evsub.c  .Event pkg "presence" registered by mod-presence
+2020-05-06 22:16:33.756 10150-10405/com.ruixun.test1 D/sipstack: 22:16:33.756 sip_endpoint.c  .Module "mod-mwi" registered
+2020-05-06 22:16:33.757 10150-10405/com.ruixun.test1 D/sipstack: 22:16:33.756        evsub.c  .Event pkg "message-summary" registered by mod-mwi
+2020-05-06 22:16:33.757 10150-10405/com.ruixun.test1 D/sipstack: 22:16:33.757 sip_endpoint.c  .Module "mod-refer" registered
+2020-05-06 22:16:33.757 10150-10405/com.ruixun.test1 D/sipstack: 22:16:33.757        evsub.c  .Event pkg "refer" registered by mod-refer
+2020-05-06 22:16:33.757 10150-10405/com.ruixun.test1 D/sipstack: 22:16:33.757 sip_endpoint.c  .Module "mod-pjsua-pres" registered
+2020-05-06 22:16:33.757 10150-10405/com.ruixun.test1 D/sipstack: 22:16:33.757 sip_endpoint.c  .Module "mod-pjsua-im" registered
+2020-05-06 22:16:33.757 10150-10405/com.ruixun.test1 D/sipstack: 22:16:33.757 sip_endpoint.c  .Module "mod-pjsua-options" registered
+2020-05-06 22:16:33.757 10150-10405/com.ruixun.test1 D/sipstack: 22:16:33.757   pjsua_core.c  .1 SIP worker threads created
+2020-05-06 22:16:33.757 10150-10405/com.ruixun.test1 D/sipstack: 22:16:33.757   pjsua_core.c  .pjsua version 2.8 for Linux-3.18.24/armv7l initialized
+2020-05-06 22:16:33.758 10150-10405/com.ruixun.test1 D/sipstack: 22:16:33.758   pjsua_core.c  .PJSUA state changed: CREATED --> INIT
+2020-05-06 22:16:33.765 10150-10405/com.ruixun.test1 D/sipstack: 22:16:33.764   pjsua_core.c  SIP UDP socket reachable at 192.168.1.101:40043
+2020-05-06 22:16:33.765 10150-10405/com.ruixun.test1 D/sipstack: 22:16:33.765  udp0x9821c600  SIP UDP transport started, published address is 192.168.1.101:40043
+2020-05-06 22:16:33.767 10150-10405/com.ruixun.test1 D/sipstack: 22:16:33.767    tcptp:43119  SIP TCP listener ready for incoming connections at 192.168.1.101:43119
+2020-05-06 22:16:33.768 10150-10405/com.ruixun.test1 D/sipstack: 22:16:33.767   pjsua_core.c  PJSUA state changed: INIT --> STARTING
+2020-05-06 22:16:33.768 10150-10405/com.ruixun.test1 D/sipstack: 22:16:33.768 sip_endpoint.c  .Module "mod-unsolicited-mwi" registered
+2020-05-06 22:16:33.768 10150-10405/com.ruixun.test1 D/sipstack: 22:16:33.768   pjsua_core.c  .PJSUA state changed: STARTING --> RUNNING
+2020-05-06 22:16:33.783 10150-10405/com.ruixun.test1 D/sipstack: 22:16:33.783    pjsua_acc.c  Adding account: id="哈哈" <sip:UA1011@112.74.178.87>
+2020-05-06 22:16:33.784 10150-10405/com.ruixun.test1 D/sipstack: 22:16:33.783    pjsua_acc.c  .Account "哈哈" <sip:UA1011@112.74.178.87> added with id 0
+2020-05-06 22:16:33.784 10150-10405/com.ruixun.test1 D/sipstack: 22:16:33.784    pjsua_acc.c  .Acc 0: setting registration..
+2020-05-06 22:16:33.785 10150-10405/com.ruixun.test1 D/sipstack: 22:16:33.785       endpoint  ..Request msg REGISTER/cseq=7827 (tdta0x9924a064) created.
+2020-05-06 22:16:33.786 10150-10405/com.ruixun.test1 D/sipstack: 22:16:33.785  tsx0xa74ff064  ...Transaction created for Request msg REGISTER/cseq=7828 (tdta0x9924a064)
+2020-05-06 22:16:33.786 10150-10405/com.ruixun.test1 D/sipstack: 22:16:33.786  tsx0xa74ff064  ..Sending Request msg REGISTER/cseq=7828 (tdta0x9924a064) in state Null
+2020-05-06 22:16:33.786 10150-10405/com.ruixun.test1 D/sipstack: 22:16:33.786  sip_resolve.c  ...Target '112.74.178.87:5060' type=Unspecified resolved to '112.74.178.87:5060' type=UDP (UDP transport)
+2020-05-06 22:16:33.786 10150-10405/com.ruixun.test1 D/sipstack: 22:16:33.786   pjsua_core.c  ...TX 599 bytes Request msg REGISTER/cseq=7828 (tdta0x9924a064) to UDP 112.74.178.87:5060:
+    REGISTER sip:112.74.178.87:5060 SIP/2.0
+    Via: SIP/2.0/UDP 192.168.1.101:40043;rport;branch=z9hG4bKPjd15f6ac5-b2df-4567-a5c4-8d9b10d91128
+    Route: <sip:112.74.178.87:5060;lr>
+    Max-Forwards: 70
+    From: "哈哈" <sip:UA1011@112.74.178.87>;tag=8f4c5889-b206-49f1-9c82-4885a7017ae3
+    To: "哈哈" <sip:UA1011@112.74.178.87>
+    Call-ID: 8efdbd82-1b2d-44cb-9c85-9c4f6c0c653f
+    CSeq: 7828 REGISTER
+    User-Agent: Vanrui-Agent
+    Contact: "哈哈" <sip:UA1011@192.168.1.101:40043;ob>
+    Expires: 60
+    Allow: PRACK, INVITE, ACK, BYE, CANCEL, UPDATE, INFO, SUBSCRIBE, NOTIFY, REFER, MESSAGE, OPTIONS
+    Content-Length:  0
+    
+    
+    --end msg--
+2020-05-06 22:16:33.787 10150-10405/com.ruixun.test1 D/sipstack: 22:16:33.787  tsx0xa74ff064  ...State changed from Null to Calling, event=TX_MSG
+2020-05-06 22:16:33.787 10150-10405/com.ruixun.test1 D/sipstack: 22:16:33.787    pjsua_acc.c  ..Acc 0: Registration sent
+2020-05-06 22:16:33.811 10150-11485/com.ruixun.test1 D/sipstack: 22:16:33.810 sip_endpoint.c !Processing incoming message: Response msg 401/REGISTER/cseq=7828 (rdata0x99232014)
+2020-05-06 22:16:33.813 10150-11485/com.ruixun.test1 D/sipstack: 22:16:33.811   pjsua_core.c  .RX 555 bytes Response msg 401/REGISTER/cseq=7828 (rdata0x99232014) from UDP 112.74.178.87:5060:
+    SIP/2.0 401 Unauthorized
+    Via: SIP/2.0/UDP 192.168.1.101:40043;received=192.168.1.101;rport=40043;branch=z9hG4bKPjd15f6ac5-b2df-4567-a5c4-8d9b10d91128
+    From: "哈哈" <sip:UA1011@112.74.178.87>;tag=8f4c5889-b206-49f1-9c82-4885a7017ae3
+    To: "哈哈" <sip:UA1011@112.74.178.87>;tag=7bbf.7594752b067525e50bcffdd99de7169f
+    Call-ID: 8efdbd82-1b2d-44cb-9c85-9c4f6c0c653f
+    CSeq: 7828 REGISTER
+    WWW-Authenticate: Digest realm="112.74.178.87", nonce="5eb2c6d00000c7fb1cbae0f79aeccf9f19969d8b278271b1"
+    Server: OpenSIPS (3.0.1 (x86_64/linux))
+    Content-Length: 0
+    
+    
+    --end msg--
+2020-05-06 22:16:33.814 10150-11485/com.ruixun.test1 D/sipstack: 22:16:33.813  tsx0xa74ff064  .Incoming Response msg 401/REGISTER/cseq=7828 (rdata0x99232014) in state Calling
+2020-05-06 22:16:33.815 10150-11485/com.ruixun.test1 D/sipstack: 22:16:33.814  tsx0xa74ff064  ..State changed from Calling to Completed, event=RX_MSG
+2020-05-06 22:16:33.817 10150-11485/com.ruixun.test1 D/sipstack: 22:16:33.816  tsx0x9922d864  ....Transaction created for Request msg REGISTER/cseq=7829 (tdta0x9924a064)
+2020-05-06 22:16:33.818 10150-11485/com.ruixun.test1 D/sipstack: 22:16:33.817  tsx0x9922d864  ...Sending Request msg REGISTER/cseq=7829 (tdta0x9924a064) in state Null
+2020-05-06 22:16:33.819 10150-11485/com.ruixun.test1 D/sipstack: 22:16:33.818       endpoint  ....Request msg REGISTER/cseq=7829 (tdta0x9924a064): skipping target resolution because address is already set
+2020-05-06 22:16:33.820 10150-11485/com.ruixun.test1 D/sipstack: 22:16:33.819   pjsua_core.c  ....TX 796 bytes Request msg REGISTER/cseq=7829 (tdta0x9924a064) to UDP 112.74.178.87:5060:
+    REGISTER sip:112.74.178.87:5060 SIP/2.0
+    Via: SIP/2.0/UDP 192.168.1.101:40043;rport;branch=z9hG4bKPj5e18a4e1-5a89-4f32-811b-441501087ffb
+    Route: <sip:112.74.178.87:5060;lr>
+    Max-Forwards: 70
+    From: "哈哈" <sip:UA1011@112.74.178.87>;tag=8f4c5889-b206-49f1-9c82-4885a7017ae3
+    To: "哈哈" <sip:UA1011@112.74.178.87>
+    Call-ID: 8efdbd82-1b2d-44cb-9c85-9c4f6c0c653f
+    CSeq: 7829 REGISTER
+    User-Agent: Vanrui-Agent
+    Contact: "哈哈" <sip:UA1011@192.168.1.101:40043;ob>
+    Expires: 60
+    Allow: PRACK, INVITE, ACK, BYE, CANCEL, UPDATE, INFO, SUBSCRIBE, NOTIFY, REFER, MESSAGE, OPTIONS
+    Authorization: Digest username="UA1011", realm="112.74.178.87", nonce="5eb2c6d00000c7fb1cbae0f79aeccf9f19969d8b278271b1", uri="sip:112.74.178.87:5060", response="864fe80a28c7178bd5d0356193f8aff5"
+    Content-Length:  0
+    
+    
+    --end msg--
+2020-05-06 22:16:33.820 10150-11485/com.ruixun.test1 D/sipstack: 22:16:33.820  tsx0x9922d864  ....State changed from Null to Calling, event=TX_MSG
+2020-05-06 22:16:33.974 10150-11485/com.ruixun.test1 D/sipstack: 22:16:33.973 sip_endpoint.c  Processing incoming message: Response msg 200/REGISTER/cseq=7829 (rdata0x99232014)
+2020-05-06 22:16:33.974 10150-11485/com.ruixun.test1 D/sipstack: 22:16:33.974   pjsua_core.c  .RX 604 bytes Response msg 200/REGISTER/cseq=7829 (rdata0x99232014) from UDP 112.74.178.87:5060:
+    SIP/2.0 200 OK
+    Record-Route: <sip:10.0.76.29;lr;ftag=8f4c5889-b206-49f1-9c82-4885a7017ae3>
+    Via: SIP/2.0/UDP 192.168.1.101:40043;received=192.168.1.101;rport=40043;branch=z9hG4bKPj5e18a4e1-5a89-4f32-811b-441501087ffb
+    From: "哈哈" <sip:UA1011@112.74.178.87>;tag=8f4c5889-b206-49f1-9c82-4885a7017ae3
+    To: "哈哈" <sip:UA1011@112.74.178.87>;tag=7bbf.3eee6375534cba5d9e5d5b3805df45c4
+    Call-ID: 8efdbd82-1b2d-44cb-9c85-9c4f6c0c653f
+    CSeq: 7829 REGISTER
+    Contact: <sip:UA1011@10.0.76.29:5060;ob>;expires=60;received="sip:223.213.73.48:40043"
+    Server: OpenSIPS (3.0.1 (x86_64/linux))
+    Content-Length: 0
+    
+    
+    --end msg--
+2020-05-06 22:16:33.975 10150-11485/com.ruixun.test1 D/sipstack: 22:16:33.974  tsx0x9922d864  .Incoming Response msg 200/REGISTER/cseq=7829 (rdata0x99232014) in state Calling
+2020-05-06 22:16:33.975 10150-11485/com.ruixun.test1 D/sipstack: 22:16:33.975  tsx0x9922d864  ..State changed from Calling to Completed, event=RX_MSG
+2020-05-06 22:16:33.976 10150-11485/com.ruixun.test1 D/sipstack: 22:16:33.975    pjsua_acc.c  ....SIP outbound status for acc 0 is not active
+2020-05-06 22:16:33.977 10150-11485/com.ruixun.test1 D/sipstack: 22:16:33.976    pjsua_acc.c  ...."哈哈" <sip:UA1011@112.74.178.87>: registration success, status=200 (OK), will re-register in 60 seconds
+2020-05-06 22:16:33.977 10150-11485/com.ruixun.test1 D/sipstack: 22:16:33.977    pjsua_acc.c  ....Keep-alive timer started for acc 0, destination:112.74.178.87:5060:15, interval:-16s
+2020-05-06 22:16:38.823 10150-11485/com.ruixun.test1 D/sipstack: 22:16:38.822  tsx0xa74ff064  Timeout timer event
+2020-05-06 22:16:38.824 10150-11485/com.ruixun.test1 D/sipstack: 22:16:38.823  tsx0xa74ff064  .State changed from Completed to Terminated, event=TIMER
+2020-05-06 22:16:38.827 10150-11485/com.ruixun.test1 D/sipstack: 22:16:38.826  tsx0xa74ff064  Timeout timer event
+2020-05-06 22:16:38.829 10150-11485/com.ruixun.test1 D/sipstack: 22:16:38.828  tsx0xa74ff064  .State changed from Terminated to Destroyed, event=TIMER
+2020-05-06 22:16:38.830 10150-11485/com.ruixun.test1 D/sipstack: 22:16:38.830  tsx0xa74ff064  Transaction destroyed!
+2020-05-06 22:16:38.975 10150-11485/com.ruixun.test1 D/sipstack: 22:16:38.974  tsx0x9922d864  Timeout timer event
+2020-05-06 22:16:38.976 10150-11485/com.ruixun.test1 D/sipstack: 22:16:38.975  tsx0x9922d864  .State changed from Completed to Terminated, event=TIMER
+2020-05-06 22:16:38.980 10150-11485/com.ruixun.test1 D/sipstack: 22:16:38.979  tsx0x9922d864  Timeout timer event
+2020-05-06 22:16:38.981 10150-11485/com.ruixun.test1 D/sipstack: 22:16:38.980  tsx0x9922d864  .State changed from Terminated to Destroyed, event=TIMER
+2020-05-06 22:16:38.982 10150-11485/com.ruixun.test1 D/sipstack: 22:16:38.981 tdta0x9924a064  ..Destroying txdata Request msg REGISTER/cseq=7829 (tdta0x9924a064)
+2020-05-06 22:16:38.983 10150-11485/com.ruixun.test1 D/sipstack: 22:16:38.982  tsx0x9922d864  Transaction destroyed!
+2020-05-06 22:16:43.898 10150-10405/com.ruixun.test1 D/sipstack: 22:16:43.898   pjsua_call.c !Making call with acc #0 to sip:UA1012@112.74.178.87
+2020-05-06 22:16:43.898 10150-10405/com.ruixun.test1 D/sipstack: 22:16:43.898    pjsua_aud.c  .Set sound device: capture=-1, playback=-2
+2020-05-06 22:16:43.898 10150-10405/com.ruixun.test1 D/sipstack: 22:16:43.898    pjsua_aud.c  ..Opening sound device (speaker + mic) PCM@16000/1/20ms
+2020-05-06 22:16:43.898 10150-10405/com.ruixun.test1 D/sipstack: 22:16:43.898 android_jni_de  ...Creating Android JNI stream
+2020-05-06 22:16:43.901 10150-10405/com.ruixun.test1 D/sipstack: 22:16:43.901 android_jni_de  ...Using audio input source : 7
+2020-05-06 22:16:43.906 10150-10405/com.ruixun.test1 D/sipstack: 22:16:43.906 android_jni_de  ...Audio record initialized successfully.
+2020-05-06 22:16:43.907 10150-12130/com.ruixun.test1 D/sipstack: 22:16:43.907 android_jni_de !Recorder thread started
+2020-05-06 22:16:43.907 10150-12130/com.ruixun.test1 D/sipstack: 22:16:43.907 android_jni_de  Setting thread priority successful
+2020-05-06 22:16:43.916 10150-10405/com.ruixun.test1 D/sipstack: 22:16:43.915 android_jni_de !...Audio track initialized successfully.
+2020-05-06 22:16:43.916 10150-10405/com.ruixun.test1 D/sipstack: 22:16:43.916   ec0x9922f400  ...Creating WebRTC AEC
+2020-05-06 22:16:43.916 10150-12132/com.ruixun.test1 D/sipstack: 22:16:43.916 android_jni_de !Playback thread started
+2020-05-06 22:16:43.917 10150-10405/com.ruixun.test1 D/sipstack: 22:16:43.916  echo_webrtc.c !...WebRTC AEC successfully created with options 195
+2020-05-06 22:16:43.917 10150-10405/com.ruixun.test1 D/sipstack: 22:16:43.917   ec0x9922f400  ...Using delay buffer with WSOLA.
+2020-05-06 22:16:43.917 10150-10405/com.ruixun.test1 D/sipstack: 22:16:43.917   ec0x9922f400  ...WebRTC AEC created, clock_rate=16000, channel=1, samples per frame=320, tail length=70 ms, latency=100 ms
+2020-05-06 22:16:43.917 10150-10405/com.ruixun.test1 D/sipstack: 22:16:43.917 android_jni_de  ...Android JNI stream started
+2020-05-06 22:16:43.918 10150-12132/com.ruixun.test1 D/sipstack: 22:16:43.917 android_jni_de !Setting thread priority successful
+2020-05-06 22:16:43.918 10150-10405/com.ruixun.test1 D/sipstack: 22:16:43.917  dlg0x9c02c064 !.UAC dialog created
+2020-05-06 22:16:43.918 10150-10405/com.ruixun.test1 D/sipstack: 22:16:43.918  dlg0x9c02c064  ..Session count inc to 2 by mod-pjsua
+2020-05-06 22:16:43.918 10150-10405/com.ruixun.test1 D/sipstack: 22:16:43.918  pjsua_media.c  .Call 0: initializing media..
+2020-05-06 22:16:43.919 10150-10405/com.ruixun.test1 D/sipstack: 22:16:43.919  pjsua_media.c  ..RTP socket reachable at 192.168.1.101:4000
+2020-05-06 22:16:43.919 10150-10405/com.ruixun.test1 D/sipstack: 22:16:43.919  pjsua_media.c  ..RTCP socket reachable at 192.168.1.101:4001
+2020-05-06 22:16:43.920 10150-10405/com.ruixun.test1 D/sipstack: 22:16:43.920 srtp0xa74f1800  ..SRTP keying SDES created
+2020-05-06 22:16:43.921 10150-10405/com.ruixun.test1 D/sipstack: 22:16:43.921  pjsua_media.c  ..RTP socket reachable at 192.168.1.101:4002
+2020-05-06 22:16:43.921 10150-10405/com.ruixun.test1 D/sipstack: 22:16:43.921  pjsua_media.c  ..RTCP socket reachable at 192.168.1.101:4003
+2020-05-06 22:16:43.922 10150-10405/com.ruixun.test1 D/sipstack: 22:16:43.922 srtp0xa74f1c00  ..SRTP keying SDES created
+2020-05-06 22:16:43.922 10150-10405/com.ruixun.test1 D/sipstack: 22:16:43.922  pjsua_media.c  ..Media index 0 selected for audio call 0
+2020-05-06 22:16:43.922 10150-10405/com.ruixun.test1 D/sipstack: 22:16:43.922  pjsua_media.c  ..Call 0: media transport initialization complete: Success
+2020-05-06 22:16:43.922 10150-10405/com.ruixun.test1 D/sipstack: 22:16:43.922  dlg0x9c02c064  ..Session count dec to 2 by mod-pjsua
+2020-05-06 22:16:43.922 10150-10405/com.ruixun.test1 D/sipstack: 22:16:43.922  dlg0x9c02c064  .Module mod-invite added as dialog usage, data=0xa8694014
+2020-05-06 22:16:43.923 10150-10405/com.ruixun.test1 D/sipstack: 22:16:43.923  dlg0x9c02c064  ..Session count inc to 4 by mod-invite
+2020-05-06 22:16:43.923 10150-10405/com.ruixun.test1 D/sipstack: 22:16:43.923  dlg0x9c02c064  .Module mod-100rel added as dialog usage, data=0x99654764
+2020-05-06 22:16:43.923 10150-10405/com.ruixun.test1 D/sipstack: 22:16:43.923  dlg0x9c02c064  .100rel module attached
+2020-05-06 22:16:43.923 10150-10405/com.ruixun.test1 D/sipstack: 22:16:43.923  inv0x9c02c064  .UAC invite session created for dialog dlg0x9c02c064
+2020-05-06 22:16:43.923 10150-10405/com.ruixun.test1 D/sipstack: 22:16:43.923       endpoint  .Request msg INVITE/cseq=3243 (tdta0x9825f064) created.
+2020-05-06 22:16:43.923 10150-10405/com.ruixun.test1 D/sipstack: 22:16:43.923  inv0x9c02c064  ..Sending Request msg INVITE/cseq=3243 (tdta0x9825f064)
+2020-05-06 22:16:43.923 10150-10405/com.ruixun.test1 D/sipstack: 22:16:43.923  dlg0x9c02c064  ...Sending Request msg INVITE/cseq=3243 (tdta0x9825f064)
+2020-05-06 22:16:43.924 10150-10405/com.ruixun.test1 D/sipstack: 22:16:43.924  tsx0x9c02c864  ....Transaction created for Request msg INVITE/cseq=3242 (tdta0x9825f064)
+2020-05-06 22:16:43.924 10150-10405/com.ruixun.test1 D/sipstack: 22:16:43.924  tsx0x9c02c864  ...Sending Request msg INVITE/cseq=3242 (tdta0x9825f064) in state Null
+2020-05-06 22:16:43.924 10150-10405/com.ruixun.test1 D/sipstack: 22:16:43.924  sip_resolve.c  ....Target '112.74.178.87:5060' type=Unspecified resolved to '112.74.178.87:5060' type=UDP (UDP transport)
+2020-05-06 22:16:43.925 10150-10405/com.ruixun.test1 D/sipstack: 22:16:43.924   pjsua_core.c  ....TX 1057 bytes Request msg INVITE/cseq=3242 (tdta0x9825f064) to UDP 112.74.178.87:5060:
+    INVITE sip:UA1012@112.74.178.87 SIP/2.0
+    Via: SIP/2.0/UDP 192.168.1.101:40043;rport;branch=z9hG4bKPjef6cc22a-4149-497f-b7c9-b8672de4b1b8
+    Max-Forwards: 70
+    From: "哈哈" <sip:UA1011@112.74.178.87>;tag=064aa986-d860-49fb-93a8-367cd8cf494a
+    To: sip:UA1012@112.74.178.87
+    Contact: "哈哈" <sip:UA1011@192.168.1.101:40043;ob>
+    Call-ID: fa8caa7c-c075-4bf3-abd4-b16f4ed18263
+    CSeq: 3242 INVITE
+    Route: <sip:112.74.178.87:5060;lr>
+    Allow: PRACK, INVITE, ACK, BYE, CANCEL, UPDATE, INFO, SUBSCRIBE, NOTIFY, REFER, MESSAGE, OPTIONS
+    Supported: replaces, 100rel, norefersub
+    User-Agent: Vanrui-Agent
+    Content-Type: application/sdp
+    Content-Length:   409
+    
+    v=0
+    o=- 3797763403 3797763403 IN IP4 192.168.1.101
+    s=pjmedia
+    t=0 0
+    m=audio 4000 RTP/AVP 8 96
+    c=IN IP4 192.168.1.101
+    a=sendrecv
+    a=rtpmap:96 telephone-event/8000
+    a=fmtp:96 0-16
+    a=ssrc:1907373119 cname:27e2ef9d2e8ef499
+    m=video 4002 RTP/AVP 97
+    c=IN IP4 192.168.1.101
+    a=sendrecv
+    a=rtpmap:97 H264/90000
+    a=fmtp:97 profile-level-id=42e01f; packetization-mode=1
+    a=ssrc:263362611 cname:27e2ef9d2e8ef499
+    
+    --end msg--
+2020-05-06 22:16:43.926 10150-10405/com.ruixun.test1 D/sipstack: 22:16:43.926  tsx0x9c02c864  ....State changed from Null to Calling, event=TX_MSG
+2020-05-06 22:16:43.926 10150-10405/com.ruixun.test1 D/sipstack: 22:16:43.926  dlg0x9c02c064  .....Transaction tsx0x9c02c864 state changed to Calling
+2020-05-06 22:16:43.973 10150-12130/com.ruixun.test1 D/sipstack: 22:16:43.973   ec0x9922f400 !Prefetching..
+2020-05-06 22:16:43.976 10150-12132/com.ruixun.test1 D/sipstack: 22:16:43.976   ec0x9922f400 !Latency bufferring complete
+2020-05-06 22:16:43.979 10150-11485/com.ruixun.test1 D/sipstack: 22:16:43.979 sip_endpoint.c !Processing incoming message: Response msg 100/INVITE/cseq=3242 (rdata0x99232014)
+2020-05-06 22:16:43.980 10150-11485/com.ruixun.test1 D/sipstack: 22:16:43.980   pjsua_core.c  .RX 397 bytes Response msg 100/INVITE/cseq=3242 (rdata0x99232014) from UDP 112.74.178.87:5060:
+    SIP/2.0 100 Giving it a try
+    Via: SIP/2.0/UDP 192.168.1.101:40043;received=192.168.1.101;rport=40043;branch=z9hG4bKPjef6cc22a-4149-497f-b7c9-b8672de4b1b8
+    From: "哈哈" <sip:UA1011@112.74.178.87>;tag=064aa986-d860-49fb-93a8-367cd8cf494a
+    To: sip:UA1012@112.74.178.87
+    Call-ID: fa8caa7c-c075-4bf3-abd4-b16f4ed18263
+    CSeq: 3242 INVITE
+    Server: OpenSIPS (3.0.1 (x86_64/linux))
+    Content-Length: 0
+    
+    
+    --end msg--
+2020-05-06 22:16:43.981 10150-11485/com.ruixun.test1 D/sipstack: 22:16:43.980  tsx0x9c02c864  .Incoming Response msg 100/INVITE/cseq=3242 (rdata0x99232014) in state Calling
+2020-05-06 22:16:43.982 10150-11485/com.ruixun.test1 D/sipstack: 22:16:43.981  tsx0x9c02c864  ..State changed from Calling to Proceeding, event=RX_MSG
+2020-05-06 22:16:43.982 10150-11485/com.ruixun.test1 D/sipstack: 22:16:43.982  dlg0x9c02c064  ...Received Response msg 100/INVITE/cseq=3242 (rdata0x99232014)
+2020-05-06 22:16:43.984 10150-11485/com.ruixun.test1 D/sipstack: 22:16:43.983  dlg0x9c02c064  ...Transaction tsx0x9c02c864 state changed to Proceeding
+2020-05-06 22:16:44.007 10150-12130/com.ruixun.test1 D/sipstack: 22:16:44.007   ec0x9922f400 !Underflow, buf_cnt=0, will generate 1 frame
+2020-05-06 22:16:44.039 10150-12130/com.ruixun.test1 D/sipstack: 22:16:44.038   ec0x9922f400  Underflow, buf_cnt=0, will generate 1 frame
+2020-05-06 22:16:44.103 10150-12130/com.ruixun.test1 D/sipstack: 22:16:44.103   ec0x9922f400  Underflow, buf_cnt=0, will generate 1 frame
+2020-05-06 22:16:44.106 10150-12130/com.ruixun.test1 D/sipstack: 22:16:44.106   ec0x9922f400  Underflow, buf_cnt=0, will generate 1 frame
+2020-05-06 22:16:44.203 10150-11485/com.ruixun.test1 D/sipstack: 22:16:44.202 sip_endpoint.c !Processing incoming message: Response msg 183/INVITE/cseq=3242 (rdata0x99232014)
+2020-05-06 22:16:44.204 10150-11485/com.ruixun.test1 D/sipstack: 22:16:44.203   pjsua_core.c  .RX 953 bytes Response msg 183/INVITE/cseq=3242 (rdata0x99232014) from UDP 112.74.178.87:5060:
+    SIP/2.0 183 Session Progress
+    Via: SIP/2.0/UDP 192.168.1.101:40043;received=192.168.1.101;rport=40043;branch=z9hG4bKPjef6cc22a-4149-497f-b7c9-b8672de4b1b8
+    From: "哈哈" <sip:UA1011@112.74.178.87>;tag=064aa986-d860-49fb-93a8-367cd8cf494a
+    To: <sip:UA1012@112.74.178.87>;tag=8XeS5m197N83S
+    Call-ID: fa8caa7c-c075-4bf3-abd4-b16f4ed18263
+    CSeq: 3242 INVITE
+    Contact: <sip:UA1012@112.74.178.87;did=992.13b4c1b5>
+    Accept: application/sdp
+    Allow: INVITE, ACK, BYE, CANCEL, OPTIONS, MESSAGE, INFO, UPDATE, REGISTER, REFER, NOTIFY
+    Supported: timer, path, replaces
+    Content-Type: application/sdp
+    Content-Length: 340
+    
+    v=0
+    o=FreeSWITCH 1588757384 1588757385 IN IP4 112.74.178.87
+    s=FreeSWITCH
+    c=IN IP4 112.74.178.87
+    t=0 0
+    m=audio 52314 RTP/AVP 8 101
+    a=rtpmap:8 PCMA/8000
+    a=rtpmap:101 telephone-event/8000
+    a=fmtp:101 0-16
+    a=ptime:20
+    m=video 37022 RTP/AVP 97
+    b=AS:1024
+    a=rtpmap:97 H264/90000
+    a=fmtp:97 profile-level-id=42e01f; packetization-mode=1
+    
+    --end msg--
+2020-05-06 22:16:44.206 10150-11485/com.ruixun.test1 D/sipstack: 22:16:44.204  tsx0x9c02c864  .Incoming Response msg 183/INVITE/cseq=3242 (rdata0x99232014) in state Proceeding
+2020-05-06 22:16:44.207 10150-11485/com.ruixun.test1 D/sipstack: 22:16:44.206  tsx0x9c02c864  ..State changed from Proceeding to Proceeding, event=RX_MSG
+2020-05-06 22:16:44.208 10150-11485/com.ruixun.test1 D/sipstack: 22:16:44.207  dlg0x9c02c064  ...Received Response msg 183/INVITE/cseq=3242 (rdata0x99232014)
+2020-05-06 22:16:44.208 10150-11485/com.ruixun.test1 D/sipstack: 22:16:44.208  dlg0x9c02c064  ....Route-set updated
+2020-05-06 22:16:44.209 10150-11485/com.ruixun.test1 D/sipstack: 22:16:44.208  dlg0x9c02c064  ...Transaction tsx0x9c02c864 state changed to Proceeding
+2020-05-06 22:16:44.211 10150-11485/com.ruixun.test1 D/sipstack: 22:16:44.210  inv0x9c02c064  ....Got SDP answer in Response msg 183/INVITE/cseq=3242 (rdata0x99232014)
+2020-05-06 22:16:44.212 10150-11485/com.ruixun.test1 D/sipstack: 22:16:44.211  inv0x9c02c064  ....SDP negotiation done, status=0
+2020-05-06 22:16:44.212 10150-11485/com.ruixun.test1 D/sipstack: 22:16:44.212  pjsua_media.c  .....Call 0: updating media..
+2020-05-06 22:16:44.214 10150-11485/com.ruixun.test1 D/sipstack: 22:16:44.213  pjsua_media.c  .......Media stream call00:0 is destroyed
+2020-05-06 22:16:44.215 10150-11485/com.ruixun.test1 D/sipstack: 22:16:44.214    pjsua_aud.c  ......Audio channel update..
+2020-05-06 22:16:44.216 10150-11485/com.ruixun.test1 D/sipstack: 22:16:44.215 strm0x9924a014  .......VAD temporarily disabled
+2020-05-06 22:16:44.217 10150-11485/com.ruixun.test1 D/sipstack: 22:16:44.216          rtp.c  .......pjmedia_rtp_session_init: ses=0x9949a2fc, default_pt=8, ssrc=0x71b0343f
+2020-05-06 22:16:44.219 10150-11485/com.ruixun.test1 D/sipstack: 22:16:44.217          rtp.c  .......pjmedia_rtp_session_init: ses=0x9922ddf4, default_pt=8, ssrc=0x71b0343f
+2020-05-06 22:16:44.220 10150-11485/com.ruixun.test1 D/sipstack: 22:16:44.220  udp0x98266a00  .......SO_RCVBUF set to 163840
+2020-05-06 22:16:44.221 10150-11485/com.ruixun.test1 D/sipstack: 22:16:44.221  udp0x98266a00  .......SO_SNDBUF set to 163840
+2020-05-06 22:16:44.222 10150-11485/com.ruixun.test1 D/sipstack: 22:16:44.221 strm0x9924a014  .......Sending keep-alive (RTCP and empty RTP)
+2020-05-06 22:16:44.223 10150-11485/com.ruixun.test1 D/sipstack: 22:16:44.222       stream.c  .......Stream strm0x9924a014 created
+2020-05-06 22:16:44.223 10150-11485/com.ruixun.test1 D/sipstack: 22:16:44.223 strm0x9924a014  .......Encoder stream started
+2020-05-06 22:16:44.224 10150-11485/com.ruixun.test1 D/sipstack: 22:16:44.223 strm0x9924a014  .......Decoder stream started
+2020-05-06 22:16:44.225 10150-11485/com.ruixun.test1 D/sipstack: 22:16:44.224     resample.c  .......resample created: high qualiy, large filter, in/out rate=8000/16000
+2020-05-06 22:16:44.225 10150-11485/com.ruixun.test1 D/sipstack: 22:16:44.225     resample.c  .......resample created: high qualiy, large filter, in/out rate=16000/8000
+2020-05-06 22:16:44.226 10150-11485/com.ruixun.test1 D/sipstack: 22:16:44.226  pjsua_media.c  ......Audio updated, stream #0: PCMA (sendrecv)
+2020-05-06 22:16:44.227 10150-11485/com.ruixun.test1 D/sipstack: 22:16:44.226  pjsua_media.c  .......Media stream call00:1 is destroyed
+2020-05-06 22:16:44.227 10150-11485/com.ruixun.test1 D/sipstack: 22:16:44.227    pjsua_vid.c  ......Video channel update..
+2020-05-06 22:16:44.228 10150-11485/com.ruixun.test1 D/sipstack: 22:16:44.228   openh264.cpp  .......Opening codec..
+2020-05-06 22:16:44.239 10150-11485/com.ruixun.test1 D/sipstack: 22:16:44.238          rtp.c  .......pjmedia_rtp_session_init: ses=0x982285f4, default_pt=97, ssrc=0xfb29833
+2020-05-06 22:16:44.240 10150-11485/com.ruixun.test1 D/sipstack: 22:16:44.239 vstdec0x982280  .......Decoding channel created 976x976 I420<-H264 22/1(~22)fps
+2020-05-06 22:16:44.241 10150-11485/com.ruixun.test1 D/sipstack: 22:16:44.240          rtp.c  .......pjmedia_rtp_session_init: ses=0x982286ac, default_pt=97, ssrc=0xfb29833
+2020-05-06 22:16:44.241 10150-12132/com.ruixun.test1 D/sipstack: 22:16:44.241 strm0x9924a014 !Start talksprut..
+2020-05-06 22:16:44.242 10150-11485/com.ruixun.test1 D/sipstack: 22:16:44.241 vstenc0x982280 !.......Encoding channel created 240x320 I420->H264 15/1(~15)fps
+2020-05-06 22:16:44.244 10150-11485/com.ruixun.test1 D/sipstack: 22:16:44.243  udp0x98266c00  .......SO_RCVBUF set to 163840
+2020-05-06 22:16:44.244 10150-11485/com.ruixun.test1 D/sipstack: 22:16:44.244  udp0x98266c00  .......SO_SNDBUF set to 163840
+2020-05-06 22:16:44.245 10150-11485/com.ruixun.test1 D/sipstack: 22:16:44.245   vid_stream.c  .......Video stream vstrm0x98228014 created
+2020-05-06 22:16:44.246 10150-11485/com.ruixun.test1 D/sipstack: 22:16:44.245 vstenc0x982280  .......Encoder stream started
+2020-05-06 22:16:44.246 10150-11485/com.ruixun.test1 D/sipstack: 22:16:44.246 vstdec0x982280  .......Decoder stream started
+2020-05-06 22:16:44.247 10150-11485/com.ruixun.test1 D/sipstack: 22:16:44.246    pjsua_vid.c  .......Setting up RX..
+2020-05-06 22:16:44.247 10150-11485/com.ruixun.test1 D/sipstack: 22:16:44.247    pjsua_vid.c  ........Creating video window: type=stream, cap_id=-1, rend_id=0
+2020-05-06 22:16:44.247 10150-11485/com.ruixun.test1 D/sipstack: 22:16:44.247     vid_port.c  .........Opening device OpenGL renderer [OpenGL] for render: format=I420, size=976x976 @22:1 fps
+2020-05-06 22:16:44.248 10150-11485/com.ruixun.test1 D/sipstack: 22:16:44.248 android_opengl  .........Re-initializing OpenGL due to format change
+2020-05-06 22:16:44.248 10150-11485/com.ruixun.test1 D/sipstack: 22:16:44.248 android_opengl  .........Android OpenGL ES renderer successfully created
+2020-05-06 22:16:44.249 10150-11485/com.ruixun.test1 D/sipstack: 22:16:44.248     vid_port.c  .........Device OpenGL renderer [OpenGL] opened: format=BGRA, size=976x976 @22:1 fps
+2020-05-06 22:16:44.251 10150-11485/com.ruixun.test1 D/sipstack: 22:16:44.250    pjsua_vid.c  .........stream window id 0 created for cap_dev=-1 rend_dev=0
+2020-05-06 22:16:44.251 10150-11485/com.ruixun.test1 D/sipstack: 22:16:44.251    pjsua_vid.c  .........Window 0 created
+2020-05-06 22:16:44.252 10150-11485/com.ruixun.test1 D/sipstack: 22:16:44.251 android_opengl  ........Starting Android opengl stream
+2020-05-06 22:16:44.253 10150-11485/com.ruixun.test1 D/sipstack: 22:16:44.252    pjsua_vid.c  .......Setting up TX..
+2020-05-06 22:16:44.253 10150-11485/com.ruixun.test1 D/sipstack: 22:16:44.253    pjsua_vid.c  ........Creating video window: type=preview, cap_id=1, rend_id=0
+2020-05-06 22:16:44.254 10150-11485/com.ruixun.test1 D/sipstack: 22:16:44.253     vid_port.c  .........Opening device Front camera [Android] for capture: format=I420, size=240x320 @15:1 fps
+2020-05-06 22:16:44.255 10150-11485/com.ruixun.test1 D/sipstack: 22:16:44.255     vid_util.c  .........Orientation converter created: 320x240 to 240x180, maintain aspect ratio=yes
+2020-05-06 22:16:44.255 10150-11485/com.ruixun.test1 D/sipstack: 22:16:44.255  android_dev.c  .........Video capture orientation set to 4
+2020-05-06 22:16:44.255 10150-11485/com.ruixun.test1 D/sipstack: 22:16:44.255     vid_port.c  .........Device Front camera [Android] opened: format=I420, size=240x320 @15:1 fps
+2020-05-06 22:16:44.256 10150-11485/com.ruixun.test1 D/sipstack: 22:16:44.256     vid_port.c  .........Opening device OpenGL renderer [OpenGL] for render: format=I420, size=240x320 @15:1 fps
+2020-05-06 22:16:44.257 10150-11485/com.ruixun.test1 D/sipstack: 22:16:44.256 android_opengl  .........Re-initializing OpenGL due to format change
+2020-05-06 22:16:44.257 10150-11485/com.ruixun.test1 D/sipstack: 22:16:44.257 android_opengl  .........Android OpenGL ES renderer successfully created
+2020-05-06 22:16:44.258 10150-11485/com.ruixun.test1 D/sipstack: 22:16:44.257     vid_port.c  .........Device OpenGL renderer [OpenGL] opened: format=BGRA, size=240x320 @15:1 fps
+2020-05-06 22:16:44.258 10150-11485/com.ruixun.test1 D/sipstack: 22:16:44.258    pjsua_vid.c  .........preview window id 1 created for cap_dev=1 rend_dev=0
+2020-05-06 22:16:44.259 10150-11485/com.ruixun.test1 D/sipstack: 22:16:44.259    pjsua_vid.c  .........Window 1 created
+2020-05-06 22:16:44.259 10150-11485/com.ruixun.test1 D/sipstack: 22:16:44.259  android_dev.c  ........Starting Android camera stream
+2020-05-06 22:16:44.358 10150-11485/com.ruixun.test1 D/sipstack: 22:16:44.358  pjsua_media.c  ......Video updated, stream #1: H264 (sendrecv)
+2020-05-06 22:16:44.364 10150-11485/com.ruixun.test1 D/sipstack: 22:16:44.364    pjsua_aud.c  .....Conf connect: 1 --> 0
+2020-05-06 22:16:44.364 10150-11485/com.ruixun.test1 D/sipstack: 22:16:44.364   conference.c  ......Port 1 (sip:UA1012@112.74.178.87) transmitting to port 0 (Android JNI)
+2020-05-06 22:16:44.364 10150-11485/com.ruixun.test1 D/sipstack: 22:16:44.364    pjsua_aud.c  .....Conf connect: 0 --> 1
+2020-05-06 22:16:44.364 10150-11485/com.ruixun.test1 D/sipstack: 22:16:44.364   conference.c  ......Port 0 (Android JNI) transmitting to port 1 (sip:UA1012@112.74.178.87)
+2020-05-06 22:16:44.400 10150-12132/com.ruixun.test1 D/sipstack: 22:16:44.400 strm0x9924a014 !Jitter buffer is bufferring (prefetch=0)
+2020-05-06 22:16:44.481 10150-12132/com.ruixun.test1 D/sipstack: 22:16:44.481   Master/sound  Underflow, buf_cnt=0, will generate 1 frame
+2020-05-06 22:16:44.649 10150-11476/com.ruixun.test1 D/sipstack: 22:16:44.649 strm0x9924a014 !RTP status: badpt=0, badssrc=0, dup=0, outorder=0, probation=-1, restart=0
+2020-05-06 22:16:44.682 10150-12132/com.ruixun.test1 D/sipstack: 22:16:44.680 strm0x9924a014 !Jitter buffer starts returning normal frames (after 14 empty/lost)
+2020-05-06 22:16:44.842 10150-12132/com.ruixun.test1 D/sipstack: 22:16:44.842 strm0x9924a014  VAD re-enabled
+2020-05-06 22:16:44.842 10150-12132/com.ruixun.test1 D/sipstack: 22:16:44.842 strm0x9924a014  Starting silence
+2020-05-06 22:16:45.001 10150-12132/com.ruixun.test1 D/sipstack: 22:16:45.001 strm0x9924a014  Frame lost, recovered!
+2020-05-06 22:16:45.040 10150-12132/com.ruixun.test1 D/sipstack: 22:16:45.040 strm0x9924a014  Jitter buffer starts returning normal frames (after 2 empty/lost)
+2020-05-06 22:16:45.042 10150-12132/com.ruixun.test1 D/sipstack: 22:16:45.042   silencedet.c  Starting talk burst (level=16243 threshold=1000)
+2020-05-06 22:16:45.043 10150-12132/com.ruixun.test1 D/sipstack: 22:16:45.042 strm0x9924a014  Start talksprut..
+2020-05-06 22:16:45.132 10150-10150/com.ruixun.test1 D/sipstack: 22:16:45.131  android_dev.c !Android camera thread registered
+2020-05-06 22:16:45.502 10150-12160/com.ruixun.test1 D/sipstack: 22:16:45.501 vstenc0x982280 !Forcing encoder to generate keyframe
+2020-05-06 22:16:45.520 10150-12132/com.ruixun.test1 D/sipstack: 22:16:45.520 strm0x9924a014 !Frame lost, recovered!
+2020-05-06 22:16:45.521 10150-12132/com.ruixun.test1 D/sipstack: 22:16:45.520 strm0x9924a014  Jitter buffer starts returning normal frames (after 1 empty/lost)
+2020-05-06 22:16:45.682 10150-12132/com.ruixun.test1 D/sipstack: 22:16:45.682 strm0x9924a014  Frame lost, recovered!
+2020-05-06 22:16:45.720 10150-12132/com.ruixun.test1 D/sipstack: 22:16:45.720 strm0x9924a014  Jitter buffer starts returning normal frames (after 1 empty/lost)
+2020-05-06 22:16:45.881 10150-12132/com.ruixun.test1 D/sipstack: 22:16:45.881 strm0x9924a014  Frame lost, recovered!
+2020-05-06 22:16:45.882 10150-12132/com.ruixun.test1 D/sipstack: 22:16:45.882 strm0x9924a014  Jitter buffer starts returning normal frames (after 1 empty/lost)
+2020-05-06 22:16:46.081 10150-12132/com.ruixun.test1 D/sipstack: 22:16:46.080 strm0x9924a014  Frame lost, recovered!
+2020-05-06 22:16:46.082 10150-12132/com.ruixun.test1 D/sipstack: 22:16:46.082 strm0x9924a014  Jitter buffer starts returning normal frames (after 1 empty/lost)
+2020-05-06 22:16:46.280 10150-12132/com.ruixun.test1 D/sipstack: 22:16:46.280 strm0x9924a014  Frame lost, recovered!
+2020-05-06 22:16:46.280 10150-12132/com.ruixun.test1 D/sipstack: 22:16:46.280 strm0x9924a014  Jitter buffer starts returning normal frames (after 1 empty/lost)
+2020-05-06 22:16:46.442 10150-12132/com.ruixun.test1 D/sipstack: 22:16:46.442 strm0x9924a014  Frame lost, recovered!
+2020-05-06 22:16:46.480 10150-12132/com.ruixun.test1 D/sipstack: 22:16:46.480 strm0x9924a014  Jitter buffer starts returning normal frames (after 1 empty/lost)
+2020-05-06 22:16:46.569 10150-12160/com.ruixun.test1 D/sipstack: 22:16:46.569 vstenc0x982280 !Forcing encoder to generate keyframe
+2020-05-06 22:16:46.641 10150-12132/com.ruixun.test1 D/sipstack: 22:16:46.641 strm0x9924a014 !Frame lost, recovered!
+2020-05-06 22:16:46.641 10150-12132/com.ruixun.test1 D/sipstack: 22:16:46.641 strm0x9924a014  Jitter buffer starts returning normal frames (after 1 empty/lost)
+2020-05-06 22:16:46.841 10150-12132/com.ruixun.test1 D/sipstack: 22:16:46.840 strm0x9924a014  Frame lost, recovered!
+2020-05-06 22:16:46.843 10150-12132/com.ruixun.test1 D/sipstack: 22:16:46.842 strm0x9924a014  Jitter buffer starts returning normal frames (after 1 empty/lost)
+2020-05-06 22:16:47.040 10150-12132/com.ruixun.test1 D/sipstack: 22:16:47.040 strm0x9924a014  Frame lost, recovered!
+2020-05-06 22:16:47.040 10150-12132/com.ruixun.test1 D/sipstack: 22:16:47.040 strm0x9924a014  Jitter buffer starts returning normal frames (after 1 empty/lost)
+2020-05-06 22:16:47.201 10150-12132/com.ruixun.test1 D/sipstack: 22:16:47.201 strm0x9924a014  Frame lost, recovered!
+2020-05-06 22:16:47.240 10150-12132/com.ruixun.test1 D/sipstack: 22:16:47.240 strm0x9924a014  Jitter buffer starts returning normal frames (after 1 empty/lost)
+2020-05-06 22:16:47.401 10150-12132/com.ruixun.test1 D/sipstack: 22:16:47.401 strm0x9924a014  Frame lost, recovered!
+2020-05-06 22:16:47.401 10150-12132/com.ruixun.test1 D/sipstack: 22:16:47.401 strm0x9924a014  Jitter buffer starts returning normal frames (after 1 empty/lost)
+2020-05-06 22:16:47.600 10150-12132/com.ruixun.test1 D/sipstack: 22:16:47.600 strm0x9924a014  Frame lost, recovered!
+2020-05-06 22:16:47.602 10150-12132/com.ruixun.test1 D/sipstack: 22:16:47.601 strm0x9924a014  Jitter buffer starts returning normal frames (after 1 empty/lost)
+2020-05-06 22:16:47.636 10150-12160/com.ruixun.test1 D/sipstack: 22:16:47.635 vstenc0x982280 !Forcing encoder to generate keyframe
+2020-05-06 22:16:47.800 10150-12132/com.ruixun.test1 D/sipstack: 22:16:47.800 strm0x9924a014 !Frame lost, recovered!
+2020-05-06 22:16:47.800 10150-12132/com.ruixun.test1 D/sipstack: 22:16:47.800 strm0x9924a014  Jitter buffer starts returning normal frames (after 1 empty/lost)
+2020-05-06 22:16:47.802 10150-12132/com.ruixun.test1 D/sipstack: 22:16:47.802   silencedet.c  Starting silence (level=4 threshold=72)
+2020-05-06 22:16:47.803 10150-12132/com.ruixun.test1 D/sipstack: 22:16:47.803 strm0x9924a014  Starting silence
+2020-05-06 22:16:47.961 10150-12132/com.ruixun.test1 D/sipstack: 22:16:47.961 strm0x9924a014  Frame lost, recovered!
+2020-05-06 22:16:48.000 10150-12132/com.ruixun.test1 D/sipstack: 22:16:48.000 strm0x9924a014  Jitter buffer starts returning normal frames (after 1 empty/lost)
+2020-05-06 22:16:48.161 10150-12132/com.ruixun.test1 D/sipstack: 22:16:48.161 strm0x9924a014  Frame lost, recovered!
+2020-05-06 22:16:48.161 10150-12132/com.ruixun.test1 D/sipstack: 22:16:48.161 strm0x9924a014  Jitter buffer starts returning normal frames (after 1 empty/lost)
+2020-05-06 22:16:48.360 10150-12132/com.ruixun.test1 D/sipstack: 22:16:48.360 strm0x9924a014  Frame lost, recovered!
+2020-05-06 22:16:48.361 10150-12132/com.ruixun.test1 D/sipstack: 22:16:48.361 strm0x9924a014  Jitter buffer starts returning normal frames (after 1 empty/lost)
+2020-05-06 22:16:48.560 10150-12132/com.ruixun.test1 D/sipstack: 22:16:48.560 strm0x9924a014  Frame lost, recovered!
+2020-05-06 22:16:48.561 10150-12132/com.ruixun.test1 D/sipstack: 22:16:48.560 strm0x9924a014  Jitter buffer starts returning normal frames (after 1 empty/lost)
+2020-05-06 22:16:48.703 10150-12160/com.ruixun.test1 D/sipstack: 22:16:48.702 vstenc0x982280 !Forcing encoder to generate keyframe
+2020-05-06 22:16:48.721 10150-12132/com.ruixun.test1 D/sipstack: 22:16:48.721 strm0x9924a014 !Frame lost, recovered!
+2020-05-06 22:16:48.760 10150-12132/com.ruixun.test1 D/sipstack: 22:16:48.760 strm0x9924a014  Jitter buffer starts returning normal frames (after 1 empty/lost)
+2020-05-06 22:16:48.921 10150-12132/com.ruixun.test1 D/sipstack: 22:16:48.921 strm0x9924a014  Frame lost, recovered!
+2020-05-06 22:16:48.921 10150-12132/com.ruixun.test1 D/sipstack: 22:16:48.921 strm0x9924a014  Jitter buffer starts returning normal frames (after 1 empty/lost)
+2020-05-06 22:16:48.977 10150-11485/com.ruixun.test1 D/sipstack: 22:16:48.977    pjsua_acc.c !Sending 2 bytes keep-alive packet for acc 0 to 112.74.178.87:5060
+2020-05-06 22:16:48.978 10150-11485/com.ruixun.test1 D/sipstack: 22:16:48.978 tdta0x98231064  Destroying txdata raw
+2020-05-06 22:16:49.120 10150-12132/com.ruixun.test1 D/sipstack: 22:16:49.120 strm0x9924a014 !Frame lost, recovered!
+2020-05-06 22:16:49.122 10150-12132/com.ruixun.test1 D/sipstack: 22:16:49.121 strm0x9924a014  Jitter buffer starts returning normal frames (after 1 empty/lost)
+2020-05-06 22:16:49.320 10150-12132/com.ruixun.test1 D/sipstack: 22:16:49.320 strm0x9924a014  Frame lost, recovered!
+2020-05-06 22:16:49.320 10150-12132/com.ruixun.test1 D/sipstack: 22:16:49.320 strm0x9924a014  Jitter buffer starts returning normal frames (after 1 empty/lost)
+2020-05-06 22:16:49.347 10150-11485/com.ruixun.test1 D/sipstack: 22:16:49.346 sip_endpoint.c !Processing incoming message: Response msg 200/INVITE/cseq=3242 (rdata0x99232014)
+2020-05-06 22:16:49.347 10150-11485/com.ruixun.test1 D/sipstack: 22:16:49.347   pjsua_core.c  .RX 914 bytes Response msg 200/INVITE/cseq=3242 (rdata0x99232014) from UDP 112.74.178.87:5060:
+    SIP/2.0 200 OK
+    Via: SIP/2.0/UDP 192.168.1.101:40043;received=192.168.1.101;rport=40043;branch=z9hG4bKPjef6cc22a-4149-497f-b7c9-b8672de4b1b8
+    From: "哈哈" <sip:UA1011@112.74.178.87>;tag=064aa986-d860-49fb-93a8-367cd8cf494a
+    To: <sip:UA1012@112.74.178.87>;tag=8XeS5m197N83S
+    Call-ID: fa8caa7c-c075-4bf3-abd4-b16f4ed18263
+    CSeq: 3242 INVITE
+    Contact: <sip:UA1012@112.74.178.87;did=992.13b4c1b5>
+    Allow: INVITE, ACK, BYE, CANCEL, OPTIONS, MESSAGE, INFO, UPDATE, REGISTER, REFER, NOTIFY
+    Supported: timer, path, replaces
+    Content-Type: application/sdp
+    Content-Length: 340
+    
+    v=0
+    o=FreeSWITCH 1588757384 1588757385 IN IP4 112.74.178.87
+    s=FreeSWITCH
+    c=IN IP4 112.74.178.87
+    t=0 0
+    m=audio 52314 RTP/AVP 8 101
+    a=rtpmap:8 PCMA/8000
+    a=rtpmap:101 telephone-event/8000
+    a=fmtp:101 0-16
+    a=ptime:20
+    m=video 37022 RTP/AVP 97
+    b=AS:1024
+    a=rtpmap:97 H264/90000
+    a=fmtp:97 profile-level-id=42e01f; packetization-mode=1
+    
+    --end msg--
+2020-05-06 22:16:49.356 10150-11485/com.ruixun.test1 D/sipstack: 22:16:49.347  tsx0x9c02c864  .Incoming Response msg 200/INVITE/cseq=3242 (rdata0x99232014) in state Proceeding
+2020-05-06 22:16:49.357 10150-11485/com.ruixun.test1 D/sipstack: 22:16:49.356  tsx0x9c02c864  ..State changed from Proceeding to Terminated, event=RX_MSG
+2020-05-06 22:16:49.358 10150-11485/com.ruixun.test1 D/sipstack: 22:16:49.357  dlg0x9c02c064  ...Received Response msg 200/INVITE/cseq=3242 (rdata0x99232014)
+2020-05-06 22:16:49.359 10150-11485/com.ruixun.test1 D/sipstack: 22:16:49.359  dlg0x9c02c064  ....Route-set updated
+2020-05-06 22:16:49.361 10150-11485/com.ruixun.test1 D/sipstack: 22:16:49.360  dlg0x9c02c064  ....Route-set frozen
+2020-05-06 22:16:49.362 10150-11485/com.ruixun.test1 D/sipstack: 22:16:49.361  dlg0x9c02c064  ...Transaction tsx0x9c02c864 state changed to Terminated
+2020-05-06 22:16:49.369 10150-11485/com.ruixun.test1 D/sipstack: 22:16:49.368  inv0x9c02c064  ....Received final response after SDP negotiation has been done in early media. Renegotiating SDP..
+2020-05-06 22:16:49.374 10150-11485/com.ruixun.test1 D/sipstack: 22:16:49.373  inv0x9c02c064  ....Got SDP answer in Response msg 200/INVITE/cseq=3242 (rdata0x99232014)
+2020-05-06 22:16:49.377 10150-11485/com.ruixun.test1 D/sipstack: 22:16:49.374  inv0x9c02c064  ....SDP negotiation done, status=0
+2020-05-06 22:16:49.378 10150-11485/com.ruixun.test1 D/sipstack: 22:16:49.378  pjsua_media.c  .....Call 0: updating media..
+2020-05-06 22:16:49.381 10150-11485/com.ruixun.test1 D/sipstack: 22:16:49.380 strm0x9924a014  .......JB summary:
+      size=21/eff=20 prefetch=0 level=6
+      delay (min/max/avg/dev)=240/480/376/68 ms
+      burst (min/max/avg/dev)=2/6/4/0 frames
+      lost=23 discard=0 empty=14
+2020-05-06 22:16:49.383 10150-11485/com.ruixun.test1 D/sipstack: 22:16:49.382  pjsua_media.c  .......Media stream call00:0 is destroyed
+2020-05-06 22:16:49.384 10150-11485/com.ruixun.test1 D/sipstack: 22:16:49.383    pjsua_aud.c  ......Audio channel update..
+2020-05-06 22:16:49.384 10150-11485/com.ruixun.test1 D/sipstack: 22:16:49.384 strm0x9924a014  .......VAD temporarily disabled
+2020-05-06 22:16:49.385 10150-11485/com.ruixun.test1 D/sipstack: 22:16:49.384          rtp.c  .......pjmedia_rtp_session_init: ses=0x9949a2fc, default_pt=8, ssrc=0x71b0343f
+2020-05-06 22:16:49.385 10150-11485/com.ruixun.test1 D/sipstack: 22:16:49.385          rtp.c  .......pjmedia_rtp_session_init: ses=0xa74ff5f4, default_pt=8, ssrc=0x71b0343f
+2020-05-06 22:16:49.386 10150-11485/com.ruixun.test1 D/sipstack: 22:16:49.386  udp0x98266a00  .......SO_RCVBUF set to 163840
+2020-05-06 22:16:49.387 10150-11485/com.ruixun.test1 D/sipstack: 22:16:49.386  udp0x98266a00  .......SO_SNDBUF set to 163840
+2020-05-06 22:16:49.387 10150-11485/com.ruixun.test1 D/sipstack: 22:16:49.387 strm0x9924a014  .......Sending keep-alive (RTCP and empty RTP)
+2020-05-06 22:16:49.389 10150-11485/com.ruixun.test1 D/sipstack: 22:16:49.388       stream.c  .......Stream strm0x9924a014 created
+2020-05-06 22:16:49.391 10150-11485/com.ruixun.test1 D/sipstack: 22:16:49.390 strm0x9924a014  .......Encoder stream started
+2020-05-06 22:16:49.391 10150-11485/com.ruixun.test1 D/sipstack: 22:16:49.391 strm0x9924a014  .......Decoder stream started
+2020-05-06 22:16:49.392 10150-11485/com.ruixun.test1 D/sipstack: 22:16:49.392     resample.c  .......resample created: high qualiy, large filter, in/out rate=8000/16000
+2020-05-06 22:16:49.393 10150-11485/com.ruixun.test1 D/sipstack: 22:16:49.392     resample.c  .......resample created: high qualiy, large filter, in/out rate=16000/8000
+2020-05-06 22:16:49.394 10150-11485/com.ruixun.test1 D/sipstack: 22:16:49.393  pjsua_media.c  ......Audio updated, stream #0: PCMA (sendrecv)
+2020-05-06 22:16:49.396 10150-11485/com.ruixun.test1 D/sipstack: 22:16:49.394  pjsua_media.c  ......Call 0: stream #1 (video) unchanged.
+2020-05-06 22:16:49.397 10150-11485/com.ruixun.test1 D/sipstack: 22:16:49.396  pjsua_media.c  ......Video updated, stream #1: H264 (sendrecv)
+2020-05-06 22:16:49.400 10150-11485/com.ruixun.test1 D/sipstack: 22:16:49.399    pjsua_aud.c  .....Conf connect: 1 --> 0
+2020-05-06 22:16:49.400 10150-11485/com.ruixun.test1 D/sipstack: 22:16:49.400   conference.c  ......Port 1 (sip:UA1012@112.74.178.87) transmitting to port 0 (Android JNI)
+2020-05-06 22:16:49.400 10150-11485/com.ruixun.test1 D/sipstack: 22:16:49.400    pjsua_aud.c !.....Conf connect: 0 --> 1
+2020-05-06 22:16:49.400 10150-12132/com.ruixun.test1 D/sipstack: 22:16:49.400 strm0x9924a014 !Jitter buffer is bufferring (prefetch=0)
+2020-05-06 22:16:49.401 10150-12132/com.ruixun.test1 D/sipstack: 22:16:49.401 strm0x9924a014 !Sending keep-alive (RTCP and empty RTP)
+2020-05-06 22:16:49.401 10150-12132/com.ruixun.test1 D/sipstack: 22:16:49.401 strm0x9924a014  Start talksprut..
+2020-05-06 22:16:49.402 10150-11485/com.ruixun.test1 D/sipstack: 22:16:49.402   conference.c !......Port 0 (Android JNI) transmitting to port 1 (sip:UA1012@112.74.178.87)
+2020-05-06 22:16:49.404 10150-11485/com.ruixun.test1 D/sipstack: 22:16:49.404  inv0x9c02c064  ....Received Response msg 200/INVITE/cseq=3242 (rdata0x99232014), sending ACK
+2020-05-06 22:16:49.405 10150-11485/com.ruixun.test1 D/sipstack: 22:16:49.405       endpoint  ....Request msg ACK/cseq=3242 (tdta0x98231064) created.
+2020-05-06 22:16:49.406 10150-11485/com.ruixun.test1 D/sipstack: 22:16:49.405  dlg0x9c02c064  .....Sending Request msg ACK/cseq=3242 (tdta0x98231064)
+2020-05-06 22:16:49.406 10150-11485/com.ruixun.test1 D/sipstack: 22:16:49.406  sip_resolve.c  .....Target '112.74.178.87:0' type=Unspecified resolved to '112.74.178.87:5060' type=UDP (UDP transport)
+2020-05-06 22:16:49.408 10150-11485/com.ruixun.test1 D/sipstack: 22:16:49.407   pjsua_core.c  .....TX 387 bytes Request msg ACK/cseq=3242 (tdta0x98231064) to UDP 112.74.178.87:5060:
+    ACK sip:UA1012@112.74.178.87;did=992.13b4c1b5 SIP/2.0
+    Via: SIP/2.0/UDP 192.168.1.101:40043;rport;branch=z9hG4bKPj8ced1d31-67d1-41cc-a232-c244c15e8cc9
+    Max-Forwards: 70
+    From: "哈哈" <sip:UA1011@112.74.178.87>;tag=064aa986-d860-49fb-93a8-367cd8cf494a
+    To: sip:UA1012@112.74.178.87;tag=8XeS5m197N83S
+    Call-ID: fa8caa7c-c075-4bf3-abd4-b16f4ed18263
+    CSeq: 3242 ACK
+    Content-Length:  0
+    
+    
+    --end msg--
+2020-05-06 22:16:49.411 10150-11485/com.ruixun.test1 D/sipstack: 22:16:49.410    pjsua_vid.c  .....Call 0: set video stream, op=5
+2020-05-06 22:16:49.411 10150-11485/com.ruixun.test1 D/sipstack: 22:16:49.411 vstenc0x982280  ......Encoder stream resumed
+2020-05-06 22:16:49.414 10150-11485/com.ruixun.test1 D/sipstack: 22:16:49.413  tsx0x9c02c864  Timeout timer event
+2020-05-06 22:16:49.415 10150-11485/com.ruixun.test1 D/sipstack: 22:16:49.414  tsx0x9c02c864  .State changed from Terminated to Destroyed, event=TIMER
+2020-05-06 22:16:49.415 10150-11485/com.ruixun.test1 D/sipstack: 22:16:49.415  tsx0x9c02c864  Transaction destroyed!
+2020-05-06 22:16:49.429 10150-11476/com.ruixun.test1 D/sipstack: 22:16:49.428 vstdec0x982280 !RTP status: badpt=0, badssrc=0, dup=0, outorder=0, probation=-1, restart=0
+2020-05-06 22:16:49.431 10150-11475/com.ruixun.test1 D/sipstack: 22:16:49.429 strm0x9924a014 !RTP status: badpt=0, badssrc=0, dup=0, outorder=0, probation=-1, restart=0
+2020-05-06 22:16:49.440 10150-12132/com.ruixun.test1 D/sipstack: 22:16:49.440 strm0x9924a014 !Jitter buffer starts returning normal frames (after 2 empty/lost)
+2020-05-06 22:16:49.441 10150-12147/com.ruixun.test1 D/sipstack: 22:16:49.440   openh264.cpp !Frame size changed: 976x976 --> 240x320
+2020-05-06 22:16:49.442 10150-12132/com.ruixun.test1 D/sipstack: 22:16:49.442 strm0x9924a014 !Jitter buffer empty (prefetch=0), plc invoked
+2020-05-06 22:16:49.454 10150-10405/com.ruixun.test1 D/sipstack: 22:16:49.453    pjsua_vid.c !Starting preview for cap_dev=1, show=1
+2020-05-06 22:16:49.454 10150-10405/com.ruixun.test1 D/sipstack: 22:16:49.454    pjsua_vid.c  .Creating video window: type=preview, cap_id=1, rend_id=-2
+2020-05-06 22:16:49.454 10150-10405/com.ruixun.test1 D/sipstack: 22:16:49.454    pjsua_vid.c  ..Window already exists for cap_dev=1, returning wid=1
+2020-05-06 22:16:49.454 10150-10405/com.ruixun.test1 D/sipstack: 22:16:49.454    pjsua_vid.c  ..Ignored error on setting window visibility on wid=1: Invalid or unsupported video capability (PJMEDIA_EVID_INVCAP)
+2020-05-06 22:16:49.454 10150-10405/com.ruixun.test1 D/sipstack: 22:16:49.454    pjsua_vid.c  ..Ignored error on setting window flags on wid=1: Invalid or unsupported video capability (PJMEDIA_EVID_INVCAP)
+2020-05-06 22:16:49.460 10150-10405/com.ruixun.test1 D/sipstack: 22:16:49.460 android_opengl  ..Re-initializing OpenGL with native window 0x9c01c508: success
+2020-05-06 22:16:49.460 10150-10405/com.ruixun.test1 D/sipstack: 22:16:49.460 android_opengl  .Starting Android opengl stream
+2020-05-06 22:16:49.461 10150-10405/com.ruixun.test1 D/sipstack: 22:16:49.461  android_dev.c  Video capture orientation set to 4
+2020-05-06 22:16:49.468 10150-10405/com.ruixun.test1 D/sipstack: 22:16:49.468 android_opengl  Re-initializing OpenGL with native window 0x9a870e08: success
+2020-05-06 22:16:49.471 10150-10405/com.ruixun.test1 D/sipstack: 22:16:49.470    pjsua_vid.c  Call 0: set video stream, op=5
+2020-05-06 22:16:49.471 10150-10405/com.ruixun.test1 D/sipstack: 22:16:49.471 vstenc0x982280  .Encoder stream resumed
+2020-05-06 22:16:49.472 10150-10405/com.ruixun.test1 D/sipstack: 22:16:49.472  android_dev.c  Video capture orientation set to 4
+2020-05-06 22:16:49.480 10150-12132/com.ruixun.test1 D/sipstack: 22:16:49.480 strm0x9924a014 !Jitter buffer starts returning normal frames (after 1 empty/lost)
+2020-05-06 22:16:49.590 10150-12147/com.ruixun.test1 D/sipstack: 22:16:49.589 vstdec0x982280 ! Decoding format changed: 240x320 I420<- 15/1(~15)fps
+2020-05-06 22:16:49.591 10150-12147/com.ruixun.test1 D/sipstack: 22:16:49.590 android_opengl  Stopping Android opengl stream
+2020-05-06 22:16:49.594 10150-12147/com.ruixun.test1 D/sipstack: 22:16:49.593 android_opengl  Re-initializing OpenGL due to format change
+2020-05-06 22:16:49.594 10150-12147/com.ruixun.test1 D/sipstack: 22:16:49.594 android_opengl  Starting Android opengl stream
+2020-05-06 22:16:49.761 10150-12132/com.ruixun.test1 D/sipstack: 22:16:49.761 strm0x9924a014 !Jitter buffer empty (prefetch=0), plc invoked
+2020-05-06 22:16:49.774 10150-12160/com.ruixun.test1 D/sipstack: 22:16:49.774 vstenc0x982280 !Forcing encoder to generate keyframe
+2020-05-06 22:16:49.800 10150-12132/com.ruixun.test1 D/sipstack: 22:16:49.800 strm0x9924a014 !Jitter buffer starts returning normal frames (after 1 empty/lost)
+2020-05-06 22:16:49.802 10150-12132/com.ruixun.test1 D/sipstack: 22:16:49.802 strm0x9924a014  Jitter buffer empty (prefetch=0), plc invoked
+2020-05-06 22:16:49.840 10150-12132/com.ruixun.test1 D/sipstack: 22:16:49.840 strm0x9924a014  Jitter buffer starts returning normal frames (after 1 empty/lost)
+2020-05-06 22:16:50.000 10150-12132/com.ruixun.test1 D/sipstack: 22:16:50.000 strm0x9924a014  Jitter buffer empty (prefetch=0), plc invoked
+2020-05-06 22:16:50.003 10150-12132/com.ruixun.test1 D/sipstack: 22:16:50.002 strm0x9924a014  VAD re-enabled
+2020-05-06 22:16:50.003 10150-12132/com.ruixun.test1 D/sipstack: 22:16:50.003 strm0x9924a014  Starting silence
+2020-05-06 22:16:51.642 10150-12132/com.ruixun.test1 D/sipstack: 22:16:51.641   silencedet.c  Re-adjust threshold (in silence)to 16
+2020-05-06 22:16:51.643 10150-12132/com.ruixun.test1 D/sipstack: 22:16:51.643   silencedet.c  Starting talk burst (level=25 threshold=16)
+2020-05-06 22:16:51.644 10150-12132/com.ruixun.test1 D/sipstack: 22:16:51.643 strm0x9924a014  Start talksprut..
+2020-05-06 22:16:52.842 10150-12132/com.ruixun.test1 D/sipstack: 22:16:52.842   silencedet.c  Starting silence (level=15 threshold=20)
+2020-05-06 22:16:52.842 10150-12132/com.ruixun.test1 D/sipstack: 22:16:52.842 strm0x9924a014  Starting silence
+2020-05-06 22:16:53.204 10150-12132/com.ruixun.test1 D/sipstack: 22:16:53.204   silencedet.c  Starting talk burst (level=21 threshold=20)
+2020-05-06 22:16:53.205 10150-12132/com.ruixun.test1 D/sipstack: 22:16:53.204 strm0x9924a014  Start talksprut..
+2020-05-06 22:16:54.003 10150-12132/com.ruixun.test1 D/sipstack: 22:16:54.003 strm0x9924a014  Jitter buffer starts returning normal frames (after 200 empty/lost)
+2020-05-06 22:16:54.006 10150-12132/com.ruixun.test1 D/sipstack: 22:16:54.006 strm0x9924a014  Jitter buffer empty (prefetch=0), plc invoked
+2020-05-06 22:16:54.043 10150-12132/com.ruixun.test1 D/sipstack: 22:16:54.043 strm0x9924a014  Jitter buffer starts returning normal frames (after 1 empty/lost)
+2020-05-06 22:16:54.046 10150-12132/com.ruixun.test1 D/sipstack: 22:16:54.046 strm0x9924a014  Jitter buffer empty (prefetch=0), plc invoked
+2020-05-06 22:16:54.163 10150-12132/com.ruixun.test1 D/sipstack: 22:16:54.163 strm0x9924a014  Jitter buffer starts returning normal frames (after 5 empty/lost)
+2020-05-06 22:16:54.326 10150-12132/com.ruixun.test1 D/sipstack: 22:16:54.325 strm0x9924a014  Jitter buffer empty (prefetch=0), plc invoked
+2020-05-06 22:16:54.363 10150-12132/com.ruixun.test1 D/sipstack: 22:16:54.363 strm0x9924a014  Jitter buffer starts returning normal frames (after 1 empty/lost)
+2020-05-06 22:16:54.416 10150-10405/com.ruixun.test1 D/sipstack: 22:16:54.416    pjsua_vid.c !Call 0: set video stream, op=7
+2020-05-06 22:16:54.451 10150-12160/com.ruixun.test1 D/sipstack: 22:16:54.449 vstenc0x982280 !Forcing encoder to generate keyframe
+2020-05-06 22:16:55.490 10150-11485/com.ruixun.test1 D/sipstack: 22:16:55.489 sip_endpoint.c !Processing incoming message: Request msg BYE/cseq=19833515 (rdata0x99232014)
+2020-05-06 22:16:55.492 10150-11485/com.ruixun.test1 D/sipstack: 22:16:55.492   pjsua_core.c  .RX 522 bytes Request msg BYE/cseq=19833515 (rdata0x99232014) from UDP 112.74.178.87:5060:
+    BYE sip:UA1011@192.168.1.101:40043;ob SIP/2.0
+    Via: SIP/2.0/UDP 10.0.76.29:5060;branch=z9hG4bKe793.ec8689a6.0
+    Max-Forwards: 68
+    From: <sip:UA1012@112.74.178.87>;tag=8XeS5m197N83S
+    To: "哈哈" <sip:UA1011@112.74.178.87>;tag=064aa986-d860-49fb-93a8-367cd8cf494a
+    Call-ID: fa8caa7c-c075-4bf3-abd4-b16f4ed18263
+    CSeq: 19833515 BYE
+    Allow: INVITE, ACK, BYE, CANCEL, OPTIONS, MESSAGE, INFO, UPDATE, REGISTER, REFER, NOTIFY
+    Supported: timer, path, replaces
+    Reason: Q.850;cause=16;text="NORMAL_CLEARING"
+    Content-Length: 0
+    
+    
+    --end msg--
+2020-05-06 22:16:55.493 10150-11485/com.ruixun.test1 D/sipstack: 22:16:55.493  dlg0x9c02c064  .Received Request msg BYE/cseq=19833515 (rdata0x99232014)
+2020-05-06 22:16:55.494 10150-11485/com.ruixun.test1 D/sipstack: 22:16:55.494  tsx0x9c02c864  ...Transaction created for Request msg BYE/cseq=19833515 (rdata0x99232014)
+2020-05-06 22:16:55.495 10150-11485/com.ruixun.test1 D/sipstack: 22:16:55.494  tsx0x9c02c864  ..Incoming Request msg BYE/cseq=19833515 (rdata0x99232014) in state Null
+2020-05-06 22:16:55.496 10150-11485/com.ruixun.test1 D/sipstack: 22:16:55.495  tsx0x9c02c864  ...State changed from Null to Trying, event=RX_MSG
+2020-05-06 22:16:55.497 10150-11485/com.ruixun.test1 D/sipstack: 22:16:55.496  dlg0x9c02c064  ....Transaction tsx0x9c02c864 state changed to Trying
+2020-05-06 22:16:55.498 10150-11485/com.ruixun.test1 D/sipstack: 22:16:55.497       endpoint  .....Response msg 200/BYE/cseq=19833515 (tdta0x98232064) created
+2020-05-06 22:16:55.498 10150-11485/com.ruixun.test1 D/sipstack: 22:16:55.498  dlg0x9c02c064  ......Sending Response msg 200/BYE/cseq=19833515 (tdta0x98232064)
+2020-05-06 22:16:55.499 10150-11485/com.ruixun.test1 D/sipstack: 22:16:55.499  tsx0x9c02c864  ......Sending Response msg 200/BYE/cseq=19833515 (tdta0x98232064) in state Trying
+2020-05-06 22:16:55.500 10150-11485/com.ruixun.test1 D/sipstack: 22:16:55.499  sip_resolve.c  .......Target '112.74.178.87:5060' type=UDP resolved to '112.74.178.87:5060' type=UDP (UDP transport)
+2020-05-06 22:16:55.500 10150-11485/com.ruixun.test1 D/sipstack: 22:16:55.500   pjsua_core.c  .......TX 326 bytes Response msg 200/BYE/cseq=19833515 (tdta0x98232064) to UDP 112.74.178.87:5060:
+    SIP/2.0 200 OK
+    Via: SIP/2.0/UDP 10.0.76.29:5060;received=112.74.178.87;branch=z9hG4bKe793.ec8689a6.0
+    Call-ID: fa8caa7c-c075-4bf3-abd4-b16f4ed18263
+    From: <sip:UA1012@112.74.178.87>;tag=8XeS5m197N83S
+    To: "哈哈" <sip:UA1011@112.74.178.87>;tag=064aa986-d860-49fb-93a8-367cd8cf494a
+    CSeq: 19833515 BYE
+    Content-Length:  0
+    
+    
+    --end msg--
+2020-05-06 22:16:55.501 10150-11485/com.ruixun.test1 D/sipstack: 22:16:55.501  tsx0x9c02c864  .......State changed from Trying to Completed, event=TX_MSG
+2020-05-06 22:16:55.504 10150-11485/com.ruixun.test1 D/sipstack: 22:16:55.502  dlg0x9c02c064  ........Transaction tsx0x9c02c864 state changed to Completed
+2020-05-06 22:16:55.511 10150-11485/com.ruixun.test1 D/sipstack: 22:16:55.511    pjsua_vid.c  ......Stopping preview for cap_dev=1
+2020-05-06 22:16:55.512 10150-11485/com.ruixun.test1 D/sipstack: 22:16:55.511 android_opengl  .......Stopping Android opengl stream
+2020-05-06 22:16:55.517 10150-11485/com.ruixun.test1 D/sipstack: 22:16:55.516  pjsua_media.c  ......Call 0: deinitializing media..
+2020-05-06 22:16:55.518 10150-11485/com.ruixun.test1 D/sipstack: 22:16:55.517 strm0x9924a014  ........JB summary:
+      size=8/eff=8 prefetch=0 level=11
+      delay (min/max/avg/dev)=20/120/88/40 ms
+      burst (min/max/avg/dev)=2/12/4/1 frames
+      lost=0 discard=0 empty=212
+2020-05-06 22:16:55.519 10150-11485/com.ruixun.test1 D/sipstack: 22:16:55.518  pjsua_media.c  ........Media stream call00:0 is destroyed
+2020-05-06 22:16:55.520 10150-11485/com.ruixun.test1 D/sipstack: 22:16:55.519    pjsua_vid.c  ........Stopping video stream..
+2020-05-06 22:16:55.561 10150-11485/com.ruixun.test1 D/sipstack: 22:16:55.560  android_dev.c  .........Stopping Android camera stream
+2020-05-06 22:16:55.581 10150-11485/com.ruixun.test1 D/sipstack: 22:16:55.580    pjsua_vid.c  .........Window 1: destroying..
+2020-05-06 22:16:55.582 10150-11485/com.ruixun.test1 D/sipstack: 22:16:55.581  android_dev.c  ..........Stopping Android camera stream
+2020-05-06 22:16:55.583 10150-11485/com.ruixun.test1 D/sipstack: 22:16:55.582     vid_port.c  ..........Closing Front camera..
+2020-05-06 22:16:55.585 10150-11485/com.ruixun.test1 D/sipstack: 22:16:55.584  android_dev.c  ..........Android camera stream destroyed
+2020-05-06 22:16:55.586 10150-11485/com.ruixun.test1 D/sipstack: 22:16:55.585 android_opengl  ..........Stopping Android opengl stream
+2020-05-06 22:16:55.588 10150-11485/com.ruixun.test1 D/sipstack: 22:16:55.587     vid_port.c  ..........Closing OpenGL renderer..
+2020-05-06 22:16:55.589 10150-11485/com.ruixun.test1 D/sipstack: 22:16:55.588 android_opengl  ..........Stopping Android opengl stream
+2020-05-06 22:16:55.607 10150-11485/com.ruixun.test1 D/sipstack: 22:16:55.607 android_opengl  .........Stopping Android opengl stream
+2020-05-06 22:16:55.608 10150-11485/com.ruixun.test1 D/sipstack: 22:16:55.607    pjsua_vid.c  .........Window 0: destroying..
+2020-05-06 22:16:55.609 10150-11485/com.ruixun.test1 D/sipstack: 22:16:55.608 android_opengl  ..........Stopping Android opengl stream
+2020-05-06 22:16:55.609 10150-11485/com.ruixun.test1 D/sipstack: 22:16:55.609     vid_port.c  ..........Closing OpenGL renderer..
+2020-05-06 22:16:55.610 10150-11485/com.ruixun.test1 D/sipstack: 22:16:55.609 android_opengl  ..........Stopping Android opengl stream
+2020-05-06 22:16:55.619 10150-11485/com.ruixun.test1 D/sipstack: 22:16:55.617 vstdec0x982280  .........JB summary:
+      size=1/eff=1 prefetch=0 level=0
+      delay (min/max/avg/dev)=0/0/0/0 ms
+      burst (min/max/avg/dev)=0/0/0/0 frames
+      lost=0 discard=0 empty=0
+2020-05-06 22:16:55.621 10150-11485/com.ruixun.test1 D/sipstack: 22:16:55.620  pjsua_media.c  ........Media stream call00:1 is destroyed
+2020-05-06 22:16:55.622 10150-11485/com.ruixun.test1 D/sipstack: 22:16:55.621 tdta0x98231064  .....Destroying txdata Request msg ACK/cseq=3242 (tdta0x98231064)
+2020-05-06 22:16:55.623 10150-11485/com.ruixun.test1 D/sipstack: 22:16:55.622 tdta0x9825f064  .....Destroying txdata Request msg INVITE/cseq=3242 (tdta0x9825f064)
+2020-05-06 22:16:55.624 10150-11485/com.ruixun.test1 D/sipstack: 22:16:55.623  dlg0x9c02c064  ......Session count dec to 3 by mod-invite
+2020-05-06 22:16:56.518 10150-11485/com.ruixun.test1 D/sipstack: 22:16:56.517    pjsua_aud.c  Closing sound device after idle for 1 second(s)
+2020-05-06 22:16:56.519 10150-11485/com.ruixun.test1 D/sipstack: 22:16:56.518    pjsua_aud.c  .Closing Android JNI sound playback device and Android JNI sound capture device
+2020-05-06 22:16:56.520 10150-11485/com.ruixun.test1 D/sipstack: 22:16:56.519 android_jni_de  .Android JNI stream stopped
+2020-05-06 22:16:56.521 10150-11485/com.ruixun.test1 D/sipstack: 22:16:56.521 android_jni_de  .Destroying Android JNI stream...
+2020-05-06 22:16:56.525 10150-12132/com.ruixun.test1 D/sipstack: 22:16:56.523 android_jni_de !Player thread stopped
+2020-05-06 22:16:56.558 10150-12130/com.ruixun.test1 D/sipstack: 22:16:56.557 android_jni_de !Recorder thread stopped
+2020-05-06 22:16:56.561 10150-11485/com.ruixun.test1 D/sipstack: 22:16:56.560 android_jni_de !.Audio record released
+2020-05-06 22:16:56.569 10150-11485/com.ruixun.test1 D/sipstack: 22:16:56.569 android_jni_de  .Audio track released
+2020-05-06 22:16:56.569 10150-11485/com.ruixun.test1 D/sipstack: 22:16:56.569 android_jni_de  .Android JNI stream destroyed
