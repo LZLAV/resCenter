@@ -1133,7 +1133,7 @@
                                                 4           mod_ua              32          mod_ua_on_rx_request            sip_ua_layer.c
                                                 5           mod_100rel          48          mod_100rel_load                 sip_100rel.c
                                                 6           mod_pjsua           64          mod_pjsua_on_rx_msg             pjsua_core.c
-                                                7           mod_invite          48          mod_inv_on_rx_request           pjsua_inv.c
+                                                7           mod_invite          48          mod_inv_on_rx_request           sip_inv.c
                                                 8           mod_evsub           48          mod_evsub_unload                evsub.c
                                                 9           mod_presence        48          
                                                 10          mod_mwi             48

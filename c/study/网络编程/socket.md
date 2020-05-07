@@ -35,3 +35,97 @@ struct in_addr{
 ### 数据存储优先顺序的转换
 
 网络字节序都是大端模式。要把主机字节序列和网络字节序列相互对应起来，需要对这两个序列存储优先顺序进行相互转化。这里用到四个函数 --- htons()、ntohs()、htonl() 和 ntohl()，这四个函数分别实现网络字节序列和主机序列的转化，这里的 h 代表 host，n 代表 network，s代表 short，l代表 long。通常 16位的 IP 端口号用 s 代表，而  IP地址用 l 来代表。
+
+> \#include<netinet/in.h>
+>
+> unsigned long int htonl(unsigned long int hostlong)
+
+htonl 函数用于将 32 位主机字符顺序转换成网络字节顺序，返回对应的网络字符顺序
+
+> \#include<netinet/in.h>
+>
+> unsigned short int htons(unsigned short int hostshort)
+
+htons 函数用于将 16 位主机字符顺序转换成网络字节顺序，返回对应的网络字符顺序
+
+### 地址格式转化
+
+通常用户在表达地址时采用的是点分十进制表示的数值（或者是用冒号分开的十进制 IPv6 地址），而在通常使用的 socket 编程中使用的则是 32位的网络字节序的二进制值，这就需要将这两个数值进行转换。IPv4中用到的函数有 inet_aton()、inet_add() 和 inet_ntoa()，IPv4 和 IPv6 兼容的函数有 inet_pton() 和 inet_ntop()。
+
+> \#include<sys/socket.h>
+>
+> \#include<netinet/in.h>
+>
+> \#include<arpa/inet.h>
+>
+> unsigned long int inet_addr(const char *cp)
+
+inet_addr() 用来将参数 cp 所指的网络地址字符串转换成网络所使用的二进制数字。网络地址字符串是以数字和点组成的字符串，如"163.13.132.68"。返回值：成功则返回对应的网络二进制的数字，失败返回 -1。
+
+> \#include<sys/socket.h>
+>
+> \#include<netinet/in.h>
+>
+> \#include<arpa/inet.h>
+>
+> int inet_aton(const char* cp,struct in_addr *inp)
+
+inet_aton() 用来将参数 cp 所指的**网络地址字符串转换成网络使用的二进制的数字**，然后存于参数 inp 所指的 in_addr 结构中。结构 in_addr 定义为
+
+> struct_addr{
+>
+> ​	unsigned long int s_addr;
+>
+> }
+
+成功则返回非0值，失败则返回 0。
+
+> \#include<sys/socket.h>
+>
+> \#include<netinet/in.h>
+>
+> \#include<arpa/inet.h>
+>
+> char* inet_ntoa(struct in_addr in)
+
+inet_ntoa() 用来将参数 in 所指的网络二进制的数字转换成网络地址，然后将指向此网络地址字符串的指针返回
+
+成功则返回字符串指针，失败则返回 NULL。
+
+**见 Demo1**
+
+
+
+### 名字地址转化
+
+主机名与域名的区别：主机名通常在局域网里面使用，通过 /etc/hosts 文件，主机名可以解析到对应的IP;域名通常是在 Internet 上使用。
+
+在Linux 中，有一些函数可以实现主机名和地址的转化，最常见的有 gethostbyname()、gethostbyaddr() 等，都可以实现 IPv4 和 IPv6 的地址和主机名之间的转化。
+
+> \#include<netdb.h>
+>
+> struct hostnet* gethostbyname(const char* hostname)
+
+将主机名转化成 IP地址
+
+> \#include<netdb.h>
+>
+> struct hostnet* gethostbyaddr(const char* addr,size_t len,int family)
+
+将IP地址转化为主机名
+
+
+
+结构体为
+
+```c
+struct hostent{
+    char *h_name;		//正式主机名
+    char **h_aliases;	//主机别名
+    int h_addrtype;		//主机ip地址类型，IPv4为 AF_INET
+    int h_length;		//主机IP地址字节长度，对于 IPv4是4字节，即32位
+    char **h_addr_list;	//主机的IP地址列表
+}#define h_addr h_addr_list[0]		//保存的是IP 地址
+```
+
+**见demo2**
