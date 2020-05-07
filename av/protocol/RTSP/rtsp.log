@@ -1,0 +1,100 @@
+OPTIONS：
+OPTIONS rtsp://218.207.101.236:554/mobile/3/67A451E937422331 RTSP/1.0  
+Cseq: 1  
+
+
+RTSP/1.0 200 OK  
+Server: PVSS/1.4.8 (Build/20090111; Platform/Win32; Release/StarValley; )  
+Cseq: 1  
+Public: DESCRIBE, SETUP, TEARDOWN, PLAY, PAUSE, OPTIONS, ANNOUNCE, RECORD  
+  
+-----------------------------------------------------
+
+DESCRIBE rtsp://218.207.101.236:554/mobile/3/67A451E937422331/8jH5QPU5GWS07Ugn.sdp RTSP/1.0  
+Cseq: 2  
+
+
+RTSP/1.0 200 OK  
+Server: PVSS/1.4.8 (Build/20090111; Platform/Win32; Release/StarValley; )  
+Cseq: 2  
+Content-length: 421  
+Date: Mon, 03 Aug 2009 08:50:36 GMT  
+Expires: Mon, 03 Aug 2009 08:50:36 GMT  
+Content-Type: application/sdp  
+x-Accept-Retransmit: our-retransmit  
+x-Accept-Dynamic-Rate: 1  
+Content-Base: rtsp://218.207.101.236:554/mobile/3/67A451E937422331/8jH5QPU5GWS07Ugn.sdp/  
+  
+v=0  
+o=MediaBox 127992 137813 IN IP4 0.0.0.0  
+s=RTSP Session  
+i=Starv Box Live Cast  
+c=IN IP4 218.207.101.236  
+t=0 0  
+a=range:npt=now-  
+a=control:*  
+m=video 0 RTP/AVP 96  
+b=AS:20  
+a=rtpmap:96 MP4V-ES/1000  
+a=fmtp:96 profile-level-id=8; config=000001b008000001b5090000010000000120008440fa282c2090a31f; decode_buf=12586  
+a=range:npt=now-  
+a=framerate:5  
+a=framesize:96 176-144  
+a=cliprect:0,0,144,176  
+a=control:trackID=1
+
+------------------------------------------------------------
+
+SETUP rtsp://218.207.101.236:554/mobile/3/67A451E937422331/8jH5QPU5GWS07Ugn.sdp/trackID=1  
+ RTSP/1.0  
+Cseq: 3  
+Transport: RTP/AVP;UNICAST;client_port=16264-16265;mode=play  
+
+
+RTSP/1.0 200 OK  
+Server: PVSS/1.4.8 (Build/20090111; Platform/Win32; Release/StarValley; )  
+Cseq: 3  
+Session: 15470472221769  
+Date: Mon, 03 Aug 2009 08:50:36 GMT  
+Expires: Mon, 03 Aug 2009 08:50:36 GMT  
+Transport: RTP/AVP;UNICAST;mode=play;client_port=16264-16265;server_port=20080-20081  
+
+
+----------------------------------------------------------------------
+
+PLAY rtsp://218.207.101.236:554/mobile/3/67A451E937422331/8jH5QPU5GWS07Ugn.sdp RTSP/1.0  
+Session: 15470472221769  
+Cseq: 4  
+  
+ 
+RTSP/1.0 200 OK  
+Server: PVSS/1.4.8 (Build/20090111; Platform/Win32; Release/StarValley; )  
+Cseq: 4  
+Session: 15470472221769  
+RTP-Info: url=rtsp://218.207.101.236:554/mobile/3/67A451E937422331/8jH5QPU5GWS07Ugn.sdp/trackID=1;seq=0;rtptime=0  
+
+-------------------------------------------------------------------------
+
+PAUSE rtsp://218.207.101.236:554/mobile/3/67A451E937422331/8jH5QPU5GWS07Ugn.sdp/ RTSP/1.0  
+Cseq: 5  
+Session: 15470472221769  
+
+  
+RTSP/1.0 200 OK  
+Server: PVSS/1.4.8 (Build/20090111; Platform/Win32; Release/StarValley; )  
+Cseq: 5  
+Session: 15470472221769  
+
+---------------------------------------------------------------------
+  
+TEARDOWN rtsp://218.207.101.236:554/mobile/3/67A451E937422331/8jH5QPU5GWS07Ugn.sdp/ RTSP/1.0  
+Cseq: 6  
+User-Agent: RealMedia Player HelixDNAClient/10.0.0.11279 (win32)  
+Session: 15470472221769  
+
+ 
+RTSP/1.0 200 OK  
+Server: PVSS/1.4.8 (Build/20090111; Platform/Win32; Release/StarValley; )  
+Cseq: 6  
+Session: 15470472221769  
+Connection: Close
