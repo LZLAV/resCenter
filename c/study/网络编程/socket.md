@@ -368,3 +368,198 @@ if(new_fd == -1)
 printf("%s %d success connect\n",inet_ntoa(clientaddr.sin_addr),ntohs(clientaddr.sin_port));
 ```
 
+##### 连接服务器
+
+connect 函数用于建立 socket 连线
+
+> \#include<sys/types.h>
+>
+> \#include<sys/socket.h>
+>
+> int connect(int sockfd,struct sockaddr *serv_addr,int addrlen)
+
+###### 函数说明
+
+connect() 用来将参数 sockfd 的 socket 连至参数 serv_addr 指定的网络地址。结构 sockaddr 请参考 bind()。参数 addrlen 为 sockaddr 的结构长度
+
+###### 返回值
+
+成功则返回 0，失败返回 -1，错误原因存于 errno 中
+
+###### 错误码
+
+- EBADF：参数 sockfd 非合法 socket 处理代码
+- EFAULT：参数 serv_addr 指针指向无法存取的内存空间
+- ENOTSOCK：参数 sockfd 为一文件描述词，非 socket
+- EISCONN：参数 sockfd 的 socket 已是连线状态
+- ECONNREFUSED：连线要求被 server 端拒绝
+- ETIMEDOUT：企图连线的操作超过限定时间仍未有响应
+- ENETUNREACH：无法传送数据包至指定的主机
+- EAFNOSUPPORT：sockaddr 结构的 sa_family 不正确
+- EALREADY：socket 为不可阻断且先前的连线操作还未完成
+
+###### 示例
+
+```c
+struct sockaddr_in seraddr;		//请求连接服务器
+memset(&seraddr,0,sizeof(struct sockaddr));
+seraddr.sin_family = AF_INET;
+seraddr.sin_port = htons(8888);		//服务器的端口号
+seraddr.sin_addr.s_addr = inet_addr("192.168.0.101");	//服务器的 IP
+if(connect(sfd,(struct sockaddr*)&seraddr,sizeof(struct sockaddr)) == -1)
+{
+    perror("connect");
+    close(fd);
+    exit(-1);
+}
+```
+
+##### 发送数据
+
+send 函数用于通过 socket 传送数据
+
+> \#include<sys/types.h>
+>
+> \#include<sys/socket.h>
+>
+> int send(int s,const void *msg,int len,unsigned int flag)
+
+###### 函数说明
+
+send() 用来将数据由指定的 socket 传给对方主机。参数 s 为已建立好连接的 socket；参数 msg 指向欲连线的数据内容，参数 len 则为数据长度，参数 flags 一般设为 0，其他数值定义如下：
+
+- MSG_OOB：传送的数据以 out-of-band 送出
+- MSG_DONTROUTE：取消路由表查询
+- MSG_DONTWAIT：设置为不可阻断运作
+- MSG_NOSIGNAL：此动作不愿被 SIGPIPE 信号中断
+
+###### 返回值
+
+成功则返回实际传送出去的字符数，失败返回 -1 。错误原因存在于 errno
+
+###### 错误码
+
+- EBADF：参数 s 非合法的 socket 处理代码
+- EFAULT：参数中有一指针指向无法存取的内存空间
+- ENOTSOCK：参数 s 为一文件描述词，非 socket
+- EINTR：被信号中断
+- EAGAIN：此操作会令进程阻断，但参数 s 的 socket 为不可阻断
+- ENOBUFS：系统的缓冲内存不足
+- ENOMEM：核心内存不足
+- EINVAL：传给系统调用的参数不正确
+
+
+
+sendto 函数用于通过 socket 传送数据
+
+> \#include<sys/types.h>
+>
+> \#include<sys/sokcet.h>
+>
+> int sendto(int s,const void *msg,int len,unsigned int flags,const struct sockaddr *to,int tolen)
+
+###### 函数说明
+
+sendto() 用来将数据由指定的 socket 传给对方主机。参数 s 为已建好连线的 socket，如果利用 UDP 协议则不需经过连线操作；参数 msg 指向欲连线的数据内容；参数 flags 一般设为 0，详细描述请参考 send()；参数 to 用来指定欲传送的网络地址，结构 sockaddr 请参考 bind()；参数 tolen 为 sockaddr 的结果长度
+
+###### 返回值
+
+成功则返回实际传送出去的字符数，失败返回 -1，错误原因存在于 errno 中
+
+###### 错误代码
+
+- EBADF：参数 s 非法的 socket 处理代码
+- EFAULT：参数中有一指针指向无法存取的内存空间
+- WNOTSOCK：参数 s 为一文件描述词，非 socket
+- EINTR：被信号中断
+- EAGAIN：此动作会令进程阻断，但参数 s 的socket 是不可阻断的
+- ENOBUFS：系统的缓冲内存不足
+- EINVAL：传给系统调用的参数不正确
+
+###### 示例
+
+```c
+if(send(new_fd,"hello",6,0) == -1)
+{
+    perror("send");
+    close(new_fd);
+    close(sfd);
+    exit(-1);
+}
+```
+
+##### 接收数据
+
+recv 函数用于通过socket 接收数据
+
+> \#include<sys/types.h>
+>
+> \#include<sys/socket.h>
+>
+> int recv(int s,void *buf,int len,unsigned int flags)
+
+###### 函数说明
+
+recv() 用来接收远端主机经指定的 socket 传来的数据，并把数据存到由参数 buf 指向的内存空间，参数 len为可接收数据的最大长度；参数 flags 一般设为 0。其他数值定义如下：
+
+- MSG_OOB：接收以 out-of-band 送出的数据
+- MSG_PEEK：返回来的数据并不会在系统内删除，如果再调用 recv() 会返回相同的数据内容
+- MSG_WAITALL：强迫接收到 len 大小的数据后才能返回，除非有错误或信号产生
+- MSG_NOSIGNAL：此操作不愿被 SIGPIPE 信号中断
+
+###### 返回值
+
+成功则返回接收到的字符数，失败返回 -1，错误原因存在于 errno 中
+
+###### 错误代码
+
+- EBADF：参数 s 非法的 socket 处理代码
+- EFAULT：参数中有一指针指向无法存取的内存空间
+- ENOTSOCK：参数 s 为一文件描述词，非 socket
+- EINTR：被信号中断
+- EAGAIN：此动作会令进程阻断，但参数 s 的socket 是不可阻断的
+- ENOBUFS：系统的缓冲内存不足
+- ENOMEM：核心内存不足
+- EINVAL：传给系统调用的参数不正确
+
+recvfrom 函数用于通过 socket 接收数据
+
+> \#include<sys/types.h>
+>
+> \#include<sys/socket.h>
+>
+> int recvfrom(int s,void *buf,int len,unsigned int flags,struct sockaddr *from,int *fromlen)
+
+###### 函数说明
+
+recv() 用来接收远程主机经指定的 socket 传来的数据，并把数据保存到由参数 buf 指向的内存空间。参数 len 为可接收数据的最大长度；参数 flags 一般设 0，其他数值定义请参考 recv() ；参数 from 用来指定欲传送的网络地址，结构 sockaddr 请参考 bind()；参数 fromlen 为 sockaddr 的结构长度
+
+###### 返回值
+
+成功则返回接收到的字符数，失败则返回 -1，错误原因在于 errno中
+
+###### 错误码
+
+- EBADF：参数 s 非法的 socket 处理代码
+- EFAULT：参数中有一指针指向无法存取的内存空间
+- ENOTSOCK：参数 s 为一文件描述词，非 socket
+- EINTR：被信号中断
+- EAGAIN：此动作会令进程阻断，但参数 s 的socket 是不可阻断的
+- ENOBUFS：系统的缓冲内存不足
+- ENOMEM：核心内存不足
+- EINVAL：传给系统调用的参数不正确
+
+###### 示例
+
+```c
+char buf[512] = {0};
+if(recv(new_fd,buf,sizeof(buf),0) == -1)
+{
+    perror("recv");
+    close(new_fd);
+    close(sfd);
+    exit(-1);
+}
+puts(buf);
+```
+
