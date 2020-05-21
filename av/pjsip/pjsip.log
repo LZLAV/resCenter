@@ -1197,4 +1197,217 @@
 
     
     makeCall:
+
+
+    onCallState():
+
+        thread_main()
+
+            worker_thread()
+
+                pjsua_handle_events()
+
+                    pjsip_endpt_handle_events2():sip_endpoint.c
+
+                        pj_ioqueue_poll()
+
+                            ioqueue_dispatch_read_event()
+
+                                udp_on_read_complete():sip_transaction_udp.c
+
+                                    pjsip_tpmgr_receive_packet()
+
+                                        endpt_on_rx_msg()
+
+                                            pjsip_endpt_process_rx_data():sip_endpoint.c
+
+                                                mod_pjsua_on_rx_request():pjsua_core.c
+
+                                                    pjsua_call_on_incoming():pjsua_call.c
+
+                                                        process_pending_call_answer():pjsua_call.c
+
+                                                            pjsip_inv_send_msg():sip_inv.c
+
+                                                                pjsip_dlg_send_response():sip_dlg.c
+
+                                                                    pjsip_tsx_send_msg():sip_transaction.c
+
+                                                                        tsx_on_state_proceeding_uas()
+
+                                                                            tsx_set_state():sip_transaction.c
+
+                                                                                mod_ua_on_tsx_state():sip_ua_layer.c
+
+                                                                                    pjsip_dlg_on_tsx_state()
+
+                                                                                        mod_inv_on_tsx_state()
+
+                                                                                            inv_on_state_incoming()
+
+                                                                                                inv_set_state()
+
+                                                                                                    pjsua_call_on_state_changed():sip_call.c
+
+                                                                                                        pj::Endpoint::on_call_state():endpoint.cpp
+
+                                                                                                            pj::Call::processStateChange():call.cpp
+
+                                                                                                                SwigDirector_Call::onCallState():pjsua_wrap.cpp
+
+                                                                                                                    SwigDirectorCall_onCallState():pjsua2JNI.java
+
+                                                                                                                        onCallState():SipCall.java
+
+                                                                                                                            getEventCallBack->onCallState:RxCallService.java
+
+                                                                                                                                RxCallService.onCallState():RxCallService.java
+
+                                                                                                                                    MainActivity::new RxCallService()
+
+
+    video capture:
+        onGetFrame()
+            vidStream_cap_cb()
+                copy_frame_to_buffer()
+                    pjmedia_frame_copy(vp->frame_buf,frame)
+        
+
+        thread_main()
+
+            clock_thread():pthread("clock")
+                enc_clock_cb()
+                    1. get_frame_from_buffer()
+                        pjmedia_from_copy(frame,vp->frame_buf)
+                    2. pjmedia_port_put_frame()
+                        tee_put_frame():vid_tee.c
+                            put_frame():vid_stream.c
+                                1. pjmedia_vid_codec_encode_begin()
+                                    oh264_codec_encode_begin()
+                                2. //Loop while we have frame to send
+                                pjmedia_rtp_encode_rtp()
+                                
+                                3. //send the rtp packet to the transport
+                                pjmedia_transport_sned_rtp()
+
+                                    transport_send_rtp():transport_srtp.c
+
+                                        //called by application send RTP packet
+                                        transport_send_rtp():transport_udp.c
+
+                                            pj_ioqueue_sendto():ioqueue_common_abs.c
+
+                                                pj_sock_sendto():socket_bsd.c
+
+                                                    //socket udp
+                                                    sendto()    
+    
+
+
+
+    render:
+        //解码
+        thread_main()
+            worker_proc()
+                pj_ioqueue_poll()
+                    ioqueue_dispatch_read_event()
+                        on_rx_rtp():transport_udp.c
+                            srtp_rtp_cb()
+                                on_rx_rtp():vid_stream.c
+
+                                    //If stram.dec_frame.size == 0 || jb full       jb为没有解码的数据
+                                        decode_frame():vid_stream.c
+
+                                    //else
+                                        pjmedia_jbuf_put_frame3():jbuf.c
+                                    
+                                        pjmedia_vid_codec_decode()
+
+                                            oh264_codec_decode():openh264.cpp
+
+        //渲染
+        thread_main()
+            clock_thread()
+                dec_clock_cb()
+                    1. //获得解码后的数据
+                        vidstream_render_cb()
+
+                            pjmedia_port_get_frame()
+
+                                get_frame():vid_stream.c
+                            
+                                    if stream.dec_frame.size >0
+                                        stream.dec_frame
+                                    else
+                                        //copy from jb
+                                        decode_frame()
+
+                                        pjmedia_vid_codec_decode()
+
+                                            oh264_codec_decode()
+                        
+                    2. 
+                        pjmedia_viddev_stream_put_frame()
+
+                            andgl_stream_put_frame():android_opengl.c
+
+                                job_queue_post_job()
+
+                                    //发送信号量
+                                    pj_sem_post(jq->sem);
+
+        
+        thread_main()
+            job_thread():android_opengl.c
+                
+                //pj_sem_wait(jq->sem);
+                render()
+
+                    pjmedia_vid_dev_opengl_draw()
+                        glTexImage2D()  //绘制
+
+
+    //建立起流
+    thread_main()
+        worker_thread()
+            pjsua_handle_events()
+                pjsip_endpt_handle_event2()
+                    pj_ioqueue_poll()
+                        ioqueue_dispatch_read_event()
+                            udp_on_read_complete()
+                                pjsip_tpmgr_receive_packet()
+                                    endpt_on_rx_msg()
+                                        pjsip_endpt_process_rx_data()
+                                            mod_tsx_layer_on_rx_response()
+                                                pjsip_tsx_recv_msg()
+                                                    tsx_on_state_proceeding_uac()
+                                                        tsx_set_state()
+                                                            mod_ua_on_tsx_state()
+                                                                pjsip_dlg_on_tsx_state()
+                                                                    mod_inv_on_tsx_state()
+                                                                        inv_on_state_calling()
+                                                                            inv_check_sdp_in_incoming_msg()
+                                                                                inv_negotiate_sdp()
+                                                                                    pjsua_call_on_media_update()
+                                                                                        pjsua_media_channel_update()
+                                                                                            pjsua_vid_channel_update()
+                                                                                                create_vid_win()
+                                                                                                    pjmedia_vid_port_create()
+                                                                                                        pjmedia_vid_dev_stream_create()
+
+                                                                                                            1. opengl_factory_create_stream()
+                                                                                                            2. and_factory_create_stream()
+                                                                                                                pjmedia_vid_dev_opengl_imp_create_stream()
+
+    thread_main()
+        worker_proc()
+            pj_media_poll()
+                ioqueue_dispatch_read_event()
+                    on_rx_rtp()
+                        srtp_rtp_cb
+                            on_rx_rtp()
+                                decode_frame()
+                                    pjmedia_vid_codec_decode()
+                                        oh264_codec_decode()
+
         
