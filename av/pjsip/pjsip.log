@@ -1266,24 +1266,36 @@
                                                                                                                                     MainActivity::new RxCallService()
 
 
+    //发送视频流，发送到 preview 渲染 和 提供给编码器编码然后再rtp发送
     video capture:
-        onGetFrame()
-            vidStream_cap_cb()
+        onGetFrame():android_dev.c
+            vidStream_cap_cb():vid_port.c
                 copy_frame_to_buffer()
-                    pjmedia_frame_copy(vp->frame_buf,frame)
+                    pjmedia_frame_copy(vp->frame_buf,frame):frame.h
         
 
         thread_main()
 
             clock_thread():pthread("clock")
-                enc_clock_cb()
+                enc_clock_cb():vid_port.c
                     1. get_frame_from_buffer()
                         pjmedia_from_copy(frame,vp->frame_buf)
                     2. pjmedia_port_put_frame()
                         tee_put_frame():vid_tee.c
-                            put_frame():vid_stream.c
-                                1. pjmedia_vid_codec_encode_begin()
-                                    oh264_codec_encode_begin()
+                            pjmedia_port_put_frame()
+                                vid_pasv_port_put_frame():vid_port.c    //渲染 preview，使用 opengl
+
+                                    convert_frame()
+                                        libyuv_conv_convert():converter_libyuv.c
+                                    
+                                    pjmedia_vid_dev_stream_put_frame()
+                                        andgl_stream_put_frame():android_opengl.c   //preview 渲染
+                                            job_queue_post_job(render)
+                                                render():android_opengl.c
+
+                            put_frame():vid_stream.c    //传输
+                                1. pjmedia_vid_codec_encode_begin()     or pjmedia_vid_codec_encode_more()
+                                    oh264_codec_encode_begin()  
                                 2. //Loop while we have frame to send
                                 pjmedia_rtp_encode_rtp()
                                 
@@ -1295,30 +1307,41 @@
                                         //called by application send RTP packet
                                         transport_send_rtp():transport_udp.c
 
-                                            pj_ioqueue_sendto():ioqueue_common_abs.c
+                                            pj_ioqueue_sendto():ioqueue_common_abs.c    // 疑问？？ ioqueue 是否缓存之前已发数据
 
                                                 pj_sock_sendto():socket_bsd.c
 
                                                     //socket udp
-                                                    sendto()    
+                                                    sendto()
+                                
+                                4. //Send rate control      流控，简单流控：每当发生传输延迟时，调用视频流put_frame（）的线程（例如：视频捕获设备线程）将被阻止。
+                                    当前时间小于下一帧传输时间则休眠 10ms                                
+
     
 
-
-
-    render:
+    //接收视频流
+    render: 
         //解码
         thread_main()
             worker_proc()
                 pj_ioqueue_poll()
                     ioqueue_dispatch_read_event()
                         on_rx_rtp():transport_udp.c
-                            srtp_rtp_cb()
+                            srtp_rtp_cb():transport_srtp.c
                                 on_rx_rtp():vid_stream.c
 
-                                    //If stram.dec_frame.size == 0 || jb full       jb为没有解码的数据
-                                        decode_frame():vid_stream.c
+                                    1. //decode rtp and update rtp rtcp session
+                                        pjmedia_rtp_decode_rtp()
+                                        
+                                        pjmedia_rtp_session_update2()
 
-                                    //else
+                                    2. switch RTP remote address,对比看远端地址是否发生改变
+
+
+                                    //If stram.dec_frame.size == 0 || jb full       jb满了
+                                        rx_decode_frame():vid_stream.c      //从 jb 中获取数据解码，并获得远端视频的帧率
+
+                                    //else     正常视频帧则存入 jb
                                         pjmedia_jbuf_put_frame3():jbuf.c
                                     
                                         pjmedia_vid_codec_decode()
