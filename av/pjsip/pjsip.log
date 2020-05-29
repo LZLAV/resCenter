@@ -1422,6 +1422,8 @@
                                                                                                             2. and_factory_create_stream()
                                                                                                                 pjmedia_vid_dev_opengl_imp_create_stream()
 
+
+    //视频流获取
     thread_main()
         worker_proc()
             pj_media_poll()
@@ -1432,5 +1434,18 @@
                                 decode_frame()
                                     pjmedia_vid_codec_decode()
                                         oh264_codec_decode()
+
+
+    
+    //网络接收及jbuf 应用
+
+    //音频
+    
+
+
+
+
+    //视频
+
 
         
