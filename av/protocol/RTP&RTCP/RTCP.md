@@ -42,7 +42,17 @@ RTCP与RTP联合工作，RTP实施实际数据的传输，RTCP则负责将控制
 ##### 报文格式
 
 ```
-`0                   1                   2                   3  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ |V=2|P|   FMT   |       PT      |          length               | +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ |                  SSRC of packet sender                        | +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ |                  SSRC of media source                         | +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ :            Feedback Control Information (FCI)                 : :                                                               :`
+`0                   1                   2                  3  
+0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 
+|V=2|P|   FMT   |       PT      |          length               | 
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 
+|                  SSRC of packet sender                        | 
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 
+|                  SSRC of media source                         | 
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 
+:            Feedback Control Information (FCI)                 : 
+:                                                               :`
 ```
 
 - version(V), 2bits : 标识当前RTP版本2
@@ -64,7 +74,7 @@ RTCP与RTP联合工作，RTP实施实际数据的传输，RTCP则负责将控制
 
 > The Generic NACK message is identified by `PT=RTPFB` and `FMT=1`.
 
-0                   			1                   			2                   		  3
+  0                   		   1                   		   2                   		  3
   0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
  |            PID                				|             		BLP               	|
@@ -160,7 +170,45 @@ block  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 ##### RR: Receiver Report RTCP Packet
 
 ```
-`0                   1                   2                   3      0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+header |V=2|P|    RC   |   PT=RR=201   |             length            |     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+     |                     SSRC of packet sender                     |     +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+report |                 SSRC_1 (SSRC of first source)                 |block  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+1    | fraction lost |       cumulative number of packets lost       |     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+     |           extended highest sequence number received           |     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+     |                      interarrival jitter                      |     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+     |                         last SR (LSR)                         |     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+     |                   delay since last SR (DLSR)                  |     +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+report |                 SSRC_2 (SSRC of second source)                |block  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+2    :                               ...                             :     +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+     |                  profile-specific extensions                  |     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+`
+0                   1                   2                   3      
+0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1     
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+header 
+
+|V=2|P|    RC   |   PT=RR=201   |             length            |     
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+     
+|                     SSRC of packet sender                     |     +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
+
+report 
+
+|                 SSRC_1 (SSRC of first source)                 |
+
+block  
+
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+1    
+| fraction lost |       cumulative number of packets lost       |     
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+     
+|           extended highest sequence number received           |     
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+     
+|                      interarrival jitter                      |     
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+     
+|                         last SR (LSR)                         |     
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+     
+|                   delay since last SR (DLSR)                  |     +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
+
+report 
+
+|                 SSRC_2 (SSRC of second source)                |
+
+block  
+
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+2    
+:                               ...                             :     +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+     
+|                  profile-specific extensions                  |     
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+`
 ```
 
 
@@ -168,41 +216,30 @@ block  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 ##### common header
 
 ```c
-/**
- * RTCP common header.
- */
-typedef struct pjmedia_rtcp_common
+struct
 {
-#if defined(PJ_IS_BIG_ENDIAN) && PJ_IS_BIG_ENDIAN!=0
-    unsigned	    version:2;	/**< packet type            */
-    unsigned	    p:1;	/**< padding flag           */
-    unsigned	    count:5;	/**< varies by payload type */
-    unsigned	    pt:8;	/**< payload type           */
-#else
-    unsigned	    count:5;	/**< varies by payload type */
-    unsigned	    p:1;	/**< padding flag           */
-    unsigned	    version:2;	/**< packet type            */
-    unsigned	    pt:8;	/**< payload type           */
-#endif
-    unsigned	    length:16;	/**< packet length          */
-    pj_uint32_t	    ssrc;	/**< SSRC identification    */
-} pjmedia_rtcp_common;
+    unsigned int v:2;		//版本号
+    unsigned int p:1;		//填充标识
+    unsigned int rc:5;		//接收报告计数，5bit
+    unsigned int pt:8;		//RTCP包的类型，8bit
+    unsigned int length;	//包的长度
+}RTCP_Header;
 ```
 
 ##### SR Header
 
 ```c
-/**
- * RTCP sender report.
- */
-typedef struct pjmedia_rtcp_sr
+struct
 {
-    pj_uint32_t	    ntp_sec;	    /**< NTP time, seconds part.	*/
-    pj_uint32_t	    ntp_frac;	    /**< NTP time, fractions part.	*/
-    pj_uint32_t	    rtp_ts;	    /**< RTP timestamp.			*/
-    pj_uint32_t	    sender_pcount;  /**< Sender packet cound.		*/
-    pj_uint32_t	    sender_bcount;  /**< Sender octet/bytes count.	*/
-} pjmedia_rtcp_sr;
+    unsigned int TimeStamp;		//时间戳
+    unsigned int PacketCount;	//发送包数
+    unsigned int ssrc;			//同步源标识符
+    unsigned int LostRate;		//丢包率
+    unsigned int jitter;		//到达间隔抖动
+    unsigned int MaxSeq;		//最大序列号
+    unsigned int Lsr;			//最后到达的SR的时间戳
+    unsigned int Dlsr;			//从最后一个发送端报告之后的延迟
+}RTCP_Sender;
 ```
 
 ##### SR Packet
@@ -221,28 +258,16 @@ typedef struct pjmedia_rtcp_sr_pkt
 ##### RR Header
 
 ```C
-/**
- * RTCP receiver report.
- */
-typedef struct pjmedia_rtcp_rr
+struct
 {
-    pj_uint32_t	    ssrc;	    /**< SSRC identification.		*/
-#if defined(PJ_IS_BIG_ENDIAN) && PJ_IS_BIG_ENDIAN!=0
-    pj_uint32_t	    fract_lost:8;   /**< Fraction lost.			*/
-    pj_uint32_t	    total_lost_2:8; /**< Total lost, bit 16-23.		*/
-    pj_uint32_t	    total_lost_1:8; /**< Total lost, bit 8-15.		*/
-    pj_uint32_t	    total_lost_0:8; /**< Total lost, bit 0-7.		*/
-#else
-    pj_uint32_t	    fract_lost:8;   /**< Fraction lost.			*/
-    pj_uint32_t	    total_lost_2:8; /**< Total lost, bit 0-7.		*/
-    pj_uint32_t	    total_lost_1:8; /**< Total lost, bit 8-15.		*/
-    pj_uint32_t	    total_lost_0:8; /**< Total lost, bit 16-23.		*/
-#endif	
-    pj_uint32_t	    last_seq;	    /**< Last sequence number.		*/
-    pj_uint32_t	    jitter;	    /**< Jitter.			*/
-    pj_uint32_t	    lsr;	    /**< Last SR.			*/
-    pj_uint32_t	    dlsr;	    /**< Delay since last SR.		*/
-} pjmedia_rtcp_rr;
+    unsigned int ssrc;			//同步源标识符
+    unsigned int LostPacket;	//丢包数
+    unsigned int LostRate;		//丢包率
+    unsigned int MaxSeq;		//最大序列号
+    unsigned int Jitter;		//到达间隔抖动
+    unsigned int Lsr;			//最后到达的 SR 的时间
+    unsigned int Dlsr;			//从最后一个发送端报告之后的延迟
+}RTCP_Receiver;
 ```
 
 ##### RR Packet
@@ -251,7 +276,7 @@ typedef struct pjmedia_rtcp_rr
 typedef struct pjmedia_rtcp_rr_pkt
 {
     pjmedia_rtcp_common  common;	/**< Common header.	    */
-    pjmedia_rtcp_rr	 rr;		/**< variable-length list   */
+    RTCP_Receiver	 rr;		/**< variable-length list   */
 } pjmedia_rtcp_rr_pkt;
 ```
 
@@ -272,7 +297,258 @@ typedef struct pjmedia_rtcp_sdes
 
 
 
+#### RTCP_FB
+
+##### rtcp_fb_type
+
+```c
+typedef enum pjmedia_rtcp_fb_type
+{
+    /**
+     * Positive acknowledgement feedbacks. Sample subtypes are Reference Picture
+     * Selection Indication (RPSI) and application layer feedbacks.
+     */
+    PJMEDIA_RTCP_FB_ACK,		//ack
+
+    /**
+     * Negative acknowledgement feedbacks. Sample subtypes are generic NACK,
+     * Picture Loss Indication (PLI), Slice Loss Indication (SLI), Reference
+     * Picture Selection Indication (RPSI), and application layer feedbacks.
+     */
+    PJMEDIA_RTCP_FB_NACK,		//nack
+
+    /**
+     * Minimum interval between two regular RTCP packets.
+     */
+    PJMEDIA_RTCP_FB_TRR_INT,	//trr-int
+
+    /**
+     * Other feedback types.
+     */
+    PJMEDIA_RTCP_FB_OTHER
+
+} pjmedia_rtcp_fb_type;
+```
+
+##### rtcp_fb_cap
+
+```c
+typedef struct pjmedia_rtcp_fb_cap
+{
+    /**
+     * Specify the codecs to which the capability is applicable. Codec ID is
+     * using the same format as in pjmedia_codec_mgr_find_codecs_by_id() and
+     * pjmedia_vid_codec_mgr_find_codecs_by_id(), e.g: "L16/8000/1", "PCMU",
+     * "H264". This can also be an asterisk ("*") to represent all codecs.
+     */
+    pj_str_t		    codec_id;
+
+    /**
+     * Specify the RTCP Feedback type.
+     */
+    pjmedia_rtcp_fb_type    type;
+
+    /**
+     * Specify the type name if RTCP Feedback type is PJMEDIA_RTCP_FB_OTHER.
+     */
+    pj_str_t		    type_name;
+
+    /**
+     * Specify the RTCP Feedback parameters. Feedback subtypes should be
+     * specified in this field, e.g:
+     * - 'pli' for Picture Loss Indication feedback,
+     * - 'sli' for Slice Loss Indication feedback,
+     * - 'rpsi' for Reference Picture Selection Indication feedback,
+     * - 'app' for specific/proprietary application layer feedback.
+     */
+    pj_str_t		    param;
+
+} pjmedia_rtcp_fb_cap;
+```
+
+##### rtcp_fb_nack
+
+```c
+typedef struct pjmedia_rtcp_fb_nack
+{
+    pj_int32_t		 pid;		/**< Packet ID (RTP seq) */
+    pj_uint16_t		 blp;		/**< Bitmask of following lost packets */
+} pjmedia_rtcp_fb_nack;
+```
+
+###### build
+
+```c
+PJ_DEF(pj_status_t) pjmedia_rtcp_fb_build_nack(
+        pjmedia_rtcp_session *session,
+        void *buf,
+        pj_size_t *length,
+        unsigned nack_cnt,
+        const pjmedia_rtcp_fb_nack nack[]) {
+    pjmedia_rtcp_common *hdr;
+    pj_uint8_t *p;
+    unsigned len, i;
+
+    PJ_ASSERT_RETURN(session && buf && length && nack_cnt && nack, PJ_EINVAL);
+
+    len = (3 + nack_cnt) * 4;
+    if (len > *length)
+        return PJ_ETOOSMALL;
+
+    /* Build RTCP-FB NACK header */
+    hdr = (pjmedia_rtcp_common *) buf;
+    pj_memcpy(hdr, &session->rtcp_rr_pkt.common, sizeof(*hdr));
+    hdr->pt = RTCP_RTPFB;
+    hdr->count = 1; /* FMT = 1 */
+    hdr->length = pj_htons((pj_uint16_t) (len / 4 - 1));
+
+    /* Build RTCP-FB NACK FCI */
+    p = (pj_uint8_t *) hdr + sizeof(*hdr);
+    for (i = 0; i < nack_cnt; ++i) {
+        pj_uint16_t val;
+        val = pj_htons((pj_uint16_t) nack[i].pid);
+        pj_memcpy(p, &val, 2);
+        val = pj_htons(nack[i].blp);
+        pj_memcpy(p + 2, &val, 2);
+        p += 4;
+    }
+
+    /* Finally */
+    *length = len;
+
+    return PJ_SUCCESS;
+}
+```
+
+##### pli
+
+pjmedia_rtcp_common 中参数设置为：
+
+> type = 206
+>
+> count = 1
+
+##### rtcp_fb_sli
+
+```c
+typedef struct pjmedia_rtcp_fb_sli
+{
+    pj_uint16_t		 first;		/**< First lost macroblock */ 第一个丢失的宏块
+    pj_uint16_t		 number;	/**< The number of lost macroblocks packets */
+    pj_uint8_t		 pict_id;	/**< Picture ID (temporal ref) */
+} pjmedia_rtcp_fb_sli;
+```
+
+###### build sli
+
+```c
+PJ_DEF(pj_status_t) pjmedia_rtcp_fb_build_sli(
+        pjmedia_rtcp_session *session,
+        void *buf,
+        pj_size_t *length,
+        unsigned sli_cnt,
+        const pjmedia_rtcp_fb_sli sli[]) {
+    pjmedia_rtcp_common *hdr;
+    pj_uint8_t *p;
+    unsigned len, i;
+
+    PJ_ASSERT_RETURN(session && buf && length && sli_cnt && sli, PJ_EINVAL);
+
+    len = (3 + sli_cnt) * 4;
+    if (len > *length)
+        return PJ_ETOOSMALL;
+
+    /* Build RTCP-FB SLI header */
+    hdr = (pjmedia_rtcp_common *) buf;
+    pj_memcpy(hdr, &session->rtcp_rr_pkt.common, sizeof(*hdr));
+    hdr->pt = RTCP_PSFB;
+    hdr->count = 2; /* FMT = 2 */
+    hdr->length = pj_htons((pj_uint16_t) (len / 4 - 1));
+
+    /* Build RTCP-FB SLI FCI */
+    p = (pj_uint8_t *) hdr + sizeof(*hdr);
+    for (i = 0; i < sli_cnt; ++i) {
+        /* 'first' takes 13 bit */
+        *p++ = (pj_uint8_t) ((sli[i].first >> 5) & 0xFF);   /* 8 MSB bits */
+        *p = (pj_uint8_t) ((sli[i].first & 31) << 3);        /* 5 LSB bits */
+        /* 'number' takes 13 bit */
+        *p++ |= (pj_uint8_t) ((sli[i].number >> 10) & 7);    /* 3 MSB bits */
+        *p++ = (pj_uint8_t) ((sli[i].number >> 2) & 0xFF);  /* 8 mid bits */
+        *p = (pj_uint8_t) ((sli[i].number & 3) << 6);        /* 2 LSB bits */
+        /* 'pict_id' takes 6 bit */
+        *p++ |= (sli[i].pict_id & 63);
+    }
+
+    /* Finally */
+    *length = len;
+
+    return PJ_SUCCESS;
+}
+```
 
 
-parse_fb
 
+##### rtcp_fb_rpsi
+
+```c
+typedef struct pjmedia_rtcp_fb_rpsi
+{
+    pj_uint8_t		 pt;		/**< Payload Type */
+    pj_str_t		 rpsi;		/**< Native RPSI bit string	*/
+    pj_size_t		 rpsi_bit_len;	/**< Length of RPSI in bit */
+} pjmedia_rtcp_fb_rpsi;
+```
+
+###### build
+
+```c
+PJ_DEF(pj_status_t) pjmedia_rtcp_fb_build_rpsi(
+        pjmedia_rtcp_session *session,
+        void *buf,
+        pj_size_t *length,
+        const pjmedia_rtcp_fb_rpsi *rpsi) {
+    pjmedia_rtcp_common *hdr;
+    pj_uint8_t *p;
+    unsigned bitlen, padlen, len;
+
+    PJ_ASSERT_RETURN(session && buf && length && rpsi, PJ_EINVAL);
+
+    bitlen = rpsi->rpsi_bit_len + 16;
+    padlen = (32 - (bitlen % 32)) % 32;
+    len = (3 + (bitlen + padlen) / 32) * 4;
+    if (len > *length)
+        return PJ_ETOOSMALL;
+
+    /* Build RTCP-FB RPSI header */
+    hdr = (pjmedia_rtcp_common *) buf;
+    pj_memcpy(hdr, &session->rtcp_rr_pkt.common, sizeof(*hdr));
+    hdr->pt = RTCP_PSFB;
+    hdr->count = 3; /* FMT = 3 */
+    hdr->length = pj_htons((pj_uint16_t) (len / 4 - 1));
+
+    /* Build RTCP-FB RPSI FCI */
+    p = (pj_uint8_t *) hdr + sizeof(*hdr);
+    /* PB (number of padding bits) */
+    *p++ = (pj_uint8_t) padlen;
+    /* Payload type */
+    *p++ = rpsi->pt & 0x7F;
+    /* RPSI bit string */
+    pj_memcpy(p, rpsi->rpsi.ptr, rpsi->rpsi_bit_len / 8);
+    p += rpsi->rpsi_bit_len / 8;
+    if (rpsi->rpsi_bit_len % 8) {
+        *p++ = *(rpsi->rpsi.ptr + rpsi->rpsi_bit_len / 8);
+    }
+    /* Zero padding */
+    if (padlen >= 8)
+        pj_bzero(p, padlen / 8);
+
+    /* Finally */
+    *length = len;
+
+    return PJ_SUCCESS;
+}
+```
+
+nack、sli、rpsi 等数据包分组可以附加到其他 RTCP 分组，例如  RR、SR，以组成复合 RTCP 分组。
+
+RTCP 反馈特定信息编码到本地SDP 中，表明本地端点有能力并且愿意接收本地SDP 中描述的 RTCP 反馈数据包。也从 SDP 媒体解码RTCP Fb 特定信息。
