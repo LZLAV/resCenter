@@ -16,7 +16,7 @@ H264媒体流的 RTP 负载格式（RTP = [RTP Header] + [RTP payload]），主�
 
 - 单元NAL 单元分组（RTP payload = [NAL Header] + [NAL payload]）
 
-  单个 NALU 传递，NALU 头部兼作 RTP 头部，RTP 头部类型即 NAL 单元类型 1-23
+  单个 NALU 传递，NALU 头部兼作 RTP 头部，RTP 头部类型即 NAL 单元类型 （1-23）。
 
 - 聚合分组（RTP payload = [STAP-A NAL HDR] [NALU | size] [NALU | HDR ] [NALU | Data] [NALU2 | size] ...）
 
@@ -53,7 +53,7 @@ struct
 
 ##### TYPE
 
-H.264 只取 1～23 是有效的值，24～31 表示这是一个特别格式的 NAL 单元。
+H.264 只取 1～23 是有效的值，24～31 表示这是一个特别格式的 NAL 单元（聚合分组：24～27，片分组：28、29）。
 
 #### 聚合分组
 
@@ -61,7 +61,7 @@ H.264 只取 1～23 是有效的值，24～31 表示这是一个特别格式的 
 
 ##### 单一时间聚合分组（STAP）
 
-包含 STAP-A (24) 和 STAP-B(25)，按时间戳进行组合，NAL单元具有相同的时间戳，一般用于低延迟环境
+包含 STAP-A (24) 和 STAP-B(25)，按时间戳进行组合，NAL单元具有相同的时间戳，一般用于低延迟环境。-A 的格式都是不允许跨帧的，也就是两个 nalu 单元的时间戳必须是相同的。常见的场景是sps和pps两个小包被合并封装。
 
 ##### 多时间聚合分组（MTAP）
 
@@ -134,6 +134,10 @@ R：保留位。必须设置为 0，接收者必须忽略该位
 
 ​	同一个 NALU 分包的 FU indicator 头是完全一致的，FU Header 只有 S 以及 E 位有区别，分别标记开始和结束，它们的 RTP 分包的序列号应该是依次递增的，并且它们的时间戳必须一致，而负载数据为 NALU 包去掉一个字节的 NALU 头后剩余数据的拆分。可以认为 NALU 头被拆分成了 FU indicator 和 FU header ，所以不再需要 1 字节 的 NALU 头了。
 
+解包：
+
+当接收端收到FU-A的分片数据，需要将所有的分片包组合还原成原始的NAl包时，FU-A的单元头与还原后的NAL的关系如下： 还原后的NAL头的八位是由FU indicator的前三位加FU header的后五位组成，即： nal_unit_type = (fu_indicator & 0xe0) | (fu_header & 0x1f)。
+
 ##### 特点
 
 NAL 单元的分割是 RTP 打包机制的一个重要环节，特点：（5个）  待续～
@@ -142,16 +146,49 @@ NAL 单元的分割是 RTP 打包机制的一个重要环节，特点：（5个�
 
 
 
-#### SDP
+#### SDP参数
+
+描述了如何在 SDP 中表示一个 H.264流。
+
+```
+"m=" 			行中的媒体名必须是 "video"
+"a=rtpmap"		行中的编码名称必须是 "H264"
+"a=rtpmap"		行中的时钟频率必须是 90000
+其他参数都包括在 "a=fmtp" 行中
+```
+
+如：
+
+```
+m = video 49170 RTP/AVP 98
+a = rtpmap:98 H264/90000
+a = fmtp:98 profile-level-id=42A01E;sprop-parameter-sets=Z0IACpZTBYml,aMIjiA==
+```
+
+##### 常用参数介绍
+
+###### packetization-mode
+
+表示支持的封包模式.
+
+- 当 packetization-mode 的值为 0 时或不存在时, 必须使用单一 NALU 单元模式
+- 当 packetization-mode 的值为 1 时必须使用非交错(non-interleaved)封包模式
+- 当 packetization-mode 的值为 2 时必须使用交错(interleaved)封包模式
+
+这个参数不可以取其他的值。
+
+###### sprop-parameter-sets
+
+这个参数可以用于传输 H.264 的序列参数集和图像参数 NAL 单元. 这个参数的值采用 Base64 进行编码. 不同的参数集间用","号隔开。
+
+###### profile-level-id
+
+这个参数用于指示 H.264 流的 profile 类型和级别. 由 Base16(十六进制) 表示的 3 个字节. 第一个字节表示 H.264 的 Profile 类型, 第三个字节表示 H.264 的 Profile 级别。
+
+###### max-mbps
+
+这个参数的值是一个整型, 指出了每一秒最大的宏块处理速度。
+
+
 
 RTCP反馈特定信息编码到本地 SDP 中，表明本地端点有能力并且愿意接收本地 SDP 中描述的 RTCP 反馈数据包。
-
-从SDP媒体解码 RTCP FB 特定信息。
-
-a=fmtp:99 profile-level-id = 420A01E;packetization-mode =1;sprop-parameter-ets=Z01ACpZTBYml,aMIjiA==
-
-420A01E：SPS 的开头几个字节
-
-packetization-mode=1：要求每个 RTP 中只有一个NAL 单元，或者一个 FU
-
-sprop-parameter-ets = Z01ACpZTBYml,aMIjiA== ：SPS 和 PPS 的Base64 转码，不用在码流中再传输 SPS/PPS
