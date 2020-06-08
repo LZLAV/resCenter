@@ -1,5 +1,7 @@
 ### SIP_Transaction
 
+![](./png/sip_transaction.png)
+
 事务是一次完整的请求。处于信令层。
 
 branch 是一个事务ID（Transaction ID ），用于区分同一个 Client 所发起的不同 Transaction。branch （遵循 RFC3261规范）参数的值必须用 magic cookie **"z9hG4bK"**打头。其它部分是对“To, From, Call-ID头域和Request-URI”按一定的算法加密后得到。
@@ -82,3 +84,72 @@ terminated
 
 null ----> early stage ----> calling ----> confirmed ----> disconnect
 
+
+
+
+
+### pjsip transaction
+
+```c
+tsx_state:
+	PJSIP_TSX_STATE_NULL,					//UAC,发送任何请求之前		   NULL
+	PJSIP_TSX_STATE_CALLING,				//uac,请求发送之后			CALLING
+	PJSIP_TSX_STATE_TRYING,					//uas,接收请求之后			Trying
+	PJSIP_TSX_STATE_PROCEEDING,				//uas/uac,临时响应			 Proceeding
+	PJSIP_TSX_STATE_COMPLETED,				//uas/uac,最终响应			 Completed
+	PJSIP_TSX_STATE_CONFIRMED,				//uas,接收ACK 之后			 Confirmed
+	PJSIP_TSX_STATE_FERMINATED,				//销毁前					  Terminated
+	PJSIP_TSX_STATE_DESTROYED,				//销毁					  Destroy
+	PJSIP_TSX_STATE_MAX						//number of states
+```
+
+```
+Transport flag:
+	TSX_HAS_PENDING_TRANSPORT=1,
+	TSX_HAS_PENDING_RESCHED=2,
+	TSX_HAS_PENDING_SEND=4,
+	TSX_HAS_PENDING_DESTROY=8,
+	TSX_HAS_PENDING_SERVER=16,
+```
+
+```
+Timeout valueL:
+	t1 = 500ms,
+	t2 = 4s,
+	t4 = 5s,
+	td = 32s,
+	timeout = 32s
+```
+
+```
+time flag:
+	TIMER_INACTIVE 0
+	RETRANSMIT_TIMER 1
+	TIMEOUT_TIMER 2
+	TRANSPORT_ERR_TIMER 3
+```
+
+两个时间：
+
+- Time out 				超时时间
+- retransmit time       重试时间
+
+transaction key：
+
+没有 branch （RFC2543）
+
+​	c\$method.name\$cseq\$from.tag\$cid->id\$host->ptr(via header)\$send_by.port\$\0
+
+含有 branch（RFC3261）
+
+​	c/s \$method.name\$branch
+
+结构：
+
+​	hashtable 用于存储 transaction，key 为键值
+
+
+
+transaction架构
+
+![](./png/pjsip_transaction.png)
