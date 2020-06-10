@@ -1197,6 +1197,83 @@
 
     
     makeCall:
+        makeCall():call.cpp
+
+            pjsua_call_make_call():pjsua_call.c
+
+                //Apply call setting
+                apply_call_setting()
+
+                //Create outgoing dialog
+                pjsip_dlg_create_uac():sip_dialog.c
+
+                    create_dialog()
+
+                    //添加到 mod_ua_dlg_table (hashtable)
+                    pjsip_ua_register_dlg():sip_ua_layer.c
+
+                //Init media channel ---->获取media属性用于填充 SDP
+                pjsua_media_channel_init():pjsua_media.c
+
+                //Create SDP，invite request and send invite
+                on_make_call_med_tp_complete()
+
+                    //Create offer
+                    pjsua_media_channel_create_sdp():pjsua_media.c
+
+                        //Create the base(blank) SDP  and 填充值
+                        pjmedia_endpt_create_base_sdp()
+
+                    //Create the INVITE session
+                    pjsip_inv_create_uac()
+
+                    //Init Session Timers
+                    pjsip_timer_init_session()
+
+                    //Create and associate our data in the session
+
+                    //Create initial INVITE
+                    pjsip_inv_invite()
+
+                    //Send initial INVITE
+                    pjsip_inv_send_msg()
+
+                        //...
+                        通过事务发送请求，切换事务状态时触发 tsx->tsx_user->on_tsx_state() 方法
+
+                        (tsx->tsx_user->on_tsx_state)()
+
+                            mod_ua_on_tsx_state():sip_ua_layer.c
+
+                                pjsip_dlg_on_tsx_state():sip_dlg.c
+
+                                    (*dlg->usage[i]->on_tsx_state)(tsx,e)
+
+                                        mod_inv_on_tsx_state():sip_inv.c
+
+                                            /*
+                                                inv state:
+                                                    PJSIP_INV_STATE_NULL            //sent/received
+                                                    PJSIP_INV_STATE_CALLING         //after sent
+                                                    PJSIP_INV_STATE_INCOMING        //after received
+                                                    PJSIP_INV_STATE_EARLY           //after response with to tag
+                                                    PJSIP_INV_STATE_CONNECTING      //200
+                                                    PJSIP_INV_STATE_CONFIRMED       //ack
+                                                    PJSIP_INV_STATE_DISCONNECTED    //session termination
+                                                    
+                                            */
+                                            inv_on_state_null():sip_inv.c
+
+                                                pjsua_call_on_state_changed():pjsua_call.c
+
+                                                    (*pjsua_var.ua_cfg.cbb.on_call_state)()
+
+                                                        on_call_state():endpoint.cpp
+
+                                                            processStateChange():call.cpp
+
+                                                                onCallState(prm)    //通过jni 回调到java方法  pjsua_wrap.cpp 中继承了 call，实现了 call 的虚方法            
+
 
 
     onCallState():
@@ -1408,10 +1485,10 @@
                                                             mod_ua_on_tsx_state()
                                                                 pjsip_dlg_on_tsx_state()
                                                                     mod_inv_on_tsx_state()
-                                                                        inv_on_state_calling()
+                                                                        inv_on_state_calling():sip_inv.c
                                                                             inv_check_sdp_in_incoming_msg()
                                                                                 inv_negotiate_sdp()
-                                                                                    pjsua_call_on_media_update()
+                                                                                    pjsua_call_on_media_update():pjsua_media.c
                                                                                         pjsua_media_channel_update()
                                                                                             pjsua_vid_channel_update()
                                                                                                 create_vid_win()
