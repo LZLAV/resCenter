@@ -159,7 +159,31 @@ Utils
     PresNotifyParam
     OnTypingIndicationParam
     PresenceStatus
-    
+    UserEvent
+    RxMsgEvent
+    TxErrorEvent
+    TxMsgEvent
+    TsxStateEvent
+    TsxStateEventSrc
+    TimerEvent
+    ContainerNode
+    PersistentDocument
+    PersistentObject
+    TimeVal
+    Version
+    Error
+    IntVector
+    StringVector
+
+Pj
+    PJSUA
+    PJSIP
+    PjMedia
+    PjSsl
+    PjTls
+    PjQos
+    PjLog
+
     
 SIP
     SipMultipartPartVector
@@ -169,6 +193,10 @@ SIP
     SipHeader
     SipMediaType
     SipEvent
+    SipEventBody
+    SipTransaction
+    SipTxData
+    SipRxData
 
 
 
@@ -181,6 +209,7 @@ Net
 
 Transport
     TransportConfig
+    TransportInfo
     TlsConfig
     TlsInfo
     SslCertInfo
