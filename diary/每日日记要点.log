@@ -1,0 +1,273 @@
+2020-08-28
+	Collections
+		reverse() 翻转
+        rotate(,n) 旋转n位，以循环buffer的概念来旋转 n 位
+        sort()  自然排序，定制排序 new Comparator
+        shuffle() 随机排序
+        swap()  交换 i 和 j 元素
+		
+		max()
+        min()
+        replaceAll(,obj1,obj2)		//将 obj1,全部替换成 obj2
+        frequency(,obj1)		//统计 obj1 出现的次数
+        indexOfSubList(,subList)	//查找subList的索引	
+        binarySearch()
+        fill(,obj1)	//以obj1 来填充集合，可指定范围
+    
+    
+        emptyXxx()		//创建一个空的、不可改变的XXX对象
+        singletonXxx()	//创建一个只有一个元素，且不可改变的对象
+        unmodifiableXxx()		//创建普通XXX对象对应的不可变版本
+		
+		
+	Arrays
+		sort()		
+        binarySearch()
+        equals()
+        fill()	//填充
+        asList()
+        toString()
+        copyOf()	//实现数组复制
+   
+   
+	static
+		
+		静态代码块
+			静态代码块—>非静态代码块—>构造方法   	//执行顺序
+			静态代码块对于定义在它之后的静态变量，可以赋值，但是不能访问.
+			
+			静态代码块在非静态代码块之前执行(静态代码块—非静态代码块—构造方法)。静态代码块只在第一次new执行一次，之后不再执行，而非静态代码块在每new一次就执行一次。 非静态代码块可在普通方法中定义(不过作用不大)；而静态代码块不行。 
+			
+			静态代码块可能在第一次new的时候执行，但不一定只在第一次new的时候执行。比如通过 `Class.forName("ClassDemo")`创建 Class 对象的时候也会执行。
+		
+		非静态代码块
+			非静态代码块与构造函数的区别是：
+				非静态代码块是给所有对象进行统一初始化，而构造函数是给对应的对象初始化，因为构造函数是可以多个的，运行哪个构造函数就会建立什么样的对象，但无论建立哪个对象，都会先执行相同的构造代码块。也就是说，构造代码块中定义的是不同对象共性的初始化内容。 
+		
+		
+		静态内部类
+			静态内部类与非静态内部类之间存在一个最大的区别，我们知道非静态内部类在编译完成之后会隐含地保存着一个引用，该引用是指向创建它的外围类，但是静态内部类却没有。没有这个引用就意味着：
+				1. 它的创建是不需要依赖外围类的创建。
+				2. 它不能使用任何外围类的非static成员变量和方法。
+			
+			public class Singleton {
+				//声明为 private 避免调用默认构造方法创建对象
+				private Singleton() {
+				
+				}
+				
+				// 声明为 private 表明静态内部该类只能在该 Singleton 类中被访问
+				private static class SingletonHolder {
+					private static final Singleton INSTANCE = new Singleton();
+				}
+				
+				public static Singleton getUniqueInstance() {
+				return SingletonHolder.INSTANCE;
+				}
+				}
+				
+				当 Singleton 类加载时，静态内部类 SingletonHolder 没有被加载进内存。只有当调用 `getUniqueInstance() `方法从而触发 `SingletonHolder.INSTANCE` 时 SingletonHolder 才会被加载，此时初始化 INSTANCE 实例，并且 JVM 能确保 INSTANCE 只被实例化一次。
+				这种方式不仅具有延迟初始化的好处，而且由 JVM 提供了对线程安全的支持。
+			
+		静态方法
+			静态方法属于类本身，非静态方法属于从该类生成的每个对象。 如果您的方法执行的操作不依赖于其类的各个变量和方法，请将其设置为静态（这将使程序的占用空间更小）。 否则，它应该是非静态的。
+		
+		this 和 super
+			在构造器中使用 `super（）` 调用父类中的其他构造方法时，该语句必须处于构造器的首行，否则编译器会报错。另外，this 调用本类中的其他构造方法时，也要放在首行。
+			
+		
+		代理模式
+			使用代理对象来代替对真实对象(real object)的访问，这样就可以在不修改原目标对象的前提下，提供额外的功能操作，扩展目标对象的功能。
+			代理模式的主要作用是扩展目标对象的功能，比如说在目标对象的某个方法执行前后你可以增加一些自定义的操作。
+			
+			静态代理
+				静态代理的实现步骤
+					1. 定义一个接口及其实现类；
+					2. 创建一个代理类同样实现这个接口
+					3. 将目标对象注注入进代理类，然后在代理类的对应方法调用目标类中的对应方法。这样的话，我们就可以通过代理类屏蔽对目标对象的访问，并且可以在目标方法执行前后做一些自己想做的事情。
+				
+				示例
+					见javaDemo->设计模式->代理模式->静态代理模式
+			
+			
+			动态代理
+				相比于静态代理来说，动态代理更加灵活。我们不需要针对每个目标类都单独创建一个代理类，并且也不需要我们必须实现接口，我们可以直接代理实现类( _CGLIB 动态代理机制_)。
+				从 JVM 角度来说，动态代理是在运行时动态生成类字节码，并加载到 JVM 中的。
+				动态代理的实现方式：
+					JDK 动态代理
+					CGLIB 动态代理
+				
+				JDK动态代理
+					
+					机制
+						在 Java 动态代理机制中 InvocationHandler 接口和 Proxy 类是核心。
+						Proxy 类中使用频率最高的方法是：newProxyInstance()，这个方法主要用来生成一个代理对象。
+						public static Object newProxyInstance(ClassLoader loader,Class<?>[] interfaces,
+											InvocationHandler h)throws IllegalArgumentException
+											{
+												......
+											}
+						这个方法一共有 3 个参数：
+							1. loader:类加载器，用于加载代理对象
+							2. interfaces: 被代理类实现的一些接口
+							3. h: 实现了 InvocationHandler 接口的对象
+						要实现动态代理的话，还必须需要实现InvocationHandler来自定义处理逻辑。 当我们的动态代理对象调用一个方法时候，这个方法的调用就会被转发到实现`InvocationHandler` 接口类的 `invoke` 方法来调用。
+						public interface InvocationHandler {
+							/**
+							* 当你使用代理对象调用方法的时候实际会调用到这个方法
+							*/
+							public Object invoke(Object proxy, Method method, Object[] args) throws Throwable;
+						}
+						
+						invoke()方法有下面三个参数：
+							1. proxy:动态生成的代理类
+							2. method: 与代理类对象调用的方法相对应
+							3. args: 当前 method 方法的参数
+						也就是说：你通过`Proxy` 类的 `newProxyInstance()` 创建的代理对象在调用方法的时候，实际会调用到实现`InvocationHandler` 接口的类的 `invoke()`方法。 你可以在 `invoke()` 方法中自定义处理逻辑，比如在方法执行前后做什么事情。
+			
+					JDK动态代理使用步骤
+						1. 定义一个接口及其实现类
+						2. 自定义 `InvocationHandler` 并重写`invoke`方法，在 `invoke` 方法中我们会调用原生方法（被代理类的方法）并自定义一些处理逻辑
+						3. 通过 `Proxy.newProxyInstance(ClassLoader loader,Class<?>[] interfaces,InvocationHandler h)` 方法创建代理对象
+			
+					代码示例见 javaDemo->设计模式->代理模式->jdk 动态代理模式
+		
+		
+		
+				CGLIB 动态代理
+					JDK 动态代理有一个最致命的问题是其只能代理实现了接口的类。
+					为了解决这个问题，我们可以用 CGLIB 动态代理机制来避免。
+			
+					CGLIB(_Code Generation Library_)是一个基于[ASM]的字节码生成库，它允许我们在运行时对字节码进行修改和动态生成。CGLIB 通过继承方式实现代理。
+					如果目标对象实现了接口，则默认采用 JDK 动态代理，否则采用 CGLIB 动态代理。
+			
+					机制
+						在 CGLIB 动态代理机制中 `MethodInterceptor` 接口和 `Enhancer` 类是核心。
+				
+						你需要自定义 `MethodInterceptor` 并重写 `intercept` 方法，`intercept` 用于拦截增强被代理类的方法。
+				
+						public interface MethodInterceptor extends Callback{
+							// 拦截被代理类中的方法
+							public Object intercept(Object obj, java.lang.reflect.Method method, Object[] args,MethodProxy proxy) throws Throwable;
+						}
+				
+						intercept参数：
+							1. obj:被代理的对象（需要增强的对象）
+							2. method:被拦截的方法（需要增强的方法）
+							3. args:方法入参
+							4. methodProxy:用于调用原始方法
+			
+						你可以通过 `Enhancer`类来动态获取被代理类，当代理类调用方法的时候，实际调用的是 `MethodInterceptor` 中的 `intercept` 方法。
+			
+					CGLIB 动态代理类使用步骤
+				
+						1. 定义一个类；
+						2. 自定义 `MethodInterceptor` 并重写 `intercept` 方法，`intercept` 用于拦截增强被代理类的方法，和 JDK 动态代理中的 `invoke` 方法类似；
+						3. 通过 `Enhancer` 类的 `create()`创建代理类；
+				
+					示例
+						见 javaDemo->设计模式->代理模式-> CGLIB动态代理模式
+		
+				JDK动态代理和CGLIB 动态代理对比
+					1. JDK 动态代理只能只能代理实现了接口的类，而 CGLIB 可以代理未实现任何接口的类。另外， CGLIB 动态代理是通过生成一个被代理类的子类来拦截被代理类的方法调用，因此不能代理声明为 final 类型的类和方法。
+					2. 就二者的效率来说，大部分情况都是 JDK 动态代理更优秀，随着 JDK 版本的升级，这个优势更加明显。
+		
+			静态代理和动态代理的对比
+				1. 灵活性：动态代理更加灵活，不需要必须实现接口，可以直接代理实现类，并且可以不需要针对每个目标类都创建一个代理类。另外，静态代理中，接口一旦新增加方法，目标对象和代理对象都要进行修改，这是非常麻烦的！
+				2.JVM 层面：静态代理在编译时就将接口、实现类、代理类这些都变成了一个个实际的 class 文件。而动态代理是在运行时动态生成类字节码，并加载到 JVM 中的。
+			
+	AOP 与 OOP
+		OOP:面向对象编程
+			它提倡的是将功能模块化，对象化
+		
+		AOP:面向切面编程
+			提倡的是针对同一类问题的统一处理
+		
+			那么AOP这种编程思想有什么用呢，一般来说，主要用于不想侵入原有代码的场景中，例如SDK需要无侵入的在宿主中插入一些代码，做日志埋点、性能监控、动态权限控制、甚至是代码调试等等。
+			
+			四种实践 AOP 编程的方案
+
+				AspectJ
+					原理：
+						实际上是在编译时候，根据一定的规则解析，然后插入一些代码，在不侵入原有代码的基础上，增加新的代码。
+					
+					目标
+						将日志记录，性能统计，安全控制，事务处理，异常处理等代码从业务逻辑代码中划分出来，通过对这些行为的分离，我们希望可以将它们独立到非指导业务逻辑的方法中，进而改变这些行为的时候不影响业务逻辑的代码。
+						比较大型的项目，而且迭代较快，使用OOP太消耗内力。有日志、性能、安全、异常处理等横切关注点需求。
+
+					示例：
+						@Before("execution(* android.app.Activity.on**(..))")
+   						public void onActivityMethodBefore(JoinPoint joinPoint) throws Throwable {
+        					String key = joinPoint.getSignature().toString();
+        					Log.d(TAG, "onActivityMethodBefore: " + key);
+    					}
+					
+						在onCreate的最前面，插入了一行AspectJ的代码。这个就是AspectJ的主要功能
+					
+					具体实践和第三方库
+						https://www.jianshu.com/p/5c9f1e8894ec （Android 群英传作者）
+
+				cglib+dexmaker
+					cglib原理是通过字节码技术为一个类创建子类，并在子类中采用方法拦截的技术拦截所有父类方法的调用，顺势织入横切逻辑。由于是通过子类来代理父类，因此不能代理被final字段修饰的方法。(Android 不能直接使用)
+
+
+				Javassist For Android
+
+				epic
+
+
+2020-08-29
+	Java 反射机制
+		在运行状态中，对于任意一个类，都能够知道这个类的所有属性和方法；对于任意一个对象，都能够调用它的任意一个方法和属性；这种动态获取的信息以及动态调用对象的方法的功能称为 java 语言的反射机制。
+		反射是框架设计的灵魂。
+
+		反射就是把 Java 类中的各种成分映射成一个个的 Java 对象。
+
+		静态编译：
+			在编译时确定类型，绑定对象
+		动态编译：
+			运行时确定类型，绑定对象
+		两者的区别在于，动态编译可以最大程度地支持多态，而多态最大的意义在于降低类的耦合性，因此反射的优点就很明显了：解耦以及提高代码的灵活性。
+	
+		获取 Class 对象三种方式
+			1. 知道具体类的情况下
+				Class alunbarClass = TargetObject.class;
+			2. 通过Class.forName()`传入类的路径获取
+				Class alunbarClass1 = Class.forName("cn.javaguide.TargetObject");
+			3. 通过对象实例`instance.getClass()`获取
+				Employee e;
+				Class alunbarClass2 = e.getClass();
+		
+		示例代码见
+			javaDemo->reflection->Test.java
+
+		优缺点
+			优点
+				运行期类型的判断，动态加载类，提高代码灵活度。
+			
+			缺点
+				1. 性能瓶颈：反射相当于一系列解释操作，通知 JVM 要做的事情，性能比直接的 java 代码要慢很多。
+				2. 安全问题，让我们可以动态操作改变类的属性同时也增加了类的安全隐患。
+
+		常见API
+			见 javaDemo->reflection->api.txt
+			类
+			对象
+			方法
+			变量
+			注解
+			泛型
+			动态代理
+	
+	枚举
+		以这种方式定义的常量使代码更具可读性，允许进行编译时检查，预先记录可接受值的列表，并避免由于传入无效值而引起的意外行为。
+
+		枚举类型比较，建议使用"==",可保证编译时安全和运行时安全。
+
+		枚举类型的属性，方法和构造函数
+			可以通过在枚举类型中定义属性,方法和构造函数让它变得更加强大。
+			public enum PizzaStatus {
+				
+			}
+
+		
