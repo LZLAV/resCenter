@@ -169,12 +169,12 @@
 						见 javaDemo->设计模式->代理模式-> CGLIB动态代理模式
 		
 				JDK动态代理和CGLIB 动态代理对比
-					1. JDK 动态代理只能只能代理实现了接口的类，而 CGLIB 可以代理未实现任何接口的类。另外， CGLIB 动态代理是通过生成一个被代理类的子类来拦截被代理类的方法调用，因此不能代理声明为 final 类型的类和方法。
+					1. JDK 动态代理只能代理实现了接口的类，而 CGLIB 可以代理未实现任何接口的类。另外， CGLIB 动态代理是通过生成一个被代理类的子类来拦截被代理类的方法调用，因此不能代理声明为 final 类型的类和方法。
 					2. 就二者的效率来说，大部分情况都是 JDK 动态代理更优秀，随着 JDK 版本的升级，这个优势更加明显。
 		
 			静态代理和动态代理的对比
 				1. 灵活性：动态代理更加灵活，不需要必须实现接口，可以直接代理实现类，并且可以不需要针对每个目标类都创建一个代理类。另外，静态代理中，接口一旦新增加方法，目标对象和代理对象都要进行修改，这是非常麻烦的！
-				2.JVM 层面：静态代理在编译时就将接口、实现类、代理类这些都变成了一个个实际的 class 文件。而动态代理是在运行时动态生成类字节码，并加载到 JVM 中的。
+				2. JVM 层面：静态代理在编译时就将接口、实现类、代理类这些都变成了一个个实际的 class 文件。而动态代理是在运行时动态生成类字节码，并加载到 JVM 中的。
 			
 	AOP 与 OOP
 		OOP:面向对象编程
@@ -267,7 +267,296 @@
 		枚举类型的属性，方法和构造函数
 			可以通过在枚举类型中定义属性,方法和构造函数让它变得更加强大。
 			public enum PizzaStatus {
-				
+				READY (2){
+            		@Override
+            		public boolean isReady() {
+                		return true;
+            		}
+        		}
 			}
 
+			this.status.isReady();
+
+		EnumSet
+			是一种专门为枚举类型所设计的 `Set` 类型。
+			与`HashSet`相比，由于使用了内部位向量表示，因此它是特定 `Enum` 常量集的非常有效且紧凑的表示形式。
+			它提供了类型安全的替代方法，以替代传统的基于int的“位标志”，使我们能够编写更易读和易于维护的简洁代码。
+			EnumSet 是抽象类，其有两个实现：RegularEnumSet 、JumboEnumSet，选择哪一个取决于实例化时枚举中常量的数量。
+			在很多场景中的枚举常量集合操作（如：取子集、增加、删除、containsAll 和 removeAll 批操作）使用 EnumSet 非常合适；如果需要迭代所有可能的常量则使用 Enum.values()。
+
 		
+		EnumMap
+			EnumMap是一个专门化的映射实现，用于将枚举常量用作键。与对应的 HashMap 相比，它是一个高效紧凑的实现，并且在内部表示为一个数组。
+			EnumMap<Pizza.PizzaStatus, Pizza> map;
+		
+		通过枚举实现一些设计模式
+
+			单例模式
+				使用枚举来实现单实例控制会更加简洁，而且无偿地提供了序列化机制，并由JVM从根本上提供保障，绝对防止多次实例化，是更简洁、高效、安全的实现单例的方式。
+				public enum PizzaDeliverySystemConfiguration {
+					INSTANCE;
+					PizzaDeliverySystemConfiguration() {
+						// Initialization configuration which involves
+						// overriding defaults like delivery deliveryStrategy
+					}
+					private PizzaDeliveryStrategy deliveryStrategy = PizzaDeliveryStrategy.NORMAL;
+					
+					public static PizzaDeliverySystemConfiguration getInstance() {
+						return INSTANCE;
+					}
+					
+					public PizzaDeliveryStrategy getDeliveryStrategy() {
+						return deliveryStrategy;
+					}
+				}
+
+				使用
+					PizzaDeliveryStrategy deliveryStrategy = PizzaDeliverySystemConfiguration.getInstance().getDeliveryStrategy();
+
+			
+
+			策略模式
+				使用枚举，可以轻松完成策略模式，添加新的实现意味着只定义具有某个实现的另一个实例。
+				public enum PizzaDeliveryStrategy {
+					EXPRESS {
+						@Override
+						public void deliver(Pizza pz) {
+							System.out.println("Pizza will be delivered in express mode");
+						}
+					},
+					NORMAL {
+						@Override
+						public void deliver(Pizza pz) {
+							System.out.println("Pizza will be delivered in normal mode");
+						}
+					};
+					
+					public abstract void deliver(Pizza pz);
+				}
+
+				public void deliver() {
+					if (isDeliverable()) {
+						PizzaDeliverySystemConfiguration.getInstance().getDeliveryStrategy()
+							.deliver(this);
+						this.setStatus(PizzaStatus.DELIVERED);
+					}
+				}
+
+				使用
+					@Test
+					public void givenPizaOrder_whenDelivered_thenPizzaGetsDeliveredAndStatusChanges() {
+						Pizza pz = new Pizza();
+						pz.setStatus(Pizza.PizzaStatus.READY);
+						pz.deliver();
+						assertTrue(pz.getStatus() == Pizza.PizzaStatus.DELIVERED);
+					}
+			
+		枚举类型中定义属性,方法和构造函数
+			public enum PinType {
+				REGISTER(100000, "注册使用"),
+				FORGET_PASSWORD(100001, "忘记密码使用"),
+				UPDATE_PHONE_NUMBER(100002, "更新手机号码使用");
+
+				private final int code;
+				private final String message;
+
+				PinType(int code, String message) {
+					this.code = code;
+					this.message = message;
+				}
+
+				public int getCode() {
+					return code;
+				}
+
+				public String getMessage() {
+					return message;
+				}
+
+				@Override
+				public String toString() {
+					return "PinType{" +
+							"code=" + code +
+							", message='" + message + '\'' +
+							'}';
+				}
+
+			}
+
+			使用
+				System.out.println(PinType.FORGET_PASSWORD.getCode());
+				System.out.println(PinType.FORGET_PASSWORD.getMessage());
+				System.out.println(PinType.FORGET_PASSWORD.toString());
+
+		
+2020-08-31
+	Collections
+
+		ArrayList
+			ArrayList 的底层是数组队列，相当于动态数组。与 Java 中的数组相比，它的容量能动态增长。在添加大量元素前，应用程序可以使用 ensureCapacity 操作来增加 ArrayList 实例的容量。这可以减少递增式再分配的数量。
+			它继承于  AbstractList ，实现了 List, RandomAccess, Cloneable, java.io.Serializable 这些接口。
+				ArrayList 继承了AbstractList，实现了List。它是一个数组队列，提供了相关的添加、删除、修改、遍历等功能。
+				ArrayList 实现了 RandomAccess 接口， RandomAccess 是一个标志接口，表明实现这个这个接口的 List 集合是支持快速随机访问的。在 ArrayList 中，我们即可以通过元素的序号快速获取元素对象，这就是快速随机访问。
+				ArrayList 实现了Cloneable 接口，即覆盖了函数 clone()，能被克隆。
+				ArrayList 实现 java.io.Serializable 接口，这意味着ArrayList支持序列化，能通过序列化去传输。
+			特点
+				ArrayList 中的操作不是线程安全的！所以，建议在单线程中才使用 ArrayList，而在多线程中可以选择 Vector 或者 CopyOnWriteArrayList。
+		
+			源码：
+				    public Object clone() {}	
+						返回此ArrayList实例的浅拷贝。 （元素本身不被复制。）
+
+					扩容
+						public void ensureCapacity(int minCapacity) {}
+						机制
+							将新容量更新为旧容量的 1.5 倍，并且比较最小需要容量和最大容量。
+					动态的核心机制
+						System.arraycopy() 方法的使用，JVM 提供的数组拷贝实现。该方法是一个本地方法
+							拷贝是浅复制。线程不安全。
+							System.arrayCopy() 是对内存直接进行复制，减少了 for 循环过程中的寻址时间，从而提高了性能。
+					
+					System.arraycopy()和Arrays.copyOf()方法
+						联系
+							看两者源代码可以发现 copyOf() 内部调用了 System.arraycopy() 方法
+						区别
+							1. arraycopy()需要目标数组，将原数组拷贝到你自己定义的数组里，而且可以选择拷贝的起点和长度以及放入新数组中的位置
+							2. copyOf()是系统自动在内部新建一个数组，并返回该数组。
+			
+			遍历
+				迭代器遍历
+					Iterator<Integer> it = arrayList.iterator();
+        	 		while(it.hasNext()){
+             			System.out.print(it.next() + " ");
+         			}
+			
+			内部类
+				private class Itr implements Iterator<E>
+				private class ListItr extends Itr implements ListIterator<E>
+				private class SubList extends AbstractList<E> implements RandomAccess
+				static final class ArrayListSpliterator<E> implements Spliterator<E>  
+				ArrayList有四个内部类，其中的 Itr是实现了Iterator接口，同时重写了里面的hasNext()， next()， remove() 等方法；其中的ListItr 继承 Itr，实现了ListIterator接口，同时重写了hasPrevious()， nextIndex()， previousIndex()， previous()， set(E e)， add(E e) 等方法，所以这也可以看出了 Iterator和ListIterator的区别: ListIterator在Iterator的基础上增加了添加对象，修改对象，逆向遍历等方法，这些是Iterator不能实现的。
+
+2020-09-02
+
+	HashMap
+		HashMap 主要用来存放键值对，它基于哈希表的Map接口实现。
+
+		JDK 1.8之前
+			HashMap 底层是 数组和链表 结合在一起使用也就是 链表散列。HashMap 通过 key 的 hashCode 经过扰动函数处理过后得到 hash  值，然后通过 (n - 1) & hash 判断当前元素存放的位置（这里的 n 指的是数组的长度），如果当前位置存在元素的话，就判断该元素与要存入的元素的 hash 值以及 key 是否相同，如果相同的话，直接覆盖，不相同就通过拉链法解决冲突。
+			所谓扰动函数指的就是 HashMap 的 hash 方法。使用 hash 方法也就是扰动函数是为了防止一些实现比较差的 hashCode() 方法 换句话说使用扰动函数之后可以减少碰撞。
+
+			扰动函数，扰动 4次。
+			static int hash(int h) {
+    			h ^= (h >>> 20) ^ (h >>> 12);
+    			return h ^ (h >>> 7) ^ (h >>> 4);
+			}
+		
+		JDK 1.8 之后
+			jdk1.8在解决哈希冲突时有了较大的变化，当链表长度大于阈值（默认为8）时，将链表转化为红黑树，以减少搜索时间。
+
+			扰动函数，扰动 1 次。
+			static final int hash(Object key) {
+        		int h;
+        		// key.hashCode()：返回散列值也就是hashcode
+        		// ^ ：按位异或
+        		// >>>:无符号右移，忽略符号位，空位都以0补齐
+        		return (key == null) ? 0 : (h = key.hashCode()) ^ (h >>> 16);
+    		}
+
+		类的属性
+			// 当桶(bucket)上的结点数大于这个值时会转成红黑树
+    		static final int TREEIFY_THRESHOLD = 8; 
+    		// 当桶(bucket)上的结点数小于这个值时树转链表
+    		static final int UNTREEIFY_THRESHOLD = 6;
+
+			loadFactor加载因子
+				loadFactor加载因子是控制数组存放数据的疏密程度，loadFactor越趋近于1，那么数组中存放的数据(entry)也就越多，也就越密，也就是会让链表的长度增加，loadFactor越小，也就是趋近于0，数组中存放的数据(entry)也就越少，也就越稀疏。loadFactor太大导致查找元素效率低，太小导致数组的利用率低，存放的数据会很分散。loadFactor的默认值为 0.75f 是官方给出的一个比较好的临界值。 
+				给定的默认容量为 16，负载因子为 0.75。Map 在使用过程中不断的往里面存放数据，当数量达到了 16 * 0.75 = 12 就需要将当前 16 的容量进行扩容，而扩容这个过程涉及到 rehash、复制数据等操作，所以非常消耗性能。
+			
+			threshold
+				threshold = capacity * loadFactor，当Size>=threshold 的时候，那么就要考虑对数组的扩增了，也就是说，这个的意思就是衡量数组是否需要扩增的一个标准。
+
+		类方法
+			put 方法
+				1. 如果定位到的数组位置没有元素 就直接插入
+				2. 如果定位到的数组位置有元素就和要插入的key比较，如果key相同就直接覆盖，如果key不相同，就判断p是否是一个树节点，如果是就调用 e = ((TreeNode<K,V>)p).putTreeVal(this, tab, hash, key, value) 将元素添加进入。如果不是就遍历链表插入(插入的是链表尾部)。
+
+			resize 方法
+				进行扩容，会伴随着一次重新hash分配，并且会遍历hash表中所有的元素，是非常耗时的。在编写程序中，要尽量避免resize。
+
+		常用遍历
+			Set<String> keys = map.keySet()
+			Collection<String> values = map.values()
+			Set<java.util.Map.Entry<String, String>> entrys = map.entrySet();
+			for (java.util.Map.Entry<String, String> entry : entrys) {
+            	System.out.println(entry.getKey() + "--" + entry.getValue());
+       		}
+	ConcurrentHashMap
+		线程安全的 HashMap。CAS 尝试写入，失败，则自旋锁保证成功。
+		
+		CAS思想
+			三个参数，一个当前内存值 V、旧的预期值 A、即将更新的值 B，当且仅当预期值 A 和内存值 V 相同时，将内存值修改为 B 并返回 true，否则什么都不做，并返回 false。
+		
+		自旋锁
+			while(!tryLock()){}	，一直获取锁，获取次数超过限制，则阻塞 lock()
+
+		Java7
+			ConcruuentHashMap 使用的分段锁，也就是每一个 Segment 上同时只有一个线程可以操作，每一个 Segment 都是一个类似 HashMap 数组的结构，它可以扩容，它的冲突会转化为链表。但是 Segment 的个数一但初始化就不能改变。
+
+		Java8 
+			ConcruuentHashMap  使用的 Synchronized 锁加 CAS 的机制。结构也由 Java7 中的 Segment 数组 + HashEntry 数组 + 链表 进化成了  Node 数组 + 链表 / 红黑树，Node 是类似于一个 HashEntry 的结构。它的冲突再达到一定大小时会转化成红黑树，在冲突小于一定数量时又退回链表。
+
+	LinkedList
+		实现了List接口和Deque接口的双端链表。
+		LinkedList底层的链表结构使它支持高效的插入和删除操作，另外它实现了Deque接口，使得LinkedList类也具有队列的特性;
+		LinkedList不是线程安全的，如果想使LinkedList变成线程安全的，可以调用静态类Collections类中的synchronizedList方法：
+			List list = Collections.SynchronizedList(new LinkedList(...));
+
+		api
+			add
+				add(E e)
+				add(int index,E e)
+				addAll(Collection  c)
+				addAll(int index, Collection c)	
+				addFirst(E e)
+				addLast(E e)
+			
+			get
+				get(int index)
+				获取头节点
+					getFirst(),element(),peek(),peekFirst()，其中getFirst()和element()方法将会在链表为空时，抛出异常
+				获取尾节点
+					getLast()、peekLast()。getLast() 方法在链表为空时，会抛出 NoSuchElementException ，而 peekLast() 则不会，只是会返回 null
+				
+
+			获取索引
+				int indexOf(Object o)	//从头遍历
+				int lastIndexOf(Object o)	//从尾遍历
+
+			包含
+				contains(Object o)
+
+			删除
+				remove() ,removeFirst(),pop()		//删除头节点
+				removeLast(),pollLast()			//删除尾节点
+					removeLast()在链表为空时将抛出NoSuchElementException，而pollLast()方法返回null。
+				remove(Object o)
+				unlink(Node<E> x)
+				remove(int index)
+			
+			遍历
+				迭代器遍历	
+					Iterator<Integer> iterator = linkedList.iterator();
+        			while (iterator.hasNext()) {
+            			iterator.next();
+        			}
+
+				通过pollFirst()或pollLast()来遍历LinkedList
+					while (temp1.size() != 0) {
+            			temp1.pollFirst();
+        			}
+				
+				通过removeFirst()或removeLast()来遍历LinkedList
+				while (temp2.size() != 0) {
+            		temp2.removeFirst();
+        		}	
