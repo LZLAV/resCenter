@@ -491,6 +491,12 @@
 			for (java.util.Map.Entry<String, String> entry : entrys) {
             	System.out.println(entry.getKey() + "--" + entry.getValue());
        		}
+		
+		HashMap的长度为什么是 2 的幂次方
+			为了能让 HashMap 存取高效，尽量较少碰撞，也就是要尽量把数据分配均匀。我们上面也讲到了过了，Hash 值的范围值-2147483648 到 2147483647，前后加起来大概 40 亿的映射空间，只要哈希函数映射得比较均匀松散，一般应用是很难出现碰撞的。但问题是一个 40 亿长度的数组，内存是放不下的。所以这个散列值是不能直接拿来用的。
+			用之前还要先做对数组的长度取模运算，得到的余数才能用来要存放的位置也就是对应的数组下标。这个数组下标的计算方法是“ `(n - 1) & hash`”。（n 代表数组长度）。这也就解释了 HashMap 的长度为什么是 2 的幂次方。
+			取余(%)操作中如果除数是 2 的幂次则等价于与其除数减一的与(&)操作（也就是说 hash%length==hash&(length-1)的前提是 length 是 2 的 n 次方；）。 并且采用二进制位操作 &，相对于%能够提高运算效率，这就解释了 HashMap 的长度为什么是 2 的幂次方。
+
 	ConcurrentHashMap
 		线程安全的 HashMap。CAS 尝试写入，失败，则自旋锁保证成功。
 		
@@ -560,3 +566,133 @@
 				while (temp2.size() != 0) {
             		temp2.removeFirst();
         		}	
+
+
+
+2020-09-03
+
+	Java 集合
+
+		List
+
+			ArrayList
+				存储结构: Object[]数组，适用于频繁的查找工作，线程不安全，支持快速随机访问
+			Vector
+				存储结构：Object[]数组
+			LinkedList
+				共同实现List 接口和 Queue接口，存储结构是双向链表，
+		
+
+		Queue
+			LinkedList
+			PriorityQueue
+
+		Dequeue
+			ArrayDequeue
+		
+
+		Set
+			存储的元素是无序的、不可重复的
+			HashSet
+				基于 HashMap 实现的，底层采用 HashMap 来保存元素；线程不安全，可以存储null值
+				HashSet 使用成员对象来计算 hashcode 值，对于两个对象来说 hashcode 可能相同，所以 equals()方法用来判断对象的相等性
+			LinkedHashSet
+				LinkedHashSet 是 HashSet 的子类，并且其内部是通过 LinkedHashMap 来实现的。能够按照添加的顺序遍历
+			SortedSet
+
+			TreeSet
+				SortrdSet 的子类
+				红黑树(自平衡的排序二叉树)，能够按照添加元素的顺序进行遍历，排序的方式有自然排序和定制排序。
+		
+
+		Map
+			使用键值对（kye-value）存储，Key 是无序的、不可重复的，value 是无序的、可重复的，每个键最多映射到一个值。
+			HashTable
+				线程安全，因为HashTable 内部的方法基本都经过`synchronized` 修饰。不允许有null键和null值，会抛出空指针异常
+			HashMap
+				存储结构：
+					JDK 7，数组+链表
+					JDK 8，数组+链表/红黑树
+				HashMap 使用键（Key）计算 Hashcode，调用 put() 向 map 中添加元素
+			LinkedHashMap
+				继承自 HashMap，底层仍然是基于拉链式散列结构即由数组和链表或红黑树组成。另外，增加了一条双向链表，使得上面的结构可以保持键值对的插入顺序。同时通过对链表进行相应的操作，实现了访问顺序相关逻辑。
+			SortedMap
+			TreeMap
+				SortedMap的子类
+
+
+		迭代器
+			Iterator 主要是用来遍历集合用的，它的特点是更加安全，因为它可以确保，在当前遍历的集合元素被更改的时候，就会抛出 ConcurrentModificationException 异常。
+			interface Iterator<E>{
+				//集合中是否还有元素
+    			boolean hasNext();
+    			//获得集合中的下一个元素
+    			E next();
+			}
+
+		线程安全性
+			线程不安全集合
+				Arraylist ,LinkedList,Hashmap,HashSet,TreeSet,TreeMap，PriorityQueue 都不是线程安全的
+
+			线程安全集合
+				1. ConcurrentHashMap: 可以看作是线程安全的 HashMap
+				2. CopyOnWriteArrayList:可以看作是线程安全的 ArrayList，在读多写少的场合性能非常好，远远好于 Vector
+				3. ConcurrentLinkedQueue:高效的并发队列，使用链表实现。可以看做一个线程安全的 LinkedList，这是一个非阻塞队列。
+				4. BlockingQueue: 这是一个接口，JDK 内部通过链表、数组等方式实现了这个接口。表示阻塞队列，非常适合用于作为数据共享的通道。
+				5. ConcurrentSkipListMap :跳表的实现。这是一个Map，使用跳表的数据结构进行快速查找。
+				6. Vector --> ArrayList
+		
+		RandomAccess接口
+			RandomAccess 接口中什么都没有定义。所以，在我看来 RandomAccess 接口不过是一个标识罢了。标识什么？ 标识实现这个接口的类具有随机访问功能。
+			在 binarySearch（) 方法中，它要判断传入的 list 是否RamdomAccess 的实例，如果是，调用indexedBinarySearch()方法，如果不是，那么调用iteratorBinarySearch()方法
+			ArrayList 实现了 RandomAccess 接口，就表明了他具有快速随机访问功能。 RandomAccess 接口只是标识，并不是说 ArrayList 实现 RandomAccess 接口才具有快速随机访问功能的。
+
+		comparable 和 Comparator 的区别
+			comparable 接口实际上是出自 java.lang 包 它有一个 compareTo(Object obj) 方法用来排序			//类对象实现的接口
+			comparator 接口实际上是出自 java.util 包它有一个 compare(Object obj1, Object obj2) 方法用来排序		//额外的排序方法
+
+			无序性
+				无序性不等于随机性 ，无序性是指存储的数据在底层数组中并非按照数组索引的顺序添加 ，而是根据数据的哈希值决定的。
+
+			不重复性
+				不可重复性是指添加的元素按照 equals()判断时 ，返回 false，需要同时重写 equals()方法和 HashCode()方法。
+
+			
+		快速失败(fail-fast)
+			快速失败(fail-fast) 是 Java 集合的一种错误检测机制。在使用迭代器对集合进行遍历的时候，我们在多线程下操作非安全失败(fail-safe)的集合类可能就会触发 fail-fast 机制，导致抛出 ConcurrentModificationException 异常。 另外，在单线程下，如果在遍历过程中对集合对象的内容进行了修改的话也会触发 fail-fast 机制。
+			每当迭代器使用 `hashNext()`/`next()`遍历下一个元素之前，都会检测 `modCount` 变量是否为 `expectedModCount` 值，是的话就返回遍历；否则抛出异常，终止遍历。
+		
+		安全失败(fail-fast)
+			采用安全失败机制的集合容器，在遍历时不是直接在集合内容上访问的，而是先复制原有集合内容，在拷贝的集合上进行遍历。所以，在遍历过程中对原集合所作的修改并不能被迭代器检测到，故不会抛 `ConcurrentModificationException` 异常。
+		
+
+		Arrays.asList()
+			Arrays.asList()将数组转换为集合后，底层其实还是数组。
+			使用工具类 Arrays.asList() 把数组转换成集合时，不能使用其修改集合相关的方法，它的 add/remove/clear 方法会抛出 UnsupportedOperationException 异常。
+			说明：
+				asList 的返回对象是一个 Arrays 内部类，并没有实现集合的修改方法。 Arrays.asList 体现的是适配器模式，只是转换接口，后台的数据仍是数组。
+			
+			String[] str = new String[]{"you","wu"};
+			List list = Arrays.asList(str);
+
+			第一种情况：
+				list.add("hei");	//运行时异常
+			第二种情况:
+				str[0]="gujin";		//那么 list.get(0) 也会随之修改
+			
+
+			传递的数组必须是对象数组，而不是基本类型。
+				int[] myArray = { 1, 2, 3 };
+				List myList = Arrays.asList(myArray);
+				System.out.println(myList.size());//1
+				System.out.println(myList.get(0));//数组地址值
+				System.out.println(myList.get(1));//报错：ArrayIndexOutOfBoundsException
+				int [] array=(int[]) myList.get(0);
+				System.out.println(array[0]);//1
+				当传入一个原生数据类型数组时，`Arrays.asList()` 的真正得到的参数就不是数组中的元素，而是数组对象本身！此时 List 的唯一元素就是这个数组，这也就解释了上面的代码。
+
+				使用包装类可以解决这个问题：
+					Integer[] myArray = { 1, 2, 3 };
+			
+			
+
