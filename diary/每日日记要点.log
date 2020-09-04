@@ -693,6 +693,29 @@
 
 				使用包装类可以解决这个问题：
 					Integer[] myArray = { 1, 2, 3 };
+				
+
+2020-09-04
+	LRU缓存
+		最近最少使用缓存,刷新或新增放到链表尾;删除，从链表头。
+		
+		实现
+			单线程
+				HashMap + LinkedList
+			多线程
+				ConcurrentHashMap + ConcurrentLinkedQueue  + ReadWriteLock
+	
+	泛型
+		示例
+			实现最小函数
+				private static <T extends Number & Comparable<? super T>> T min(T[] values) {
+					if (values == null || values.length == 0) return null;
+					T min = values[0];
+					for (int i = 1; i < values.length; i++) {
+						if (min.compareTo(values[i]) > 0) min = values[i];
+					}
+					return min;
+				}
 			
 			
 
