@@ -717,5 +717,8 @@
 					return min;
 				}
 			
-			
+2020-09-07
+	Android Audio	音频相关知识
+		A2DP全名是Advanced Audio Distribution Profile 蓝牙音频传输模型协定。
+
 
