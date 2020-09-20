@@ -1,0 +1,104 @@
+real()  % 实部
+
+imag()  % 虚部
+
+angle()     % 相位
+
+heaviside() %阶跃函数
+
+fliplr()    % 翻转
+rectpuls()  % 矩阵波
+tripuls()   % 三角波
+
+% 信号的奇偶分解
+f = sym('cos(t+1)+t');
+f1 = subs(f,t,-t);
+g = 1/2 *(f+f1);    % 偶分量
+h = 1/2 *(f-f1);    % 奇分量
+
+信号的积分和微分
+    连续信号
+        diff(function,'variable',n)     % 微分
+            function：信号
+            variable：独立变量
+            n：求导的阶数
+
+        int(function,'variable',a,b)      % 积分
+            a: 积分上限
+            b：积分下限
+
+卷积
+    conv()
+    conv2()
+    convn()
+
+信号波的产生
+
+    线性调频扫频信号函数
+        chirp(t,f0,t1,f1,'method',phi,'shape')
+            产生一个线性（频率随时间线性变化）信号，其时间轴设置由数组 t 定义。时刻 0 的瞬间频率为f0,时刻t1的瞬间频率为f1。默认情况，f0=0Hz,t1 =1,f1 = 100Hz
+            method：
+                指定改变扫频的方法。默认时为 linear
+                linear 线性扫频
+                quadratic：二次扫频
+                logarithmic：对数扫频 ，必须有 f1>f0
+            phi:
+                指定信号的初始相位为 phi(单位为度)，默认时 phi =0。
+            shape:
+                指定二次扫频方法的抛物线的形状是凹还是凸，值为 concave 或 convex。
+    
+    方波信号产生
+        square 函数可以得到方波函数。
+            square(t,duty)：产生一个 2*pi 为周期的方波，范围为 -1 到 1 之间，占空比为50%。很像sin函数，比如sin函数输入pi/6 就是1/2，输入pi/2 就是1，输入pi就是0，输入3/2*pi就是-1；而square也是一样，输入的数小于pi，就是1，大于pi小于2*pi就是-1。
+                duty：duty是一个百分数,duty = 75(75%的占空比），用于指定脉冲宽度与整个周期的比例。
+
+随机函数与三角波函数
+    rand(m,n)：返回一个 m X n 的随机矩阵。
+
+    sawtooth()：用于产生锯齿波或三角波信号
+        sawtooth(t)：产生周期为 2pi，振幅为 -1 到 1 的锯齿波。在 2pi 的整数倍处值为 -1 到1，这一段波形斜率为 1/pi。
+        sawtooth(t,width)：产生三角波，width 在 0到1之间。
+
+
+rectpuls 函数与 diric 函数
+
+    rectpuls()：产生非周期方波信号函数
+        rectpuls(t,w)：产生指定宽度为 w 的非周期方波
+    
+    diric()：用于产生 Dirichlet 函数或周期 Sinc 函数
+        diric(x,n)：返回一大小与 x 相同的矩阵，其元素为 Dirichlet 函数
+    
+sinc 函数与 tripuls 函数
+    sinc(x)：返回一个有 sinc 函数值为元素的矩阵。
+    
+    tripuls()：用于产生非周期三角波信号
+        tripuls(t,w,s)：产生周期为 w 的非周期方波，斜率为 s（-1<s<1）
+
+gauspuls 函数与 pulstran 函数
+    guaspuls()：用于产生高斯正弦脉冲信号函数
+        guaspuls(T,FC,BW,BWR):产生幅度为1 的高斯正弦脉冲（RF）信号的抽样
+            T ：持续时间
+            FC: 中心频率
+            BW: 宽带
+        
+        TC = guaspuls('cutoff',FC,BE,BER,TPB):返回按参数 TEP(dB) 计算所对应的截断时间TC
+    
+    pulstran() 用于脉冲序列发生器
+        pulstran(t,d,'func'):该函数基于一个名为 func 的连续函数并以之为一个周期，从而产生一串周期性的连续函数(func 函数可自定义)。pulstran 函数的横坐标范围有向量 t 指定，而向量 d 用于指定周期性的偏移量（即各个周期的中心点），这样这个 func 函数会被计算 length(d) 次，从而产生一个周期性脉冲信号。
+        pulstran 函数的一个调用形式为 y = pulstran(t,d,'func',p1,p2,...)：p1,p2,... 为需要传送给 func 函数的额外输入参数值（除了变量t 之外）。
+
+    
+
+连续时间系统的时域分析
+
+    连续时间系统的零状态与零输入响应的求解分析
+
+        连续时间系统可以用常系数微分方程来描述，其完全响应由零输入响应和零状态响应组成。MATLAB 符号工具箱提供了 dsolve 函数，可以实现对常系数微分方程的符号求解，其调用格式为:
+            dsolve('eq1,eq2,...','cond1,cond2,...','v')
+                eq：表示各个微分方程
+                cond：表示初始条件或者起始条件
+                v: 表示自变量，默认是变量 t
+            通过使用 dsolve 函数可以求出系统微分方程的零输入响应和零状态响应，进而求出完全响应。
+    
+    
+
