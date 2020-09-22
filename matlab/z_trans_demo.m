@@ -74,7 +74,10 @@ disp(f);
  freqz(b,a,N);
  freqz(b,a,N,'whole');
  %}
+
  
+%幅频特性和相频特性
+%{
 b = [5/4 -5/4];
 a =[1 -1/4];
 [h,w] = freqz(b,a,400,'whole');
@@ -107,3 +110,69 @@ H = prod(Bj,1)./prod(Ai,1);
 figure(3);
 subplot(2,1,1),plot(w,H),title('离散系统幅频特性曲线'),xlabel('角频率'),ylabel('幅度');
 subplot(2,1,2),plot(w,fai),title('离散系统的相频特性曲线'),xlabel('角频率'),ylabel('相位');
+%}
+
+
+% Z反变换，留数法
+%{
+close all;
+clc;
+B = poly([-0.4 -04]);   % poly(r),其中r是向量，返回其根是r元素的多项式的系数。
+A = poly([-0.8 -0.8 0.5 0.5 -0.1]);
+[R P K] = residuez(B,A);
+R = R'
+P = P'
+K
+%}
+
+%{
+a = [3 -2 0 0 0 1];
+b = [2 1];
+ljdt(a,b);
+p = roots(a);
+q = roots(b);
+pa = abs(p)
+%}
+
+%{
+% 绘制系统零极点分布图及系统单位序列响应
+z = 0;      % 定义系统零点位置
+p = 0.25;   % 定义系统极点位置
+k = 1;      % 定义系统增益
+subplot(221);
+zplane(z,p)
+grid on;
+%绘制系统零极点分布图
+subplot(222);
+[num,den] = zp2tf(z,p,k);   % 零极点模型转换为传递函数模型
+impz(num,den);
+% 绘制系统单位序列响应时域波形
+title('h(n)');
+grid on;
+% 定义标题
+% 绘制系统零极点分布图及系统单位序列响应
+p = 1;
+subplot(223);
+zplane(z,p);
+grid on;
+[num,den] = zp2tf(z,p,k);
+subplot(224);
+impz(num,den)
+title('h(n)')
+grid on;
+%}
+
+num = [0.55 0.5 -1];
+den = [1 -0.5 -0.45];
+x0 = [2 3];
+y0 = [1 2];
+N = 50;
+n = [0:N-1];
+x = 0.7.^n;
+Zi = filtic(num,den,y0,x0);
+[y,Zf] = filter(num,den,x,Zi);
+plot(n,x,'r--',n,y,'b--');
+title('响应');
+xlabel('n');
+ylabel('x(n)-y(n)');
+legend('输入x','输入y');

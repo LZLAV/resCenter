@@ -1,5 +1,5 @@
 
-clear all;
+clear;
 clf;
 dt = 0.001;
 t = -1:dt:2.5;
