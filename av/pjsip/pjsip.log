@@ -1525,4 +1525,49 @@
     //线程分布及功能
 
 
+    handleIpChange
+
+        handleIpChange(const IpChangeParam &param):endpoint.cpp   
+              
+            param: IpChangeParam
+                    restartListener:bool    //是否重启
+                        false:default   
+                    restartLisDelay:unsigned    //重启失败，延迟多长时间再次重启
+
+            pjsua_handle_ip_change(const pjsua_ip_change_param *param):pjsua_core.c
+
+                restart_listener:true
+                    1. set tpdata->is_restarting = true
+                    2. restart_listener(i, param->restart_lis_delay)        //重启传输
+
+                        restart_listener(pjsua_transport_id id,unsigned restart_lis_delay)
+
+                            1. pjsua_transport_get_info(id, &tp_info);
+                            2. pj_sockaddr_init()
+                            3. pjsip_udp_transport_restart2(PJSIP_UDP_TRANSPORT_DESTROY_SOCKET)   or  pjsip_tcp_transport_restart()
+                                handle_ip_change_on_acc()
+                            4. pjsua_var.ua_cfg.cb.on_ip_change_progress()
+
+                restart_listener:false
+                    handle_ip_change_on_acc()
+                        1. 根据 regc 的相关信息来判断是否对当前 transport 关闭
+                            关闭
+                            不关闭
+                                是否允许 reinvite
+                                    允许
+                                        pjsua_acc_update_contact_on_ip_change(acc)
+                                            update contact
+                                                pjsua_acc_set_registration()
+                                    不允许
+                                        pjsua_acc_handle_call_on_ip_change(acc)
+                                            handle call
+                                                pjsua_call_hangup()
+                                                
+                                                pjsua_call_reinvite()
+
+                                
+                                
+
+
+
         
