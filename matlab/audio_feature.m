@@ -6,7 +6,7 @@ waveFiles = dir(fullfile(cd,'*.wav'));
 len = size(waveFiles);
 
 for i=1:len
-    fileName = [cd '/' waveFiles(1).name];
+    fileName = [cd '/' waveFiles(i).name];
     [sampledata,FS] = audioread(fileName);
     calsample(sampledata,FS);
     keypoint(sampledata,4);

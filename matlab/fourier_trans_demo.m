@@ -31,8 +31,8 @@ k = 0:1:K;
 w = pi*k/K;
 % 离散时间傅里叶变换
 X = x*exp(-j*n'*w);
-X = real(X);
-w = [-fliplr(w),w(2:501)];
+X = real(X);                    % 获取实部
+w = [-fliplr(w),w(2:501)];      % 翻转
 X = [fliplr(X),X(2:501)];
 figure;
 subplot(2,2,1);
