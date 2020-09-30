@@ -647,6 +647,7 @@ ylabel('相位');
 %}
 
 % 滤波器的输出及其输入、输出信号的傅里叶振幅谱
+%{
 dt = 1/2000;
 t = 0:dt:0.1;       % 给出模拟滤波器输出的时间范围
 % 模拟输入信号
@@ -666,6 +667,175 @@ Y = fft(ys);
 plot((0:length(Y)-1)/(length(Y)*dt),abs(Y)*2/length(Y));
 xlabel('频率/Hz');
 title('输出信号振幅谱');
+%}
+
+% 设计一个 6 阶的切比雪夫II型带通滤波器   ??? tf 函数不能使用
+%{
+N= 6;
+Rp =3;      % 滤波器的阶数
+f1 = 150;
+f2 = 600;
+w1 = 2*pi*f1;
+w2 = 2*pi*f2;       % 边界频率(rad/s)
+[z,p,k] = cheb2ap(N,Rp);        % 设计切比雪夫II型原型低通滤波器
+[b,a] = zp2tf(z,p,k);           % 转换为传递函数形式
+Wo = sqrt(w1*w2);               % 中心频率
+Bw = w2-w1;                     % 频带宽度
+[bt,at] = lp2bp(b,a,Wo,Bw);     % 频率转换
+[h,w] = freqs(bt,at);
+figure;
+subplot(2,2,1);
+semilogy(w/2/pi,abs(h));        % 绘制幅频特性
+xlabel('频率/Hz');title('幅频图');
+grid on;
+subplot(2,2,2);plot(w/2/pi,angle(h)*180/pi);        % 绘制相频响应
+xlabel('频率/Hz');ylabel('相位图/^o');title('相频图');
+grid on;
+H = [tf(bt,at)];        % 在MATLAB 中表示此滤波器
+[h1,t1]= impulse(H);        % 绘出系统的冲激响应图
+subplot(2,2,3);plot(t1,h1);
+xlabel('时间/s');title('脉冲冲激响应');
+[h1,h2] = step(H);      % 给出系统的阶跃响应
+subplot(2,2,4);plot(t2,h2);
+xlabel('时间/s');title('阶跃响应');
+%}
+
+% 设计一个 三阶巴特沃斯LP 滤波器，分别用冲激响应不变法和双线性变换法
+%{
+[B,A] = butter(3,2*pi*1000,'s');
+[num1,den1] = impinvar(B,A,4000);       % 冲激响应不变法
+[h1,w] = freqz(num1,den1);
+[B,A] = butter(3,2/0.00025,'s');
+[num2,den2] = bilinear(B,A,4000);       % 双线性变换
+[h2,w] = freqz(num2,den2);
+f = w/pi*2000;
+plot(f,abs(h1),'-.',f,abs(h2),'-');
+grid on;
+xlabel('频率/Hz');
+ylabel('幅值');
+%}
+
+
+% 设计一个巴特沃斯带通滤波器，90k-120kHz，阻带 120kHz 处最小衰减大于 10dB
+%{
+w1 = 2*500*tan(2*pi*90/(2*400));
+w2 = 2*500*tan(2*pi*110/(2*400));
+wr = 2*500*tan(2*pi*120/(2*400));
+[N,wn] = buttord([w1,w2],[1 wr],3,10,'s');
+[B,A] = butter(N,wn,'s');
+[num,den] = bilinear(B,A,400);
+[h,w] = freqz(num,den);
+f = w/pi*200;
+plot(f,20*log10(abs(h)));
+axis([40,160,-30,10]);
+grid on;
+xlabel('频率/Hz');ylabel('幅度/dB');
+%}
+
+% 采样率 1kHz，要求滤除100Hz 的干扰，其 3dB 的边界频率为 85Hz 和 125Hz,原型归一化低通滤波器
+%{
+w1 = 85/500;
+w2 = 125/500;
+[B,A] = butter(1,[w1,w2],'stop');
+[h,w] = freqz(B,A);
+f = w/pi*500;
+plot(f,20*log10(abs(h)));
+axis([50,150,-30,10]);
+grid on;
+xlabel('频率/Hz');
+ylabel('幅度/dB');
+%}
+
+% 用冲激响应不变法设计一个巴特沃斯低通滤波器，使其特征逼近一个低通巴特沃斯模拟滤波器的性能指标
+%{
+wp = 2000 * 2*pi;
+ws = 3000*2*pi;     % 滤波器截止频率
+Rp = 3;
+Rs = 15;            % 通带波纹和阻带衰减
+Fs = 9000;          % 采样频率
+Nn = 256;           % 调用 freqz 所用的频率点数
+[N,wn] = buttord(wp,ws,Rp,Rs,'s');  % 模拟滤波器的最小阶数
+[z,p,k] = buttap(N);            % 设计模拟低通原型巴特沃斯滤波器
+[Bap,Aap] = zp2tf(z,p,k);       % 将零点极点增益形式转换为传递函数形式
+[b,a] = lp2lp(Bap,Aap,wn);      % 进行频率转换
+[bz,az] = impinvar(b,a,Fs);
+% 运用冲激响应不变法得到数字滤波器的传递函数
+figure;
+[h,f] = freqz(bz,az,Nn,Fs);     % 绘制数字滤波器的幅频特性和相频特性
+subplot(221);
+plot(f,20*log10(abs(h)));
+xlabel('频率/Hz');
+ylabel('振幅/dB');
+grid on;
+subplot(222);
+plot(f,180/pi*unwrap(angle(h)));
+xlabel('频率/Hz');
+ylabel('相位/^o');
+grid on;
+f1 = 1000;f2 = 2000;        % 输入信号的频率
+N = 100;                    % 数据长度
+dt = 1/Fs; n = 0:N-1;       % 采样时间间隔
+t = n*dt;               % 时间序列
+x = tan(2*pi*f1*t) +0.5*sin(2*pi*f2*t);    % 滤波器输入信号
+subplot(223);
+plot(t,x);
+title('输入信号');       % 绘制输入信号
+y = filtfilt(bz,az,x);       % 用函数 filtfilt 对输入信号进行滤波
+y1 = filter(bz,az,x);       % 用 filter 函数对输入信号进行滤波
+subplot(224);plot(t,y,t,y1,':');
+title('输出信号');
+xlabel('时间/s');
+legend('filtfilt 函数','filter函数');
+%}
+
+
+% 用双线性变换法设计一个椭圆低通滤波器
+%{
+wp = 0.3*pi;
+ws = 0.4*pi;        % 对数字滤波器截止频率通带波纹
+Rp = 2;
+Rs = 30;            % 阻带衰减
+Fs = 100;
+Ts = 1/Fs;          % 采样频率
+Nn = 256;           % 采用 freqz 所用的频率点数
+wp = 2/Ts*cos(wp/2);
+ws = 2/Ts*cos(ws/2);        % 按频率公式进行转换
+[n,wn]  = ellipord(wp,ws,Rp,Rs,'s');        % 计算模拟滤波器的最小阶数
+[z,p,k] = ellipap(n,Rp,Rs);     % 设计模拟原型滤波器
+[Bap,Aap] = zp2tf(z,p,k);       % 零点极点增益形式转换为传递函数形式
+[b,a] = lp2lp(Bap,Aap,wn);      % 低通转换为低通滤波器的频率转换
+[bz,az] = bilinear(b,a,Fs);     % 运用双线性变换法得到数字滤波器传递函数
+[h,f] = freqz(bz,az,Nn,Fs);     % 绘出频率特性
+subplot(121);plot(f,20*log10(abs(h)));
+xlabel('频率/Hz');ylabel('振幅/dB');
+grid on;
+subplot(122);plot(f,180/pi*unwrap(angle(h)));
+xlabel('频率/Hz');ylabel('相位/^o');
+grid on;
+%}
+
+% 设计一个数字高通滤波器，通带为 400-500Hz，通带内容许有 0.5dB 的波动，阻带内衰减在小于 317Hz的频带内至少为 19dB
+% ，采样频率为1000Hz
+wc = 2*1000*tan(2*pi*400/(2*1000));
+wt = 2*1000*tan(2*pi*317/(2*1000));
+[N,wn] = cheb1ord(wc,wt,0.5,19,'s');
+% 选择最小阶和截止频率
+% 设计高通滤波器
+[B,A] = cheby1(N,0.5,wn,'high','s');
+% 设计切比雪夫I型模拟滤波器
+[num,den] = bilinear(B,A,1000);
+% 数字滤波器设计
+[h,w] = freqz(num,den);
+f = w/pi*500;
+plot(f,20*log10(abs(h)));
+axis([0,500,-80,10]);
+grid on;
+xlabel('频率/Hz');
+ylabel('幅度/dB');
+
+
+
+
 
 
 
