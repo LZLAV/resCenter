@@ -816,6 +816,7 @@ grid on;
 
 % 设计一个数字高通滤波器，通带为 400-500Hz，通带内容许有 0.5dB 的波动，阻带内衰减在小于 317Hz的频带内至少为 19dB
 % ，采样频率为1000Hz
+%{
 wc = 2*1000*tan(2*pi*400/(2*1000));
 wt = 2*1000*tan(2*pi*317/(2*1000));
 [N,wn] = cheb1ord(wc,wt,0.5,19,'s');
@@ -832,8 +833,158 @@ axis([0,500,-80,10]);
 grid on;
 xlabel('频率/Hz');
 ylabel('幅度/dB');
+%}
 
 
+% 切比雪夫I型滤波器的设计
+
+fs = 1000; % 采样率
+Ts = 1/fs;
+N = 1000;   % 序列长度
+t = (0:N-1)*Ts;
+delta_f = 1*fs/N;
+f1 = 50;
+f2 = 100;
+f3 = 200;
+f4 = 400;
+x1 = 2*0.5*sin(2*pi*f1*t);
+x2 = 2*0.5*sin(2*pi*f2*t);
+x3 = 2*0.5*sin(2*pi*f3*t);
+x4 = 2*0.5*sin(2*pi*f4*t);
+x = x1+x2+x3+x4;        % 待处理信号有四个分量组成
+
+X = fftshift(abs(fft(x)))/N;
+X_angle  = fftshift(angle(fft(X)));
+f = (-N/2:N/2-1) *delta_f;
+
+figure(1);
+subplot(3,1,1);
+plot(t,x);
+title('原信号');
+subplot(3,1,2);
+ plot(f,X);
+ grid on;
+ title('原信号频谱幅度特性');
+ subplot(3,1,3);
+ plot(f,X_angle);
+ title('原信号频谱相位特性');
+ grid on;
+
+ 
+ % 设计一个切比雪夫低通滤波器，要求把 50Hz 的频率分量保留，其他分量滤掉
+ %{
+ wp = 55/(fs/2);        % 通带截止频率，取 50-100 中间的值，并对其归一化
+ ws = 90/(fs/2);        % 阻带截止频率，取 50-100 中间的值，并对其归一化
+ alpha_p =3;            % 通带允许最大衰减为 db
+ alpha_s = 40;          % 阻带允许最小衰减为 db
+ % 获取阶数和截止频率
+ [N1 wc1] = cheb1ord(wp,ws,alpha_p,alpha_s);
+ % 获得转移函数系数
+ [b a] =cheby1(N1,alpha_p,wc1,'low');
+ % 滤波
+ filter_lp_s = filter(b,a,x);
+ X_lp_s = fftshift(abs(fft(filter_lp_s)))/N;
+ X_lp_s_angle = fftshift(angle(fft(filter_lp_s)));
+ figure(2);
+ freqz(b,a);        % 滤波器频谱特性
+ figure(3);
+ subplot(3,1,1);
+ plot(t,filter_lp_s);
+ grid on;
+ title('低通滤波后时域图形');
+ subplot(3,1,2);
+ plot(f,X_lp_s);
+ title('低通滤波后频域幅度特性');
+ subplot(3,1,3);
+ plot(f,X_lp_s_angle);
+ title('低通滤波后频域相位特性');
+ %}
+
+% 设计一个高通滤波器，要求把 400Hz 的频率分量保留，其他分量滤掉
+%{
+wp = 350/(fs/2);   % 通带截止频率，取200-400 中间的值，并对其归一化
+ws = 380/(fs/2);    % 阻带截止频率，取 200-400 中间的值，并对其归一化
+alpha_p = 3;        % 通带允许最大衰减为 db
+alpha_s = 20;       % 阻带允许最小衰减为 db
+% 获取阶数和截止频率
+[N2 wc2] = cheb1ord(wp,ws,alpha_p,alpha_s);
+% 获取转移函数系数
+[b a] = cheby1(N2,alpha_p,wc2,'high');
+% 滤波
+filter_hp_s = filter(b,a,x);
+X_hp_s = fftshift(abs(fft(filter_hp_s)))/N;
+X_hp_s_angle = fftshift(angle(fft(filter_hp_s)));
+figure(4);
+freqz(b,a);     % 滤波器频谱特性
+figure(5);
+subplot(3,1,1);
+plot(t,filter_hp_s);
+grid on;
+title('高通滤波后时域图形');
+subplot(3,1,2);
+plot(f,X_hp_s);
+title('高通滤波后频域幅度特性');
+subplot(3,1,3);
+plot(f,X_hp_s_angle);
+title('高通滤波后频域相位特性');
+%}
+
+% 设计一个带通滤波器，要求把 50Hz 和 400Hz 的频率分量滤掉，其他分量保留
+%{
+wp = [65 385]/(fs/2);       % 通带截止频率，50-100、200-400 中间各取一个值，并对其归一化
+ws = [75 375]/(fs/2);       % 阻带截止频率，50-100、200-400 中间各取一个值，并对其归一化
+alpha_p = 3;        % 通带允许最大衰减为 db
+alpha_s = 20;       % 阻带允许最小衰减为 db
+% 获取阶数和截止频率
+[N3 wn] = cheb1ord(wp,ws,alpha_p,alpha_s);
+% 获取转移函数系数
+[b a] = cheby1(N3,alpha_p,wn,'bandpass');
+% 滤波
+filter_bp_s = filter(b,a,x);
+X_bp_s = fftshift(abs(fft(filter_bp_s)));
+X_bp_s_angle = fftshift(angle(fft(filter_bp_s)));
+figure(6);
+freqz(b,a);     % 滤波器频谱特性
+figure(7);
+subplot(3,1,1);
+plot(t,filter_bp_s);
+grid on;
+title('带通滤波后时域图形');
+subplot(3,1,2);
+plot(f,X_bp_s);
+title('带通滤波后频谱幅度特性');
+subplot(3,1,3);
+plot(f,X_bp_s_angle);
+title('带通滤波后频率相位特性');
+%}
+
+% 设计一个带阻滤波器，要求把 50-400Hz 的频率分量保留，其他分量滤掉
+wp = [65 385]/(fs/2);   % 通带截止频率50-100、200-400中间各取一个值，并对其归一化
+ws = [75 375]/(fs/2);   % 阻带截止频率 50-100、200-400 中间各取一个值，并对其归一化
+alpha_p = 3;        % 通带允许最大衰减为 db
+alpha_s = 20;       % 阻带允许最小衰减为 db
+[N4 wn] = cheb1ord(wp,ws,alpha_p,alpha_s);
+[b a] = cheby1(N4,alpha_p,wn,'stop');
+% 滤波
+filter_bs_s = filter(b,a,x);
+X_bs_s = fftshift(abs(fft(filter_bs_s)))/N;
+X_bs_s_angle = fftshift(angle(fft(filter_bs_s)));
+figure(8);
+freqz(b,a);     % 滤波器频谱特性
+figure(9);
+subplot(4,1,1);
+plot(t,filter_bs_s);
+grid on;
+title('带阻滤波后时域图形');
+subplot(4,1,2);
+plot(f,X_bs_s);
+title('带阻滤波后频域幅度特性');
+subplot(4,1,3);
+plot(f,X_bs_s_angle);
+title('带阻滤波后频域相位特性');
+subplot(4,1,4);
+plot(f,unwrap(X_bs_s_angle));       % unwrap 相位特性解卷绕
+title('测试解卷绕');
 
 
 
