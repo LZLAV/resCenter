@@ -1,0 +1,421 @@
+package com.ruixun.rxinterphone.ui;
+
+import android.Manifest;
+import android.annotation.TargetApi;
+import android.app.ActivityManager;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.PowerManager;
+import android.text.TextUtils;
+import android.view.Gravity;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.WindowManager;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.csipsdk.sdk.SipStackHandler;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.ruixun.rxinterphone.BuildConfig;
+import com.ruixun.rxinterphone.InterphoneApplication;
+import com.ruixun.rxinterphone.R;
+import com.ruixun.rxinterphone.adater.GroupAdapter;
+import com.ruixun.rxinterphone.base.BaseActivity;
+import com.ruixun.rxinterphone.base.RxConstants;
+import com.ruixun.rxinterphone.bean.GroupInfoWrap;
+import com.ruixun.rxinterphone.bean.GroupItem;
+import com.ruixun.rxinterphone.bean.LoginBean;
+import com.ruixun.rxinterphone.bean.POCGroupResult;
+import com.ruixun.rxinterphone.bean.SipInfo;
+import com.ruixun.rxinterphone.bean.SipMsgBean;
+import com.ruixun.rxinterphone.bean.UpdateBean;
+import com.ruixun.rxinterphone.compat.DevicesManager;
+import com.ruixun.rxinterphone.dialog.GroupListDialog;
+import com.ruixun.rxinterphone.dialog.LoadDialog;
+import com.ruixun.rxinterphone.dialog.SpeakDialog;
+import com.ruixun.rxinterphone.dialog.SpecCallDialog;
+import com.ruixun.rxinterphone.lbs.LocationUtils;
+import com.ruixun.rxinterphone.lbs.NewLocationService;
+import com.ruixun.rxinterphone.speak.ISpeakView;
+import com.ruixun.rxinterphone.speak.PresenterManager;
+import com.ruixun.rxinterphone.speak.call.GroupCall;
+import com.ruixun.rxinterphone.update.UpdateInterphone;
+import com.ruixun.rxinterphone.utils.DeviceUtils;
+import com.ruixun.rxinterphone.utils.EasySP;
+import com.ruixun.rxinterphone.utils.NetUrl;
+import com.ruixun.rxinterphone.utils.PermitUtils;
+import com.vanrui.common.log.Lg;
+import com.zhouyou.http.EasyHttp;
+import com.zhouyou.http.cache.model.CacheMode;
+import com.zhouyou.http.callback.SimpleCallBack;
+import com.zhouyou.http.exception.ApiException;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import butterknife.BindView;
+
+import javax.validation.constraints.NotNull;
+
+import static com.ruixun.rxinterphone.base.RxConstants.POC_GROUP_CODE;
+import static com.ruixun.rxinterphone.base.RxConstants.POC_GROUP_ID;
+import static com.ruixun.rxinterphone.base.RxConstants.POC_GROUP_NAME;
+import static com.ruixun.rxinterphone.base.RxConstants.POC_SUPER_GROUP_ID;
+
+
+/**
+ * @author liuyi
+ * @Description 群组界面
+ * @Date 2018/8/9
+ */
+public class MainActivity extends BaseActivity implements ISpeakView {
+
+    private static final String TAG = MainActivity.class.getSimpleName();
+    LinearLayout mSpeakLayout;      //按住说话
+    RecyclerView mRecyclerView;     //展示群组信息
+    TextView mTitleView;            //设备名称
+    TextView mSpeakingDevice;       //当前发言设备
+    @BindView(R.id.iv_setting)
+    ImageView imSetting;
+    @BindView(R.id.ll_setting)
+    LinearLayout mLlSetting;
+    @BindView(R.id.tv_name)
+    TextView mTvName;
+    @BindView(R.id.rl_layout)
+    RelativeLayout mSpeakStateLayout;   //当前发言的整个显示条
+    @BindView(R.id.iv_speak_tag)
+    ImageView speakingTag;              //发言标识
+    @BindView(R.id.tv_super)
+    TextView mTvSuper;
+    @BindView(R.id.ll_hangup)
+    LinearLayout mLlHangup;
+    @BindView(R.id.im_spac_call)
+    ImageView imSpecCall;
+
+    private GroupAdapter mRecycleViewAdapter;
+    private boolean isCallingGroup;
+    private int onLineSize = 0,groupSize = 0;
+    private List<GroupItem> groupItemList;
+    private GroupListDialog groupListDialog;
+    private SpecCallDialog mSpecDialog;
+    private List<GroupInfoWrap> lists;
+    private Gson mGson;
+    private String lastShowCallDialog;
+    private  ProgressDialog progressDialog;
+    private boolean isShowSubAct = false;
+    private boolean isVirtPoc = false;
+
+    @Override
+    public int getLayoutId() {
+        return R.layout.act_main;
+    }
+
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Lg.i("MainActivity onCreate .....");
+    }
+
+    @Override
+    public void initView() {
+        mSpeakingDevice = findViewById(R.id.tv_speak_device);
+        mTitleView = findViewById(R.id.title);
+        mSpeakLayout = findViewById(R.id.ll_speak);
+//        mSpeakTime = findViewById(R.id.tvSpeakTime);
+//        mBtnMute = findViewById(R.id.btMute);
+        mRecyclerView = findViewById(R.id.tl_group_list);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mLlSetting.setOnClickListener(onClickListener);
+        imSpecCall.setOnClickListener(onClickListener);
+        mLlHangup.setOnClickListener(onClickListener);
+        mSpeakStateLayout.setEnabled(false);
+    }
+
+
+    private View.OnClickListener onClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.ll_setting:
+                    Intent intentSetting = new Intent(MainActivity.this, SettingActivity.class);
+                    startActivity(intentSetting);
+                    break;
+//                case R.id.tv_group_name:
+//                    showSelectGroupDialog();
+//                    break;
+                case R.id.ll_hangup:
+                    PresenterManager.getInstance().hangupByUser();
+                    mLlHangup.setVisibility(View.GONE);
+                    speakStateChange(false, "");
+                    break;
+                case R.id.im_spac_call:
+                    //TODO 展示特殊电话类型
+                    if(mSpecDialog == null){
+                        mSpecDialog = new SpecCallDialog(MainActivity.this,onSpecCallItemClickListener);
+                    }
+                    mSpecDialog.show();
+                    break;
+            }
+        }
+    };
+
+    SpecCallDialog.OnItemClickListener onSpecCallItemClickListener = new SpecCallDialog.OnItemClickListener() {
+        @Override
+        public void onItemClick(int type) {
+            if(PresenterManager.getInstance()!=null){
+                PresenterManager.getInstance().callSpeciCall(type);
+            }
+            if(mSpecDialog!=null && mSpecDialog.isShowing()){
+                mSpecDialog.dismiss();
+            }
+        }
+    };
+
+    @Override
+    public void initData() {
+//        mSpeakPresenter = SpeakPresenter.getInstance();
+        PresenterManager.getInstance().init(this);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && isNeedToRequestPermission()) {
+            requestNeedPermission();
+        } else {
+            PresenterManager.getInstance().initSipCall();
+            PresenterManager.getInstance().postDeviceData();
+        }
+        if(!DeviceUtils.isOpenBlooth()){
+            showToastTip("为确保定位的准确性，请保持蓝牙打开");
+        }
+        mTvName.setText(EasySP.init(this).getString(RxConstants.SP_KEY.REL_NAME,"未知人员"));
+        mSpeakLayout.setOnTouchListener(onTouchListener);
+        mSpeakLayout.setEnabled(false);
+        mSpeakLayout.setBackground(getDrawable(R.drawable.icon_unlogin));
+        mSpeakingDevice.setText(getString(R.string.speak_idle));
+        mSpeakingDevice.setEnabled(false);
+        lists = new ArrayList<>();
+        mGson = new Gson();
+        UpdateInterphone.getInstance().addUpdateListener(updateDataListener);
+    }
+
+
+    private UpdateInterphone.UpdateDataListener updateDataListener = new UpdateInterphone.UpdateDataListener() {
+        @Override
+        public void onDataResult(UpdateBean updateBean) {
+
+        }
+
+        @Override
+        public void startDownload() {
+
+        }
+
+        @Override
+        public void downloadComplete(File apkPath) {
+            UpdateInterphone.getInstance().showUpdateDialog(mContext);
+        }
+    };
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (UpdateInterphone.getInstance().checkHashInstallApk()) {
+            UpdateInterphone.getInstance().showUpdateDialog(this);
+        }
+        int groupId = -1;
+        if (!PresenterManager.getInstance().isSuper()) {
+            groupId = EasySP.init(InterphoneApplication.getInstance()).getInt(POC_GROUP_ID, -1);
+        } else {
+            groupId = EasySP.init(InterphoneApplication.getInstance()).getInt(POC_SUPER_GROUP_ID, -1);
+        }
+        if(groupId == -1) {
+
+        }else {
+            PresenterManager.getInstance().refreshData();
+        }
+    }
+
+    @Override
+    public void groupConnected() {
+        isCallingGroup = true;
+        mSpeakLayout.setEnabled(true);
+        mSpeakLayout.setBackground(getDrawable(R.drawable.speak_unable));
+//        mSpeakTime.setText(getString(R.string.press_speak));
+        finishActivity(RxConstants.ACT_CODE.EXTRA_REQUEST_NO_GROUP_CODE);
+    }
+
+    @Override
+    public void groupDisconnected() {
+        currentDeviceOffline();
+        mSpeakLayout.setEnabled(false);
+        mSpeakLayout.setBackground(getDrawable(R.drawable.speak_idle));
+        isCallingGroup = false;
+        resetState();
+    }
+
+    @Override
+    public void sipLogin() {
+        mSpeakLayout.setEnabled(false);
+        mSpeakLayout.setBackground(getDrawable(R.drawable.speak_idle));
+    }
+
+    @Override
+    public void sipLogOut() {
+        //断开sip登录后显示该设备断连状态
+        currentDeviceOffline();
+        mSpeakLayout.setEnabled(false);
+        mSpeakLayout.setBackground(getDrawable(R.drawable.icon_unlogin));
+        Lg.i("sip unlogin");
+        resetState();
+
+    }
+
+    //删除,通过 adapter 来更新数据
+    @Override
+    public void currentDeviceOffline() {
+        if (mRecycleViewAdapter != null) {
+            POCGroupResult.GroupData.DeviceInfo offLineDevice = getRefreshDevice(DeviceUtils.getDeviceID(mContext));
+            if (offLineDevice != null) {
+                if (offLineDevice.getStatus() != POCGroupResult.GroupData.DeviceInfo.OFFLINE_STATE) {
+                    updateGroupNumber(--onLineSize, groupSize);
+                    offLineDevice.setStatus(POCGroupResult.GroupData.DeviceInfo.OFFLINE_STATE);
+                    mRecycleViewAdapter.notifyDataSetChanged();
+                }
+            }
+        }
+    }
+
+    /**
+     * 获取设备相关数据
+     */
+    @Override
+    public void receiveDeviceSipDataResult(SipInfo sipInfo) {
+        if (sipInfo != null) {
+            mTitleView.setText(sipInfo.getDeviceName());
+            mTvSuper.setVisibility(sipInfo.getSuperDevice() == RxConstants.DEVICE_TYPE.SUPER_DEVICE ? View.VISIBLE : View.GONE);
+            if (sipInfo.getExtList() == null || (sipInfo.getCurrentGroupCode() != null && TextUtils.isEmpty(sipInfo.getCurrentGroupCode())) ||
+                    (sipInfo.getExtList() != null && sipInfo.getExtList().size() == 0)) {
+                showActTip(getString(R.string.add_group_tip), RxConstants.ACT_CODE.EXTRA_REQUEST_NO_GROUP_CODE);
+                Lg.i("no poc group");
+            }
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && isNeedToRequestPermission()) {
+            if (!PermitUtils.hasNotLocationPermission(this)) {
+                startLocationService();
+            }
+        }else {
+            startLocationService();
+        }
+
+    }
+
+    @Override
+    public void showActTip(String msg, int code) {
+        //设备入网不成功
+        if(!isShowSubAct) {
+            isShowSubAct = true;
+            Intent intent = new Intent(MainActivity.this, AddDeviceTip.class);
+            intent.putExtra(AddDeviceTip.EXTRA_DEVICE_TIP, msg);
+            startActivityForResult(intent, code);
+        }
+    }
+
+    @Override
+    public void showTipDialog(String msg) {
+        if(isFinishing()){
+            return;
+        }
+        if(progressDialog == null) {
+            progressDialog = new ProgressDialog(mContext);
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDialog.setCanceledOnTouchOutside(false);
+        }
+        progressDialog.setMessage(msg+"");
+        progressDialog.show();
+    }
+
+    @Override
+    public void closeTipDialog() {
+        if(progressDialog!=null && progressDialog.isShowing()){
+            progressDialog.dismiss();
+            progressDialog = null;
+        }
+    }
+
+    @Override
+    public void showToastTip(String msg) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                DeviceUtils.showToast(MainActivity.this,msg);
+            }
+        });
+    }
+
+    @Override
+    public void runInMainThread(Runnable runnable) {
+        runOnUiThread(runnable);
+    }
+
+    @Override
+    public void updateGroupData() {
+        if (mRecycleViewAdapter != null) {
+            mRecycleViewAdapter.updateDataWrap(GroupCall.getInstance().getGroupData());
+        }
+    }
+
+    @Override
+    public void updateDevName(String name) {
+        EasySP.init(this).putString(RxConstants.POC_DEVICE_NAME, name);
+        mTitleView.setText(name);
+    }
+
+    @Override
+    public void closeSubAct(int code) {
+        finishActivity(code);
+    }
+
+    /**
+     * 挂断操作
+     */
+    @Override
+    public void hangupState(boolean show,boolean isSelf) {
+        mLlHangup.setVisibility((show &&!isSelf) ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void speakState(boolean speak) {
+
+    }
+
+
+    /**
+     * 展示切换群组，仅在普通设备显示
+     */
+    @Override
+    public void showSelectGroupDialog(boolean refresh) {
+        if(refresh && (groupListDialog == null || !groupListDialog.isShowing())){ //未显示，刷新数据，则不处理
+            return;
+        }
+        if (groupListDialog != null && groupListDialog.isShowing()) {
+            groupListDialog.dismiss();
+        }
+        if (groupListDialog == null) {
+            groupListDialog = new GroupListDialog(this, AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutPar

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AndroidLayouts">
+    <shared>
+      <config />
+    </shared>
+  </component>
+  <component name="AndroidLogFilters">
+    <option name="TOOL_WINDOW_CUSTOM_FILTER" value="PJSUA_" />
+    <option name="TOOL_WINDOW_LOG_LEVEL" value="verbose" />
+    <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
+  </component>
+  <component name="AutomaticModuleUnloader">
+    <loaded-modules>
+      <module name="CSipSDK_source" />
+      <module name="siplib2" />
+      <module name="app2" />
+    </loaded-modules>
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="774ea5f1-b6b7-4233-b999-8400b2938135" name="Default Changelist" comment="修改opus默认采样率为 16k;取消部分硬编码，由宏定义">
+      <change beforePath="$PROJECT_DIR$/siplib2/src/main/cpp/pjproject-2.8/pjmedia/src/pjmedia/jbuf.c" beforeDir="false" afterPath="$PROJECT_DIR$/siplib2/src/main/cpp/pjproject-2.8/pjmedia/src/pjmedia/jbuf.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/siplib2/src/main/cpp/pjproject-2.8/pjsip/src/pjsua-lib/pjsua_acc.c" beforeDir="false" afterPath="$PROJECT_DIR$/siplib2/src/main/cpp/pjproject-2.8/pjsip/src/pjsua-lib/pjsua_acc.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/siplib2/src/main/cpp/pjproject-2.8/pjsip/src/pjsua-lib/pjsua_core.c" beforeDir="false" afterPath="$PROJECT_DIR$/siplib2/src/main/cpp/pjproject-2.8/pjsip/src/pjsua-lib/pjsua_core.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/siplib2/src/main/cpp/pjproject-2.8/pjsip/src/pjsua2/endpoint.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/siplib2/src/main/cpp/pjproject-2.8/pjsip/src/pjsua2/endpoint.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/siplib2/src/main/cpp/pjproject-2.8/third_party/build/opus/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/siplib2/src/main/cpp/pjproject-2.8/third_party/build/opus/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/siplib2/src/main/java/com/csipsdk/sdk/SipManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/siplib2/src/main/java/com/csipsdk/sdk/SipManager.java" afterDir="false" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="DefaultGradleProjectSettings">
+    <option name="isMigrated" value="true" />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="7b14e4ad" />
+  <component name="ExternalProjects

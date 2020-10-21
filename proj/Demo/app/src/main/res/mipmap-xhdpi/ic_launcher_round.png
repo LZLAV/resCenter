@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AnalysisUIOptions">
+    <option name="SCOPE_TYPE" value="4" />
+  </component>
+  <component name="AndroidLayouts">
+    <shared>
+      <config />
+    </shared>
+  </component>
+  <component name="AndroidLogFilters">
+    <option name="TOOL_WINDOW_CUSTOM_FILTER" value="sipstack" />
+    <option name="TOOL_WINDOW_LOG_LEVEL" value="verbose" />
+    <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="No Filters" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="cb79421c-4a6c-4a2c-a08c-ca5dbc756495" name="Default Changelist" comment="增加音频编解码的选择;增加耳机功能">
+      <change afterPath="$PROJECT_DIR$/app/libs/siplib2-openH264-202009230955.aar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/libs/siplib2-openH264-debug.aar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/ruixun/rxinterphone/speak/PresenterManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/ruixun/rxinterphone/speak/PresenterManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/ruixun/rxinterphone/speak/call/GroupCall.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/ruixun/rxinterphone/speak/call/GroupCall.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/ruixun/rxinterphone/speak/call/SuperCall.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/ruixun/rxinterphone/speak/call/SuperCall.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/ruixun/rxinterphone/ui/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/ruixun/rxinterphone/ui/MainActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/ruixun/rxinterphone/ui/ProjectSettings.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/ruixun/rxinterphone/ui/ProjectSettings.java" afterDir="false" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="DefaultGradleProjectSettings">
+    <option name="isMigrated" value="true" />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="7b14e4ad" />
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <task path="$PROJECT_DIR$">
+          <activation />
+        </task>
+        <task path="$PROJECT_DIR$/app">
+          <activation />
+        </task>
+        <projects_view>
+          <tree_state>
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="rxInterphone" type="f1a62948:ProjectNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="rxInterphone" type="f1a62948:ProjectNode" />
+                <item name="rxInterphone" type="2d1252cf:ModuleNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="rxInterphone" type="f1a62948:ProjectNode" />
+                <item name="rxInterphone" type="2d1252cf:ModuleNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+              </path>
+            </expand>
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
+  </component>
+  <component name="FavoritesManager">
+    <favorites_list name="rxInterphone">
+      <favorite_root url="file://$PROJECT_DIR$/app/libs/AutoSdk_20200724.jar" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+    </favorites_list>
+  </component>
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ruixun/rxinterphone/InterphoneApplication.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="305">
+              <caret line="158" column="46" selection-start-line="158" selection-start-column="46" selection-end-line="158" selection-end-column="46" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Interface" />
+        <option value="layoutResourceFile_vertical" />
+        <option value="resourceFile" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>groupListDialog</find>
+      <find>progressDialog</find>
+      <find>onBa</find>
+      <find>EXTRA_REQUEST_NO_DEVICE_CODE</find>
+      <find>POC</find>
+      <find>closeS</find>
+      <find>sipLogin</find>
+      <find>HttpLog</find>
+      <find>customLogger</find>
+      <find>receiveDeviceSipDataResult</find>
+      <find>receiveDeviceData</find>
+      <find>pocGroupData</find>
+      <find>EasyHttp.get</find>
+      <find>postDeviceData</find>
+      <find>receivePOCGroupResult</find>
+      <find>EXTRA_REQUEST_NO_GROUP_CODE</find>
+      <find>RxConstants.ACT_CODE.EXTRA_REQUEST_NO_GROUP_CODE</find>
+      <find>onPause</find>
+      <find>showActTip</find>
+      <find>onTouch</find>
+      <find>groupCallingId</find>
+      <find>switchGroup</find>
+      <find>changeToHeadset</find>
+      <find>changeToSpeaker</find>
+      <find>onCall</find>
+      <find>uploadLocation</find>
+      <find>scanedResults</find>
+      <find>network</find>
+      <find>post(NetUrl.POST_SPEAK_RIGHT)</find>
+      <find>requestSpeakRi</find>
+    </findStrings>
+  </component>
+  <component name="GenerateSignedApkSettings">
+    <option name="EXPORT_PRIVATE_KEY" value="false" />
+    <option name="KEY_STORE_PATH" value="E:\vanrui\new_vanrui\code\interphoneapplication\app\signature\interphone.jks" />
+    <option name="KEY_ALIAS" value="interphone" />
+    <option name="REMEMBER_PASSWORD
