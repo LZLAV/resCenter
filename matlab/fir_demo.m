@@ -604,6 +604,7 @@ h = usefir1(3,60,2000,3000,3,2,10000);
 
 
 % 频率采样法低通滤波器示例
+%{
 N = 33;
 wc = pi/3;
 N1 =fix(wc/(2*pi/N));
@@ -613,6 +614,9 @@ H = A.*exp(j*theta);
 h = real(ifft(H));v = 1:N;
 subplot(2,2,1);plot(v,A,'k*');
 title('频率样本');ylabel('H(k)');
+axis([0,fix(N*1.1),-0.1,1.1]);
+subplot(2,2,2);stem(v,h,'k');
+title('冲激响应');ylabel('H(k)');
 axis([0,fix(N*1.1),-0.3,0.4]);
 M = 500;
 nx = [1:N];
@@ -622,12 +626,131 @@ subplot(2,2,3);
 plot(w./pi,abs(X),'k');
 xlabel('\omega/\pi');ylabel('Hd\omega');
 axis([0,1,-0.1,1.3]);title('幅度响应');
-subplot(2,2,3);
+subplot(2,2,4);
 plot(w./pi,20*log10(abs(X)),'k');
 title('幅度响应');
 xlabel('\omega/\pi');
 ylabel('dB');
 axis([0,1,-80,10]);
+%}
+
+
+% 频率采样法高通滤波器    ?????????????
+%{
+wp = 0.8*pi;ws = 0.6*pi;
+Rp =1;As = 60;
+M = 33;alpha = (M-1)/2; l =0:M-1;w1 = (2*pi/M)*l;
+Hrs = [zeros(1,11),0.1187,0.473,ones(1,8),0.473,0.1187,zeros(1,10)];
+Hdr = [0 0 1 1];wdl = [0 0.6 0.8 1];
+k1 = 0:floor((M-1)/2);k2 = floor((M-1)/2)+1:M-1;
+angH = [-alpha*(2*pi)/M*k1,alpha*(2*pi)/M*(M-k2)];
+H = Hrs.*exp(j*angH);
+h = real(ifft(H,M));
+[db,mag,pha,grd,w] = freqz_m(h,1);
+[Hr,ww,a,L] = hr_type(h);
+subplot(1,1,1);
+subplot(2,2,1);plot(w1(1:17)/pi,Hrs(1:17),'o',wd1,Hdr);
+axis([0,1,-0.1,1.1]);title('高通：M=33，T1=0.1187,T2=0.473');
+xlabel('');ylabel('Hr(k)');
+set(gca,'XTickMode','manual','Xtick',[0;6;8;1]);
+set(gca,'XTickLabelMode','manual','XTickLabels',['0';'.6';'.8';'1']);
+grid on;
+subplot(2,2,2);stem(l,h);axis([-1,M,-0.4,0.4]);
+title('冲激响应');ylabel('h(n)');text(M+1,-0.4,'n');
+subplot(2,2,3);plot(ww/pi,Hr,w1(1:17)/pi,Hrs(1:17),'o');
+xlabel('频率/pi');ylabel('Hr(w)');
+set(gca,'XTickMode','manual','XTick',[0,.6,.8,1]);
+set(gca,'XTickLabelMode','manual','XTickLabels',['0';'.6';'.8';'1']);
+grid on;
+subplot(2,2,4);plot(w/pi,db);
+axis([0 1 -100 10]);
+grid on;title('幅度响应');
+xlabel('频率/pi');ylabel('分贝数');
+set(gca,'XTickMode','manual','XTick',[0;.6;.8;1]);
+set(gca,'XTickLabelMode','manual','XTickLabels',['0';'.6';'.8';'1']);
+set(gca,'YTickMode','manual','YTick',[-50;0]);
+set(gca,'YTickLabelMode','manual','YTickLabels',['50';'0']);
+%}
+
+
+% 利用 remez 函数设计低通等波纹滤波器
+%{
+n = 40;         % 滤波器的阶数
+f = [0 0.5 0.6 1];  % 频率向量
+a = [1 2 0 0];      % 振幅向量
+w = [1 20];
+b = firls(n,f,a,w);
+[h,w1] = freqz(b);      % 计算滤波器的频率响应
+bb = remez(n,f,a,w);    % 采用 remez 设计滤波器
+[hh,w2] = freqz(bb);    % 计算滤波器的频率响应
+figure;
+plot(w1/pi,abs(h),'r.',w2/pi,abs(hh),'b-.',f,a,'ms');
+% 绘制滤波器幅频响应
+xlabel('归一化频率');
+ylabel('振幅');
+%}
+
+
+% 利用切比雪夫逼近设计法设计低通滤波器   ?????????????
+%{
+wp = 0.4*pi;
+ws = 0.6*pi;
+Rp = 0.45;
+As = 80;
+% 给定指标
+delta1 = (10^(Rp/20)-1)/(10^(Rp/20)+1);
+delta2 = (1+delta1) *(10^(-As/20));
+% 求波动指标
+weights = [delta2/delta1 1];
+deltaf = (ws-wp)/(2*pi);
+% 给定权函数 和 wp-ws
+N = ceil((-20*log10(sqrt(delta1*delta2))-13)/(14.6*deltaf)+1);
+N = N+mod(N-1,2);
+% 估算阶数N
+f = [0 wp/pi ws/pi 1];
+A = [1 1 0 0];
+% 给定频率点和希望幅度值
+h = remez(N-1,f,A,weights);
+% 求冲激响应
+[db,mag,pha,grd,W] = freqz_m(h,[1]);
+% 验证求取频率特性
+delta_w = 2*pi/1000;
+wsi = ws/delta_w +1;
+wpi = wp/delta_w +1;
+Asd = -max(db(wsi:1:500));
+% 求阻带衰减
+subplot(2,2,1);n =0:1:N-1;stem(n,h);
+axis([0,52,-0.1,0.3]);title('脉冲响应');
+xlabel('n');
+ylabel('hd(n)');
+grid on;
+% 画h(n)
+subplot(2,2,2);
+plot(W,db);
+title('对数幅频特性');
+ylabel('分贝数');
+xlabel('频率');
+grid on;
+% 画对数幅频特性
+subplot(2,2,3);
+plot(W,mag);axis([0,4,-0.5,1.5]);
+title('绝对幅频特性');
+xlabel('Hr(w)');
+ylabel('频率');
+grid on;
+% 画绝对幅频特性
+n = 1:(N-1)/2+1;
+H0 = 2*h(n)*cos(((N+1)/2-n)'*W)-mod(N,2)*h((N-1)/2+1);
+% 求 Hg(w)
+subplot(2,2,4);
+plot(W(1:wpi),H0(1:wpi)-1,W(wsi+5:501),H0(wsi+5:501));
+title('误差特性');
+% 求误差
+ylabel('Hr(w)');
+xlabel('频率');
+grid on;
+%}
+
 
 
 
