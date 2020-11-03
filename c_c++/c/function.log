@@ -1,0 +1,296 @@
+
+
+函数
+
+    execlp(buf, buf, (char *)0);	//从PATH 环境变量中查找文件并执行
+
+    pid = waitpid(pid, &status, 0)
+        /*
+			wait等待第一个终止的子进程，而waitpid可以通过pid参数指定等待哪一个子进程。当pid=-1、option=0时，waitpid函数等同于wait，可以把wait看作waitpid实现的特例。
+
+			waitpid函数提供了wait函数没有提供的三个功能：
+				1、waitpid等待一个特定的进程，而wait则返回任一终止子进程的状态 。
+				2、waitpid提供了一个 wait的非阻塞版本，有时希望取得一个子进程的状态， 但不想进程阻塞。
+				3、waitpid支持作业控制。
+		*/
+    
+    read(STDIN_FILENO, buf, BUFFSIZE)
+        STDIN_FILENO : 标准输入
+        STDOUT_FILENO ：标准输出
+
+    val = fcntl(atoi(argv[1]), F_GETFL, 0)
+        //fcntl : 用来操作文件描述词的一些特性,F_GETFL 取得文件描述词状态旗标, 此旗标为open()的参数flags.
+		//atoi : 将字符串转换成int(整数)
+    
+    lstat(*(argv + i), &buf)
+        //lstat : 由文件描述词取得文件状态
+        /*
+			S_ISLNK(st_mode)	// 是否是一个连接.
+			S_ISREG(st_mode)	// 是否是一个常规文件.
+			S_ISDIR(st_mode)	// 是否是一个目录
+			S_ISCHR(st_mode)	// 是否是一个字符设备.
+			S_ISBLK(st_mode)	// 是否是一个块设备
+			S_ISFIFO(st_mode)	// 是否是一个FIFO文件.
+			S_ISSOCK(st_mode)	// 是否是一个SOCKET文件 
+		*/
+    
+    access(*(argv + 1), R_OK)
+        //access : 判断是否具有存取文件的权限
+    
+    umask(0);
+        /*
+            设置建立新文件时的权限遮罩
+            umask()会将系统umask值设成参数mask&0777后的值, 然后将先前的umask值返回。在使用open()建立新文件时, 该参数mode 并非真正建立文件的权限, 而是(mode&~umask)的权限值。
+        */
+    
+    stat("foo", &statbuf)
+        stat : 获取文件状态
+    
+    chmod("foo", (statbuf.st_mode & ~S_IXGRP) | S_ISGID)
+        chmod : 修改文件权限
+    
+    utime(*(argv + i), &timebuf)
+        utime : 修改文件的存取时间和更改时间
+    
+    chdir("/tmp")
+        chdir : 改变当前的工作目录
+    
+    getcwd(ptr, size)
+        getcwd()：取得当前的工作目录
+        char * getcwd(char * buf, size_t size);
+        函数说明：getcwd()会将当前的工作目录绝对路径复制到参数buf 所指的内存空间，参数size 为buf 的空间大小。
+
+        注：
+            1、在调用此函数时，buf 所指的内存空间要足够大。若工作目录绝对路径的字符串长度超过参数size 大小，则返回NULL，errno 的值则为ERANGE。
+            2、倘若参数buf 为NULL，getcwd()会依参数size 的大小自动配置内存(使用malloc())，如果参数size 也为0，则getcwd()会依工作目录绝对路径的字符串程度来决定所配置的内存大小，进程可以在使用完次字符串后利用free()来释放此空间。
+
+        返回值：执行成功则将结果复制到参数buf 所指的内存空间, 或是返回自动配置的字符串指针. 失败返回NULL,错误代码存于errno.
+    
+    char *strrev(char *str);
+        【参数说明】str为要逆置的字符串。
+        strrev()将str所指的字符串逆置。
+        【返回值】返回指向逆置后的字符串的指针。
+        strrev()不会生成新字符串，而是修改原有字符串。因此它只能逆置字符数组，而不能逆置字符串指针指向的字符串，因为字符串指针指向的是字符串常量，常量不能被修改。
+    
+    可变参数
+        int max_list(int start, ...)
+        {
+            va_list var_arg;
+            int count;
+            int i = 0, max, current;
+
+            va_start(var_arg, start);
+            max = start;
+
+            do {
+                current = va_arg(var_arg, int);
+                if (current > max)
+                    max = current;
+            } while(current > 0);
+            
+            return max;
+        }
+    
+
+    int setjmp(jmp_buf env);
+        setjmp 函数的功能是将函数在此处的上下文保存在 jmp_buf 结构体中，以供 longjmp 从此结构体中恢复。
+        参数 env 即为保存上下文的 jmp_buf 结构体变量；
+        如果直接调用该函数，返回值为 0； 若该函数从 longjmp 调用返回，返回值为非零，由 longjmp 函数提供。根据函数的返回值，我们就可以知道 setjmp 函数调用是第一次直接调用，还是由其它地方跳转过来的。
+
+    void longjmp(jmp_buf env, int val);
+        longjmp 函数的功能是从 jmp_buf 结构体中恢复由 setjmp 函数保存的上下文，该函数不返回，而是从 setjmp 函数中返回。
+        参数 env 是由 setjmp 函数保存过的上下文。
+        参数 val 表示从 longjmp 函数传递给 setjmp 函数的返回值，如果 val 值为0， setjmp 将会返回1，否则返回 val。
+        longjmp 不直接返回，而是从 setjmp 函数中返回，longjmp 执行完之后，程序就像刚从 setjmp 函数返回一样。
+    
+    int getrlimit(int resource, struct rlimit *rlim);
+    int setrlimit(int resource, const struct rlimit *rlim);
+        获取或设定资源使用限制。每种资源都有相关的软硬限制，软限制是内核强加给相应资源的限制值，硬限制是软限制的最大值。非授权调用进程只可以将其软限制指定为0~硬限制范围中的某个值，同时能不可逆转地降低其硬限制。授权进程可以任意改变其软硬限制。RLIM_INFINITY的值表示不对资源限制。
+        参数：
+            resource：可能的选择有
+                RLIMIT_AS //进程的最大虚内存空间，字节为单位。
+                RLIMIT_CORE //内核转存文件的最大长度。
+                RLIMIT_CPU //最大允许的CPU使用时间，秒为单位。当进程达到软限制，内核将给其发送SIGXCPU信号，这一信号的默认行为是终止进程的执行。然而，可以捕捉信号，处理句柄可将控制返回给主程序。如果进程继续耗费CPU时间，核心会以每秒一次的频率给其发送SIGXCPU信号，直到达到硬限制，那时将给进程发送 SIGKILL信号终止其执行。
+                RLIMIT_DATA //进程数据段的最大值。
+                RLIMIT_FSIZE //进程可建立的文件的最大长度。如果进程试图超出这一限制时，核心会给其发送SIGXFSZ信号，默认情况下将终止进程的执行。
+                RLIMIT_LOCKS //进程可建立的锁和租赁的最大值。
+                RLIMIT_MEMLOCK //进程可锁定在内存中的最大数据量，字节为单位。
+                RLIMIT_MSGQUEUE //进程可为POSIX消息队列分配的最大字节数。
+                RLIMIT_NICE //进程可通过setpriority() 或 nice()调用设置的最大完美值。
+                RLIMIT_NOFILE //指定比进程可打开的最大文件描述词大一的值，超出此值，将会产生EMFILE错误。
+                RLIMIT_NPROC //用户可拥有的最大进程数。
+                RLIMIT_RTPRIO //进程可通过sched_setscheduler 和 sched_setparam设置的最大实时优先级。
+                RLIMIT_SIGPENDING //用户可拥有的最大挂起信号数。
+                RLIMIT_STACK //最大的进程堆栈，以字节为单位。
+
+            rlim：描述资源软硬限制的结构体，原型如下：
+                struct rlimit {
+                　　rlim_t rlim_cur;　　//soft limit
+                　　rlim_t rlim_max;　　//hard limit
+                };
+
+        返回说明：
+            成功执行时，返回0。失败返回-1，errno被设为以下的某个值
+                EFAULT：rlim指针指向的空间不可访问
+                EINVAL：参数无效
+                EPERM：增加资源限制值时，权能不允许
+    
+    int execl(const char * path, const char * arg, ...);
+        头文件 ：#include <unistd.h>
+        函数说明：execl()用来执行参数path 字符串所代表的文件路径, 接下来的参数代表执行该文件时传递过去的argv(0), argv[1], ..., 最后一个参数必须用空指针(NULL)作结束.
+        返回值：如果执行成功则函数不会返回, 执行失败则直接返回-1, 失败原因存于errno 中.
+        
+        示例：
+            execl("/bin/ls", "ls", "-al", "/etc/passwd", (char *)0);
+            执行："/bin/ls -al /etc/passwd */"
+
+
+    WIFCONTINUED(status) 非0表示暂停后已经继续运行。
+    WIFEXITED(status)：如果子进程正常结束则为非0 值.
+    WEXITSTATUS(status)：取得子进程exit()返回的结束代码, 一般会先用WIFEXITED 来判断是否正常结束才能使用此宏.
+    WIFSIGNALED(status)：如果子进程是因为信号而结束则此宏值为真
+    WTERMSIG(status)：取得子进程因信号而中止的信号代码, 一般会先用WIFSIGNALED 来判断后才使用此宏.
+    WIFSTOPPED(status)：如果子进程处于暂停执行情况则此宏值为真. 一般只有使用WUNTRACED时才会有此情况.
+    WSTOPSIG(status)：取得引发子进程暂停的信号代码, 一般会先用WIFSTOPPED 来判断后才使用此宏.    
+    WTREMSIG(status):如果进程是被信号杀死的，则返回杀死进程信号的值
+    WCOREDUMP(status) : 如果子进程产生了core dump，则返回true,否则返回false
+
+    void setbuf(FILE * stream, char * buf);
+        头文件：#include <stdio.h>
+        函数setbuf()用于将指定缓冲区与特定的文件流相关联，实现操作缓冲区时直接操作文件流的功能。其原型如下：
+    
+        【参数】stream为文件流指针，buf为缓冲区的起始地址。
+            如果参数buf 为NULL 指针，则为无缓冲，setbuf()相当于调用setvbuf(stream, buf, buf ? _IOFBF : _IONBF, BUFSIZE)，请参考C语言setvbuf()函数。
+        setbuf()和setvbuf()函数的实际意义在于：用户打开一个文件后，可以建立自己的文件缓冲区，而不必使用fopen()函数打开文件时设定的默认缓冲区。这样就可以让用户自己来控制缓冲区，包括改变缓冲区大小、定时刷新缓冲区、改变缓冲区类型、删除流中默认的缓冲区、为不带缓冲区的流开辟缓冲区等。
+        说明：在打开文件流后，读取内容之前，可以调用setbuf()来设置文件流的缓冲区（而且必须是这样）。
+        示例：
+            #include <stdio.h>  
+            char outbuf[BUFSIZ]; 
+            int main(void) 
+            { 
+                setbuf(stdout, outbuf);  // 把缓冲区与流相连
+                puts("This is a test of buffered output.\n");
+                puts(outbuf);
+                fflush(stdout);  // 刷新
+                puts(outbuf);  // 输出
+                return 0; 
+            }
+
+            输出结果：
+                This is a test of buffered output..
+                This is a test of buffered output..
+                This is a test of buffered output..
+                This is a test of buffered output..
+            程序先把outbuf与输出流相连，然后输出一个字符串，这时因为缓冲区已经与流相连，所以outbuf中也保存着这个字符串，紧接着puts函数又输出一遍，所以现在outbuf中保存着两个一样的字符串。刷新输出流之后，再次puts，则又输出两个字符串。
+
+    
+    int setvbuf(FILE * stream, char * buf, int type, unsigned size);
+        头文件：#include <stdio.h>
+        函数setvbuf()用来设定文件流的缓冲区。
+        【参数】stream为文件流指针，buf为缓冲区首地址，type为缓冲区类型，size为缓冲区内字节的数量。
+        参数类型type说明如下：
+            _IOFBF (满缓冲)：当缓冲区为空时，从流读入数据。或当缓冲区满时，向流写入数据。
+            _IOLBF (行缓冲)：每次从流中读入一行数据或向流中写入—行数据。
+            _IONBF (无缓冲)：直接从流中读入数据或直接向流中写入数据，而没有缓冲区。
+
+        【返回值】成功返回0，失败返回非0。
+        如果您只是想简单的操作缓冲区，还可以使用setbuf()函数。
+        setbuf()和setvbuf()函数的实际意义在于：用户打开一个文件后，可以建立自己的文件缓冲区，而不必使用fopen()函数打开文件时设定的默认缓冲区。这样就可以让用户自己来控制缓冲区，包括改变缓冲区大小、定时刷新缓冲区、改变缓冲区类型、删除流中默认的缓冲区、为不带缓冲区的流开辟缓冲区等。
+        说明：
+            在打开文件流后，读取内容之前，调用setvbuf()可以用来设置文件流的缓冲区（而且必须是这样）。
+
+        示例：
+            为文件设置特殊类型缓冲区。
+            #include <stdio.h> 
+            int main(void) 
+            { 
+            FILE *input, *output; 
+            char bufr[512]; 
+            input = fopen("file.in", "w+");     /*打开文件*/
+            output = fopen("file.out", "w");
+            if (setvbuf(input, bufr, _IOFBF, 512) != 0)  /*失败*/
+            {
+                printf("failed to set up buffer for input file\n");
+            }
+            else 
+            {
+                printf("buffer set up for input file\n"); 
+            }
+            if (setvbuf(output, NULL, _IOLBF, 132) != 0)  /*为流指定特殊的缓冲区*/
+            {
+                printf("failed to set up buffer for output file\n"); 
+            }
+            else 
+            {
+                printf("buffer set up for output file\n"); 
+            }
+            fclose(input); 
+            fclose(output); 
+            return 0; 
+            }
+            运行结果：
+                Buffer set up for input file
+                Buffer set up for output file
+
+            程序先打开两个文件，分别设置缓冲区，根据返回值判定是否成功，最后使用fclose函数关闭这两个文件。
+    
+    long sysconf(int name);
+        头文件：#include <unistd.h>
+        该函数是获取一些系统的参数
+        参数：
+            name
+                _SC_CHILD_MAX：每个user可同时运行的最大进程数
+                _SC_HOST_NAME_MAX：hostname最大长度，需小于_POSIX_HOST_NAME_MAX (255)
+                _SC_OPEN_MAX：一个进程可同时打开的文件最大数
+                _SC_PAGESIZE：一个page的大小，单位byte
+                _SC_PHYS_PAGES：物理内存总page数
+                _SC_AVPHYS_PAGES：当前可获得的物理内存page数
+                _SC_NPROCESSORS_CONF：配置的处理器个数
+                _SC_NPROCESSORS_ONLN：当前可获得的处理器个数
+                _SC_CLK_TCK：每秒对应的时钟tick数
+
+    pid_t vfork(void);
+        头文件：#include <unistd.h>
+        函数说明：
+            vfork()会产生一个新的子进程, 其子进程会复制父进程的数据与堆栈空间, 并继承父进程的用户代码,组代码, 环境变量、已打开的文件代码、工作目录和资源限制等。
+        Linux 使用copy-on-write(COW)技术, 只有当其中一进程试图修改欲复制的空间时才会做真正的复制动作, 由于这些继承的信息是复制而来, 并非指相同的内存空间, 因此子进程对这些变量的修改和父进程并不会同步。此外，子进程不会继承父进程的文件锁定和未处理的信号。
+        注意：
+            Linux 不保证子进程会比父进程先执行或晚执行，因此编写程序时要留意死锁或竞争条件的发生。
+        返回值：
+            如果 vfork()成功则在父进程会返回新建立的子进程代码(PID), 而在新建立的子进程中则返回0. 如果vfork 失败则直接返回-1, 失败原因存于errno 中.
+        错误代码：
+            EAGAIN：内存不足.
+            ENOMEM：内存不足, 无法配置核心所需的数据结构空间。
+    
+    int ispunct(char c)
+        用来检测一个字符是否为标点符号或特殊字符
+    int iscntrl(char c)
+        控制字符，ASCII码值为 0x00 ~ 0x1f，再加上 0x7f(DEL)。
+    int isspace(char c)
+    int isdigit(char c)
+    int islower(char c)
+    int isupper(char c)
+    int isprint(char c)
+        用来判断一个字符是否为打印字符
+        可打印字符的ASCII码值大于 0x1f（除了0x7f(DEL)），这些字符可以显示到屏幕上，让我们看到；不能显示在屏幕上，我们看不到的，叫控制字符。
+
+    strlen(char *str)
+        stlen的结果是个无符号数，所以操作符>=左边的表达式也将是无符号数,而无符号数绝不可能是负的
+        if(strlen(a) - strlen(b) >= 0){
+        }
+    
+
+    void (*signal(int sig, void (*func)(int)))(int)
+        设置一个函数来处理信号，即带有 sig 参数的信号处理程序。
+        sig -- 在信号处理程序中作为变量使用的信号码。
+            SIGABRT	(Signal Abort) 程序异常终止。
+            SIGFPE	(Signal Floating-Point Exception) 算术运算出错，如除数为 0 或溢出（不一定是浮点运算）。
+            SIGILL	(Signal Illegal Instruction) 非法函数映象，如非法指令，通常是由于代码中的某个变体或者尝试执行数据导致的。
+            SIGINT	(Signal Interrupt) 中断信号，如 ctrl-C，通常由用户生成。
+            SIGSEGV	(Signal Segmentation Violation) 非法访问存储器，如访问不存在的内存单元。
+            SIGTERM	(Signal Terminate) 发送给本程序的终止请求信号。
+        func -- 一个指向函数的指针。它可以是一个由程序定义的函数，也可以是下面预定义函数之一：
+            SIG_DFL	默认的信号处理程序。
+            SIG_IGN	忽视信号。
+        返回值：
+            该函数返回信号处理程序之前的值，当发生错误时返回 SIG_ERR。
