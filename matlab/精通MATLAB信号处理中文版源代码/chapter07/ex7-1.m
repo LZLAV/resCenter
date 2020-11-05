@@ -1,0 +1,13 @@
+N=60000;
+randn('state',0);
+y=randn(1,N);
+disp('平均值:');
+yM=mean(y)
+disp('平方值:');
+yp=y*y'/N
+disp('平方根:');
+ys=sqrt(yp)
+disp('标准差:');
+yst=std(y,1)
+disp('方差:');
+yd=yst.*yst

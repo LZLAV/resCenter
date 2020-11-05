@@ -1,0 +1,10 @@
+sigma=2.5; 
+fs=1e7; 
+ t=1e-3; 
+t1=0:1/fs:t-1/fs; 
+n=length(t1); 
+rand('state',0); 
+u=rand(1,n); 
+ x=sqrt(2*log2(1./u))*sigma; 
+subplot(2,1,1);plot(x); 
+ subplot(2,1,2);hist(x,0:0.2:20);

@@ -1,0 +1,15 @@
+clear all;
+t1=0:pi/4:3*pi;
+t2=0:pi/25:3*pi;
+x1=3*(cos(t1)+t1.*sin(t1));
+y1=3*(sin(t1)-t1.*cos(t1));
+x2=3*(cos(t2)+t2.*sin(t2));
+y2=3*(sin(t2)-t2.*cos(t2));
+subplot(2,2,1);plot(x1,y1,'r.');
+title('图形1');
+subplot(2,2,2);plot(x2,y2,'r.');
+title('图形2');
+subplot(2,2,3);plot(x1,y1);
+title('图形3');
+subplot(2,2,4);plot(x2,y2);
+title('图形4');

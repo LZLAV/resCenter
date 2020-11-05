@@ -1,0 +1,12 @@
+Fs=8000;N=216;
+fcuts=[1000 1200 2300 2500];
+mags=[0 1 0];
+devs=[0.02 0.1 0.02];
+[n,Wn,beta,ftype]=kaiserord(fcuts,mags,devs,Fs);
+n=n+rem(n,2);
+hh=fir1(n,Wn,ftype,kaiser(n+1,beta),'noscale');
+[H,f]=freqz(hh,1,N,Fs);
+plot(f,abs(H));
+xlabel('ÆµÂÊ (Hz)');
+ylabel('·ùÖµ|H(f)|');
+grid on;

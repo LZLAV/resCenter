@@ -1,0 +1,13 @@
+k=0:10;
+a=[1 6 4];
+b=[1 3];
+h=impz(b,a,k);
+subplot(1,2,1);stem(k,h);
+xlabel('n'); ylabel('h(n)');
+title('单位冲激响应的近似值');
+grid on;
+hk=-(-1).^k+2*(-2).^k;
+subplot(1,2,2);stem(k,h);
+xlabel('n'); ylabel('h(n)');
+title('单位冲激响应的理论值');
+grid on;

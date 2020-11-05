@@ -1,0 +1,14 @@
+clf;
+t=-3*pi:pi/40:4*pi;
+subplot(2,1,1);
+plot(t,sinc(t));
+title('Sinc');
+grid on;
+xlabel('t');
+ylabel('sinc(t)');
+subplot(2,1,2);
+plot(t,diric(t,5));
+title('Diric');
+grid on;
+xlabel('t');
+ylabel('diric(t)');

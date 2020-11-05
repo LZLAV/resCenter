@@ -1,0 +1,13 @@
+num=[0.55 0.5 -1];
+den=[1 -0.5 -0.45];
+x0=[2 3];y0=[1 2];
+N=50;
+n=[0:N-1]';
+x=0.7.^n;
+Zi=filtic(num,den,y0,x0);
+[y,Zf]=filter(num,den,x,Zi);
+plot(n,x,'r-',n,y,'b--');
+title('ÏìÓ¦');
+xlabel('n');ylabel('x(n)-y(n)');
+legend('ÊäÈë x','Êä³ö y',1);
+grid;

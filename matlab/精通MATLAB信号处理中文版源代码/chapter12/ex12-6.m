@@ -1,0 +1,11 @@
+ dba=3.5; 
+fs=1e7; 
+ t=1e-3; 
+ n=t*fs; 
+ rand('state',0);
+ u=rand(1,n); 
+ x=log2(1-u)/(-dba); 
+ subplot(2,1,1);plot(0:1/fs:t-1/fs,x); 
+xlabel('t(单位:s)');title('指数分布信号'); 
+subplot(2,1,2);hist(x,0:0.05:4); 
+title('指数分布信号直方图');

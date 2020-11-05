@@ -1,0 +1,17 @@
+h=fir1(30,125/500,boxcar(31));
+Fs=1000;
+f1=100;
+f2=200;
+m=1024;
+w=exp(-j*2*pi*(f2-1)/(m*Fs));
+a=exp(j*2*pi*f1/Fs);
+y=fft(h,m);
+z=czt(h,m,w,a);
+fy=(0:length(y)-1)'*Fs/length(y);
+fz=(0:length(z)-1)'*(f2-f1)/length(z)+f1;
+subplot(2,1,1)
+plot(fy(1:500),abs(y(1:500)));
+title('fft');
+subplot(2,1,2)
+plot(fz,abs(z));
+title('czt');

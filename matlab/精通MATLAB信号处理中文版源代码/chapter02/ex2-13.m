@@ -1,0 +1,10 @@
+t=-4:0.001:4;
+T=2;
+f=rectpuls(t,T);
+ft=rectpuls(2*t,T);
+subplot(2,1,1)
+plot(t,f)
+axis([-4,4,-0.5,1.5])
+subplot(2,1,2)
+plot(t,ft)
+axis([-4,4,-0.5,1.5])

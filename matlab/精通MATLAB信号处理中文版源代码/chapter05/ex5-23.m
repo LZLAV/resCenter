@@ -1,0 +1,36 @@
+clear all;
+wp=0.8*pi; ws=0.6*pi;
+Rp=1; As=60;
+M=33;  alpha=(M-1)/2;  l=0:M-1; w1=(2*pi/M)*l;
+Hrs=[zeros(1,11), 0.1187, 0.473,ones(1,8), 0.473, 0.1187,zeros(1,10)];
+Hdr=[0 0 1 1];wdl=[0 0.6 0.8 1];
+k1=0:floor((M-1)/2);k2=floor((M-1)/2)+1:M-1;
+angH=[-alpha*(2*pi)/M*k1,alpha*(2*pi)/M*(M-k2)];
+H=Hrs.*exp(j*angH);
+h=real(ifft(H,M));
+[db,mag,pha,grd,w]=freqz_m(h,1);
+[Hr,ww,a,L]=hr_type1(h);
+subplot(1,1,1)
+subplot(2,2,1);plot(w1(1:17)/pi,Hrs(1:17),'o',wdl,Hdr);
+axis([0,1,-0.1,1.1]);title('高通:M=33, T1=0.1187, T2=0.473');
+xlabel(''); ylabel('Hr(k)');
+set(gca,'XTickMode','manual','XTick',[0;.6;.8;1]);
+set(gca,'XTickLabelMode','manual','XTickLabels',[' 0';'.6';'.8';' 1']);
+grid on;
+subplot(2,2,2);stem(l,h);axis([-1,M,-0.4,0.4]);
+title('脉冲响应');ylabel('h(n)');text(M+1,-0.4,'n');
+subplot(2,2,3);plot(ww/pi,Hr,w1(1:17)/pi,Hrs(1:17),'o');
+axis([0,1,-0.1,1.1]);title('振幅响应');
+xlabel('频率/pi');ylabel('Hr(w)');
+set(gca,'XTickMode','manual','XTick',[0,.6,.8,1]);
+set(gca,'XTickLabelMode','manual','XTickLabels',[' 0';'.6';'.8';' 1']);
+grid on;
+subplot(2,2,4);plot(w/pi,db);
+axis([0 1 -100 10]); 
+grid on;title('幅度响应');
+xlabel('频率/pi');ylabel('分贝数');
+set(gca,'XTickMode','manual','XTick',[0;.6;.8;1]);
+set(gca,'XTickLabelMode','manual','XTickLabels',[' 0';'.6';'.8';' 1']);
+set(gca,'YTickMode','manual','YTick',[-50;0]);
+set(gca,'YTickLabelMode','manual','YTickLabels',['50';' 0']);
+

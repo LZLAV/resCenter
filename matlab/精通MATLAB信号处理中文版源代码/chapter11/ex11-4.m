@@ -1,0 +1,18 @@
+clear;clc;close all;
+fm=10;fc=40;T=4;A=3;
+t=0:0.001:T;
+m=cos(2*pi*fm*t);
+vsb=m.*cos(2*pi*fc*t);
+b=fir1(70,0.035);
+vsb=filter(b,1,vsb);
+subplot(121);
+plot(t,vsb); 
+title('VSB调制信号');
+xlabel('t');
+r=vsb.*cos(2*pi*fc*t);
+b=fir1(128,0.01);
+rt=filter(b,1,r);
+subplot(122);
+plot(t,rt);
+title('相干解调后的信号');
+xlabel('t');

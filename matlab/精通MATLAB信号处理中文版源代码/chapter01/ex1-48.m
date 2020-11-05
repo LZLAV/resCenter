@@ -1,0 +1,7 @@
+X=randn(2,10)
+DX=var(X')
+DX1=var(X',1)
+S=std(X',1)
+S1=std(X')
+SK = skewness(X')
+SK1 = skewness(X',1)

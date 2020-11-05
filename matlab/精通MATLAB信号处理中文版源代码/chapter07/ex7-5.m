@@ -1,0 +1,10 @@
+clear all;
+t=1:20;x=t.^2;
+y=(t+3).^2;
+R=xcorr(x,y);
+c=xcov(x,y);
+n=1:length(c);
+subplot(121);stem(n,c);
+title('互协方差');
+subplot(122);stem(n,R);
+title('互相关');

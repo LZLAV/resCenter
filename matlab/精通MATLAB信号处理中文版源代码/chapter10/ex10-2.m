@@ -1,0 +1,17 @@
+[x,fs,bits]=wavread('qq.wav');  
+sound(x); 
+X=fft(x,4096);
+magX=abs(X);
+angX=angle(X);
+subplot(221);
+plot(x);
+title('原始信号波形');
+subplot(222);
+plot(X); 
+title('原始信号频谱');
+subplot(223);
+plot(magX);
+title('原始信号幅值');
+subplot(224);
+plot(angX);
+title('原始信号相位');
