@@ -66,6 +66,12 @@
 
         返回值：执行成功则将结果复制到参数buf 所指的内存空间, 或是返回自动配置的字符串指针. 失败返回NULL,错误代码存于errno.
     
+    assert()
+        断言函数
+        断言就是对某种假设条件进行检查。assert 将通过检查表达式 expression 的值来决定是否需要终止执行程序。也就是说，如果表达式 expression 的值为假（即为 0），那么它将首先向标准错误流 stderr 打印一条出错信息，然后再通过调用 abort 函数终止程序运行；否则，assert 无任何作用。
+
+        默认情况下，assert 宏只有在 Debug 版本（内部调试版本）中才能够起作用，而在 Release 版本（发行版本）中将被忽略。当然，也可以通过定义宏或设置编译器参数等形式来在任何时候启用或者禁用断言检查（不建议这么做）。同样，在程序投入运行后，最终用户在遇到问题时也可以重新起用断言。这样可以快速发现并定位软件问题，同时对系统错误进行自动报警。对于在系统中隐藏很深，用其他手段极难发现的问题也可以通过断言进行定位，从而缩短软件问题定位时间，提高系统的可测性。
+
     char *strrev(char *str);
         【参数说明】str为要逆置的字符串。
         strrev()将str所指的字符串逆置。
@@ -253,7 +259,7 @@
         头文件：#include <unistd.h>
         函数说明：
             vfork()会产生一个新的子进程, 其子进程会复制父进程的数据与堆栈空间, 并继承父进程的用户代码,组代码, 环境变量、已打开的文件代码、工作目录和资源限制等。
-        Linux 使用copy-on-write(COW)技术, 只有当其中一进程试图修改欲复制的空间时才会做真正的复制动作, 由于这些继承的信息是复制而来, 并非指相同的内存空间, 因此子进程对这些变量的修改和父进程并不会同步。此外，子进程不会继承父进程的文件锁定和未处理的信号。
+        Linux 使用 copy-on-write(COW) 技术, 只有当其中一进程试图修改欲复制的空间时才会做真正的复制动作, 由于这些继承的信息是复制而来, 并非指相同的内存空间, 因此子进程对这些变量的修改和父进程并不会同步。此外，子进程不会继承父进程的文件锁定和未处理的信号。
         注意：
             Linux 不保证子进程会比父进程先执行或晚执行，因此编写程序时要留意死锁或竞争条件的发生。
         返回值：
@@ -294,3 +300,129 @@
             SIG_IGN	忽视信号。
         返回值：
             该函数返回信号处理程序之前的值，当发生错误时返回 SIG_ERR。
+    
+
+    sigemptyset()函数：
+        初始化信号集
+        头文件：#include <signal.h>
+        定义函数：int sigemptyset(sigset_t *set);
+        函数说明：sigemptyset()用来将参数 set 信号集初始化并清空.
+        返回值：执行成功则返回0, 如果有错误则返回-1.
+        错误代码：EFAULT 参数set 指针地址无法存取。
+    
+    sigaddset()
+        增加一个信号至信号集
+        头文件：#include <signal.h>
+        定义函数：int sigaddset(sigset_t *set, int signum);
+        函数说明：sigaddset()用来将参数 signum 代表的信号加入至参数set 信号集里.
+        返回值：执行成功则返回0, 如果有错误则返回-1.
+        错误代码：
+            1、EFAULT 参数set 指针地址无法存取。
+            2、EINVAL 参数signum 非合法的信号编号。
+    
+    sigprocmask()
+        查询或设置信号遮罩
+        头文件：#include <signal.h>
+        定义函数：int sigprocmask(int how, const sigset_t *set, sigset_t * oldset);
+        函数说明：sigprocmask()可以用来改变目前的信号遮罩, 其操作依参数how 来决定：
+            1、SIG_BLOCK    新的信号遮罩由目前的信号遮罩和参数set 指定的信号遮罩作联集
+            2、SIG_UNBLOCK  将目前的信号遮罩删除掉参数 set 指定的信号遮罩
+            3、SIG_SETMASK  将目前的信号遮罩设成参数 set 指定的信号遮罩. 如果参数 oldset 不是NULL 指针, 那么目前的信号遮罩会由此指针返回。将set的值设定为新的进程信号掩码。即set对信号掩码进行了赋值操作。
+        返回值：执行成功则返回0, 如果有错误则返回-1.
+        错误代码：
+            1、EFAULT 参数set, oldset 指针地址无法存取.
+            2、EINTR 此调用被中断。
+    
+    sigpending()
+        sigpending函数返回信号集，其中的各个信号对于调用进程是阻塞的而不能递送，因而也一定是当前未决的。该信号集通过set参数返回。（这些信号是已经产生的信号，但因为信号屏蔽字中对其设置了屏蔽位，从而被阻塞，不能递送给进程的那些信号。注意sigpending返回的信号集与信号屏蔽字的区别。从集合角度来讲，此信号集是当前信号屏蔽字的子集。）
+        头文件：#include <signal.h>
+        定义函数：int sigpending(sigset_t *set);
+        函数说明： sigpending() 会将被搁置的信号集合由参数 set 指针返回. 返回值执行成功则返回 0, 如果有错误则返回-1.
+        错误代码：
+            1、EFAULT 参数set 指针地址无法存取
+            2、EINTR 此调用被中断.
+    
+    sigismember()
+        测试某个信号是否已加入至信号
+        头文件：#include <signal.h>
+        定义函数：int sigismember(const sigset_t *set, int signum);
+        函数说明：sigismember()用来测试参数signum 代表的信号是否已加入至参数set 信号集里. 如果信号集里已有该信号则返回1, 否则返回0.
+        返回值：信号集已有该信号则返回1, 没有则返回0.如果有错误则返回-1.
+        错误代码：
+            1、EFAULT 参数set 指针地址无法存取。
+            2、EINVAL 参数signum 非合法的信号编号。
+
+    singal 示例：
+        
+        一个保护临界区代码的错误实例：(sigprocmask()和pause()实现)
+        #include <unistd.h>
+        #include <signal.h>
+        #include <stdio.h>
+        
+        void handler(int sig)    //信号处理函数的实现
+        {
+        printf("SIGINT sig");
+        }
+        int main()
+        {
+            sigset_t new,old;
+            struct sigaction act;
+            act.sa_handler = handler;  //信号处理函数handler
+            sigemptyset(&act.sa_mask);
+            act.sa_flags = 0;
+            sigaction(SIGINT, &act, 0);  //准备捕捉SIGINT信号
+            sigemptyset(&new);
+            sigaddset(&new, SIGINT);
+            sigprocmask(SIG_BLOCK, &new, &old);  //将SIGINT信号阻塞，同时保存当前信号集
+            printf("Blocked");
+            sigprocmask(SIG_SETMASK, &old, NULL);  //取消阻塞
+            pause();  //让进程暂停直到信号出现
+            return 0；
+        }
+        上面实例的问题是：本来期望pause()之后，来SIGINT信号，可以结束程序；可是，如果当“取消阻塞”和“pause”之间，正好来了SIGINT信号，结果程序因为pause的原因会一直挂起。。。
+        解决的方式，当然是sigsuspend()函数了。
+
+        使用sigsuspend()的程序
+            #include <unistd.h>
+            #include <signal.h>
+            #include <stdio.h>
+            void handler(int sig)   //信号处理程序
+            {
+                if(sig == SIGINT)
+                    printf("SIGINT sig");
+                else if(sig == SIGQUIT)
+                    printf("SIGQUIT sig");
+                else
+                    printf("SIGUSR1 sig");
+            }
+            
+            int main()
+            {
+                sigset_t new,old,wait;   //三个信号集
+                struct sigaction act;
+                act.sa_handler = handler;
+                sigemptyset(&act.sa_mask);
+                act.sa_flags = 0;
+                sigaction(SIGINT, &act, 0);    //可以捕捉以下三个信号：SIGINT/SIGQUIT/SIGUSR1
+                sigaction(SIGQUIT, &act, 0);
+                sigaction(SIGUSR1, &act, 0);
+            
+                sigemptyset(&new);
+                sigaddset(&new, SIGINT);  //SIGINT信号加入到new信号集中
+                sigemptyset(&wait);
+                sigaddset(&wait, SIGUSR1);  //SIGUSR1信号加入wait
+                sigprocmask(SIG_BLOCK, &new, &old);       //将SIGINT阻塞，保存当前信号集到old中
+            
+                //临界区代码执行    
+            
+                if(sigsuspend(&wait) != -1)  //程序在此处挂起；用wait信号集替换new信号集。即：过来SIGUSR1信  号，阻塞掉，程序继续挂起；过来其他信号，例如SIGINT，则会唤醒程序。执行sigsuspend的原子操作。注意：如果“sigaddset(&wait, SIGUSR1);”这句没有，则此处不会阻塞任何信号，即过来任何信号均会唤醒程序。
+                    printf("sigsuspend error");
+                printf("After sigsuspend");
+                sigprocmask(SIG_SETMASK, &old, NULL);
+                return 0;
+            }
+        sigsuspend的原子操作是：
+            1. 设置新的mask阻塞当前进程(上面是用wait替换new，即阻塞SIGUSR1信号)
+            2. 收到SIGUSR1信号，阻塞，程序继续挂起；收到其他信号，恢复原先的mask(即包含SIGINT信号的)。
+            3. 调用该进程设置的信号处理函数(程序中如果先来SIGUSR1信号，然后过来SIGINT信号，则信号处理函数会调用两次，打印不同的内容。第一次打印SIGINT,第二次打印SIGUSR1，因为SIGUSR1是前面阻塞的)
+            4. 待信号处理函数返回，sigsuspend返回了。(sigsuspend将捕捉信号和信号处理函数集成到一起了)
