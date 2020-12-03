@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Rptslayer</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">设置</string>
+    <string name="no_data">No data</string>
+	<string name="picture">Picture</string>
+	<string name="monitoring">监控</string>
+	<string name="friend">朋友</string>
+	<string name="video">视频</string>
+	<string name="setting">我</string>
+	<string name="edit_add">请输入添加的名字</string>
+	<string name="cancel">取消</string>
+	<string name="confirm">确认</string>
+	<string name="add_monitor">添加结构</string>
+	<string name="ad_monitor">添加监控</string>
+	<string name="edit_add_monitor">请输入监控的链接</string>
+	<string name="location">文件路径</string>
+	<string name="prompt">提示</string>
+	<string name="prompt_content">获取文件夹失败，请检查你的SD卡是否安装成功！</string>
+	<string name="error">错误</string>
+	<string name="no_read">不可读！</string>
+	<string name="only_support_extend">只支持以下扩展名的文件：</string>
+	<string name="clear_history">你可以输入"clear"来清除历史记录！</string>
+	<string name="start_with">无效输入，开头必须是：</string>
+	<string name="file_operator_failed">文件操作失败：</string>
+	<string name="input_movie_hint">输入一个媒体文件路径来播放</string>
+	<string name="open_media_file">打开文件失败，请检查你的文件或者网络状态！</string>
+	<string name="original_size">原始大小</string>
+	<string name="full_screen">全屏播放</string>
+	<string name="choose_media">选择文件资源</string>
+	<string name="hide_info">隐藏文件信息</string>
+	<string name="show_info">展示文件信息</string>
+	<string name="long_delete">删除选中项</string>
+	<string name="long_update">更改选中项</string>
+	<string name="com_name">瑞普图视</string>
+	<string name="about">关于</string>
+	<string name="about_rpts_player">关于瑞普图视播放器</string>
+	<string name="local_file_list">本地文件设置</string>
+	<string name="only_show_media">仅显示媒体文件</string>
+	<string name="only_showed_media">只显示媒体文件</string>
+	<string name="all_file_list">所有文件清单</string>
+	<string name="show_hidden_files">显示隐藏文件</string>
+	<string name="showed_hidden_files">隐藏文件显示</string>
+	<string name="not_showed_hidden_files">不显示隐藏文件</string>
+	<string name="player_setting">播放设置</string>
+	<string name="decoder_thread_number">线程数目设置</string>
+	<string name="thread_number_hint">多核手机设置多线程处理（默认为1）</string>
+	<string name="select_thread_number">线程数目选择</string>
+	<string name="loop_play">循环播放</string>
+	<string name="loop_play_on_hint">循环播放已开</string>
+	<string name="loop_play_off_hint">循环播放已关闭</string>
+	<string name="about_message">感谢您的使用！\n\n 请您把您的宝贵建议和程序的Bug发至瑞普图视公司的邮箱：service@realpower265.com\n\n谢谢您的支持！</string>
+	
+</resources>

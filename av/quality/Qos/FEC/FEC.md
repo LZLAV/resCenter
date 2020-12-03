@@ -4,6 +4,20 @@ FEC：Forward Error Correction，前向纠错
 
 FEC 是一种通过在网络传输中增加数据包的冗余信息，使得接收端能够在网络发生丢包后利用这些冗余信息直接恢复出丢失的数据包的一种方法。
 
+#### FEC算法汇总
+
+- inBand FEC
+- 异或 XOR
+- Reed-Solomon
+- 交织编码
+- Fountain
+
+1. 
+
+1. webrtc的opus音频使用的是inband FEC和交织编码
+2. webrtc的视频ulpfec使用的是异或XOR
+3. Reed Solomon算法比较复杂，理论上数据恢复能力比较强。
+
 #### FEC 的基础理论：异或
 
 ##### 异或的规则
@@ -98,3 +112,12 @@ b = (a ^ a) ^ b = a ^ c
 
    
 
+
+**RED**：RFC2198， 封装FEC冗余报文
+**UlpFEC**： RFC5109，报文异或，生成冗余打包；
+带宽占用大，连续丢包，随机丢包
+**FLEXFEC**： 草案， 更灵活，引入交织算法，增加纵向OXR运算，增加网络抗丢包能力。
+
+
+a=rtpmap:116 red/90000
+a=rtpmap:117 ulpfec/90000  

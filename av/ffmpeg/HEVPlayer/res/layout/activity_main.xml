@@ -1,0 +1,81 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"  
+    xmlns:tools="http://schemas.android.com/tools"  
+    android:layout_width="match_parent"  
+    android:layout_height="match_parent"  
+    tools:context=".MainActivity"
+    >  
+      
+    <!-- 底部四个导航按钮 -->  
+    <LinearLayout   
+        android:id="@+id/ll_tabs"  
+        android:layout_width="match_parent"  
+        android:layout_height="60dp"  
+        android:layout_alignParentBottom="true"  
+        android:orientation="horizontal"  
+        android:background="@color/background_color"
+        android:paddingTop="5dp"
+        >  
+        <Button  
+            android:id="@+id/monitoring"  
+            android:layout_width="0dp"  
+            android:layout_height="match_parent"  
+            android:layout_weight="1"  
+            android:text="@string/monitoring"  
+            android:textColor="@android:color/white"
+            android:drawableTop="@drawable/btn_monitor"
+            android:background="@null"
+            />  
+        <Button   
+            android:id="@+id/friend"  
+            android:layout_width="0dp"  
+            android:layout_height="match_parent"  
+            android:layout_weight="1"  
+            android:text="@string/friend"  
+            android:textColor="@android:color/white"
+            android:drawableTop="@drawable/btn_friends"
+            android:background="@null"
+            />  
+        <Button   
+            android:id="@+id/video"  
+            android:layout_width="0dp"  
+            android:layout_height="match_parent"  
+            android:layout_weight="1"  
+            android:text="@string/video"  
+            android:textColor="@android:color/white"
+            android:drawableTop="@drawable/btn_video"
+            android:background="@null"
+            />  
+        <Button   
+            android:id="@+id/setting"  
+            android:layout_width="0dp"  
+            android:layout_height="match_parent"  
+            android:layout_weight="1"  
+            android:text="@string/setting"  
+            android:textColor="@android:color/white"
+            android:drawableTop="@drawable/btn_my"
+            android:background="@null"
+            />  
+          
+    </LinearLayout>  
+
+      
+    <!--   
+    <RelativeLayout  
+        android:id="@+id/fragment_content_view"  
+        android:layout_width="match_parent"  
+        android:layout_height="match_parent"  
+        android:layout_above="@id/ll_tabs"  
+        android:layout_marginBottom="2dp"  
+        android:background="#fff"  
+        />  
+     -->  
+       
+     <!-- VIewPager 主要是加载内容的 -->  
+     <android.support.v4.view.ViewPager  
+        android:id="@+id/viewpager"  
+        android:layout_above="@id/ll_tabs"   
+        android:layout_width="match_parent"  
+        android:layout_height="match_parent"/>  
+     
+  
+</RelativeLayout>  

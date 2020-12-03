@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PreferenceScreen 
+	xmlns:android="http://schemas.android.com/apk/res/android" 
+	android:title="Settings">
+	<PreferenceCategory android:title="@string/about" xmlns:android="http://schemas.android.com/apk/res/android">
+		<Preference android:title="@string/about_rpts_player" android:key="about_this_app"></Preference>
+	</PreferenceCategory>
+	<PreferenceCategory android:title="@string/local_file_list" xmlns:android="http://schemas.android.com/apk/res/android">
+		<CheckBoxPreference 
+			android:title="@string/only_show_media" 
+			android:summaryOn="@string/only_showed_media"
+			android:summaryOff="@string/all_file_list"
+			android:defaultValue="false" android:key="only_media_switch">
+		</CheckBoxPreference>
+		<CheckBoxPreference 
+			android:title="@string/show_hidden_files" 
+			android:summaryOn="@string/showed_hidden_files"
+			android:summaryOff="@string/not_showed_hidden_files"
+			android:defaultValue="false" android:key="show_hidden_switch">
+		</CheckBoxPreference>
+	</PreferenceCategory>
+	<PreferenceCategory android:title="@string/player_setting" xmlns:android="http://schemas.android.com/apk/res/android">
+		<ListPreference
+			android:key="multi_thread"    
+			android:title="@string/decoder_thread_number"
+			android:summary="@string/thread_number_hint"
+			android:entries="@array/thread_number_options"    
+			android:entryValues="@array/thread_number_options"
+			android:dialogTitle="@string/select_thread_number"    
+			android:defaultValue="0">
+		</ListPreference>
+		<CheckBoxPreference 
+			android:title="@string/loop_play" 
+			android:summaryOn="@string/loop_play_on_hint"
+			android:summaryOff="@string/loop_play_off_hint"
+			android:defaultValue="false" android:key="loop_play_switch">
+		</CheckBoxPreference>	
+	</PreferenceCategory>
+</PreferenceScreen>
