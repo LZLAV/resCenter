@@ -71,3 +71,16 @@ BBR可以区分出噪声丢包和拥塞丢包，这样意味着，BBR比传统TC
 **第四，BBR探测新带宽收敛慢的问题**
 
 原始的BBR算法的收敛性受到pacing gain周期影响，带宽突降的时候，BBR需要多个轮次才会降到实际带宽。这是由于BBR每轮只能降速一次，而pacing gain的6个RTT的保持周期大大加长了这个时间。解决的办法就是随机化pacing gain的6个保持周期，如果是0.75倍周期，就一次降速到位，这样可以极大的减少BBR的收敛时间。
+
+
+
+
+
+
+
+[BBR在实时音视频领域应用](https://zhuanlan.zhihu.com/p/63888741)
+
+[Google's BBR 拥塞控制算法模型解析](https://zhuanlan.zhihu.com/p/63888741)
+
+[从TCP拥塞本质看BBR算法及其收敛性(附CUBIC的改进/NCL机制)](https://link.zhihu.com/?target=https%3A//blog.csdn.net/dog250/article/details/52939004%3Fdepth_1-utm_source%3Ddistribute.pc_relevant.none-task-blog-BlogCommendFromBaidu-1%26utm_source%3Ddistribute.pc_relevant.none-task-blog-BlogCommendFromBaidu-1)
+
