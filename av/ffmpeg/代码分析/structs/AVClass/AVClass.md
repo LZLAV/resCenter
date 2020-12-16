@@ -1,0 +1,15 @@
+## AVClass
+
+结构体成员管理系统
+
+AVOption用于在FFmpeg中描述结构体中的成员变量。它最主要的作用可以概括为两个字：“赋值”。一个AVOption结构体包含了变量名称，简短的帮助，取值等等信息。
+
+所有和AVOption有关的数据都存储在AVClass结构体中。如果一个结构体（例如AVFormatContext或者AVCodecContext）想要支持AVOption的话，它的第一个成员变量必须是一个指向AVClass结构体的指针。该AVClass中的成员变量option必须指向一个AVOption类型的静态数组。
+
+AVClass最主要的作用就是给结构体（例如AVFormatContext等）增加AVOption功能的支持。换句话说AVClass就是AVOption和目标结构体之间的“桥梁”。AVClass要求必须声明为目标结构体的第一个变量。
+
+### AVOption
+
+AVOption的特点就在于它赋值时候的灵活性。AVOption可以使用字符串为任何类型的变量赋值。传统意义上，如果变量类型为int，则需要使用整数来赋值；如果变量为double，则需要使用小数来赋值；如果变量类型为char *，才需要使用字符串来赋值。而AVOption将这些赋值“归一化”了，统一使用字符串赋值。
+
+其实除了可以对FFmpeg常用结构体AVFormatContext，AVCodecContext等进行赋值之外，还可以对它们的私有数据priv_data进行赋值。这个字段里通常存储了各种编码器特有的结构体。而这些结构体的定义在FFmpeg的SDK中是找不到的。例如使用libx264进行编码的时候，通过AVCodecContext的priv_data字段可以对X264Context结构体中的变量进行赋值，设置preset，profile等。使用libx265进行编码的时候，通过AVCodecContext的priv_data字段可以对libx265Context结构体中的变量进行赋值，设置preset，tune等。
