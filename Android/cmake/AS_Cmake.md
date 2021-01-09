@@ -1,5 +1,48 @@
 ## AS_Cmake
 
+### 环境配置
+
+#### 指定Cmake 与 NDK
+
+1. 下载工具
+   1. CMake
+   2. LLDB
+   3. NDK
+
+2. 配置特定版本的CMake
+
+   ```groovy
+   android {
+       ...
+       externalNativeBuild {
+           cmake {
+               ...
+               version "cmake-version"
+           }
+       }
+   }
+   ```
+
+   将 CMake 的安装路径添加到 `PATH` 环境变量，或将其添加到项目的 `local.properties` 文件中
+
+   ```groovy
+   cmake.dir="path-to-cmake"
+   ```
+
+   
+
+3. 配置特定版本的NDK
+
+   ```groovy
+   android {
+       ndkVersion "major.minor.build" // e.g.,  ndkVersion '21.3.6528147'
+   }
+   ```
+
+   
+
+4. 
+
 ##### 最简单引入Cmake
 
 ###### Module：build.gradle
