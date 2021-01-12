@@ -1,0 +1,74 @@
+
+2021-01-12
+    -结构体元素
+    -内存空间分配
+    -二叉树
+    -进程
+    -大小端
+    -图及其图顶点访问
+    详细内容：
+        typedef struct JWImplementationArray{
+            int size;
+            int capacity;
+            int *data;
+        } JArray;
+
+        malloc()
+        realloc()
+        memmove()
+        assert()    //断言
+
+
+        bst binary search
+
+        typedef struct bst_node_t{
+            int value;
+            struct bst_node_t* left;
+            struct bst_node_t* right;
+        } bst_node;
+
+        malloc()    //节点分配
+        递归调用
+
+        //大小端获取
+        bool is_little_endian(){
+            union{
+                short number;
+                char oneByte;
+            } endianTest;
+
+            endianTest.number = 1;
+            return endianTest.oneByte;
+        }
+
+
+        int pid = fork();   //创建一个进程
+
+        typedef struct{
+            int v;  //vertex count，顶点数
+            int e;  //edge count，边数
+
+            struct neighbors{
+                int length;
+                int capacity;
+                int list[];
+            }* adjacency_list[];
+        } UndirectedGraph;      //有向或无向图结构，无向图的关联性：两边都要添加
+
+        /*
+        *   访问图的元素，通过一个数组来标识是否被访问过
+        */
+        void ugraph_dfs(UndirectedGraph *g,int visited[],const int vertex)
+        {
+            visited[vertex] = 1;    //访问的顶点
+            printf("%d -> ",vertex);
+
+            for(int e=0;e<g->adjacency_list[vertex]->length;++e)
+            {
+                int u = g->adjacency_list[vertex]->list[e];
+                if(visited[u] == 0) //没有被访问过的点
+                {
+                    ugraph_dfs(g,visited,u);
+                }
+            }
+        }

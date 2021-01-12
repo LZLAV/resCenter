@@ -1,0 +1,3 @@
+
+void FatalError(const char *msg);
+	FatalError函数会生成致命错误信号。一个致命错误是特指无法恢复的情况。VM在调用该函数之后将会关闭：

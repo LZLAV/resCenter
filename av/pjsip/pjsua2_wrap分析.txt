@@ -1,0 +1,63 @@
+JObjectWrapper
+    保存 jobject 
+        弱全局引用 or 全局引用
+    弱全局引用与全局引用互相装换
+LocalRefGuard
+    本地引用
+
+
+
+pjsua_wrap  swig 虚方法的实现，通过 JNI->Java->Jni->Java 的方式调用 java 方法
+
+enum
+    TLS
+        密钥级别
+    SSL
+        密钥级别
+        proto(协议)
+        cert(证书)
+    
+    TURN transport type
+        UDP
+        TCP
+        TLS
+    
+    EVENT type
+    
+    SRTP crypto 加密
+
+    视频传输码率控制
+
+    VID DEV capability
+
+    AUD DEV ROUTE
+
+    AUD DEV capability
+
+    PCM format
+
+    FILE PLAY options
+
+    MEDIA direction
+
+    MEDIA format
+
+    VID packet
+
+    CRED DATA type
+
+    SIP code
+
+    TRANSPORT type
+
+    SIP transport flag
+
+    SSL protocol method
+
+    ROLE
+
+    VID Request Keyframe method
+
+    sound dev mode
+    
+        
