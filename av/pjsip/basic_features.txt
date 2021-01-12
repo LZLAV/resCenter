@@ -1,0 +1,110 @@
+
+C basic
+
+    字符串
+        strchr() : 查找某字符在字符串中首次出现的位置
+
+
+pjsip basic features
+
+    system
+        getpid()
+
+
+    thread
+        TLS:
+            __thread
+            
+            pthread_key_create(&key, NULL);
+            pthread_setspecific(index, value);
+            pthread_getspecific(index);
+    
+
+        mutex
+            pthread_mutexattr_t attr;
+            pthread_mutexattr_init(&attr);
+            pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_NORMAL);
+                type:
+                    PTHREAD_MUTEX_NORMAL
+                    PTHREAD_MUTEX_RECURSIVE     //递归锁
+            pthread_mutex_init(&mutex->mutex, &attr);
+            pthread_mutexattr_destroy(&attr);
+            pj_mutex_lock(&critical_section);
+            pj_mutex_unlock(&critical_section);
+            //读写锁
+            pj_rwmutex_t *rwm;
+            pthread_rwlock_init(&rwm->rwlock, NULL);
+    
+
+    time
+        struct timespec tp;
+        clock_gettime(CLOCK_BOOTTIME, &tp);
+        gettimeofday(&the_time, NULL);
+
+
+
+    net
+        socket
+            static char buf[128];
+            gethostname(buf, sizeof(buf));
+            getaddrinfo(nodecopy, NULL, &hint, &res);
+            long *sock = socket(af, type, proto);
+            setsockopt(sock, level, optname, (const char *) optval, optlen);
+            connect(sock, (struct sockaddr *) addr, namelen);
+            getsockname(sock, (struct sockaddr *) addr, (socklen_t *) namelen);
+            close(sock);
+            ntohl(netlong);
+
+            int ioctl(int fd, int request, ...);
+                fd : 文件描述符
+                request : 表示要请求的信息。如IP地址、网络掩码等
+                    SIOCGIFCONF         获取所有接口的清单
+                    SIOCSIFADDR         设置接口地址
+                    SIOCGIFADDR         获取接口地址
+                    SIOCSIFFLAGS        设置接口标志
+                    SIOCGIFFLAGS        获取接口标志
+                    SIOCSIFDSTADDR      设置点到点地址      
+                    SIOCGIFDSTADDR      获取点到点地址
+                    SIOCGIFBRDADDR      获取广播地址
+                    SIOCSIFBRDADDR      设置广播地址
+                    SIOCGIFNETMASK      获取子网掩码
+                    SIOCSIFNETMASK      设置子网掩码
+                    SIOCGIFMETRIC       获取接口的测度
+                    SIOCSIFMETRIC       设置接口的测度
+                    SIOCGIFMTU          获取接口MTU
+                    SIOCxxx             （还有很多取决于系统的实现）
+                ... : 后面的可变参数根据request而定
+
+
+    sip：
+        字段：
+            user
+            method
+            transport
+            maddr
+            lr
+            sip
+            sips
+            tel
+            branch
+            ttl
+            received
+            q
+            expires
+            tag
+            rport
+
+        host
+        digit
+        alpha
+        alnum：decimal +alpha
+        token
+        token without % character
+        via
+
+        Ipv6
+
+    DNS：
+        pjsip_resolver_create():sip_resolve.c   resolver
+        pj_dns_resolver_create()：resolver.c
+        
