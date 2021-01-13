@@ -108,3 +108,32 @@ pjsip basic features
         pjsip_resolver_create():sip_resolve.c   resolver
         pj_dns_resolver_create()：resolver.c
         
+    
+
+pjsip_cfg_t
+    endpt
+        allow_port_in_fromto_hdr    0
+        accept_replace_in_early_state   0
+        allow_tx_hash_in_uri    0
+        disable_rport   0
+        disable_tcp_switch  0      //自动切换，从 udp->tcp 当outgoing request > 1300 bytes
+        disable_tls_switch  0      //切换tls，target-URI “sips”
+        follow_early_media_fork     true
+        req_has_via_alias      true // via header  "alias"
+        resolve_hostname_to_get_interface   false  //
+        disable_secure_dlg_check        0
+        use_compact_form        0
+        accept_multiple_sdp_answers     true
+    tsx //事务层设置
+        max_count       31 //最大的事务数
+        t1              500ms //事务 T1 超时
+        t2              4s  //事务 T2 超时
+        t4              5s  //non-INVITE 事务完成的时间
+        td              32s //INVITE 事务完成的时间
+    regc    //客户端注册设置
+        check_contact   1
+        add_xuid_param      //注册是否添加 x-uid
+    tcp
+        keep_alive_interval  90s   //tcp 保活包的时间间隔
+    tls
+        keep_alive_interval  90s    //tls 保活包的时间间隔
