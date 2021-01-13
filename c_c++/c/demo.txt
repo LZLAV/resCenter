@@ -6,6 +6,8 @@
     -进程
     -大小端
     -图及其图顶点访问
+    -hash_table
+    
     详细内容：
         typedef struct JWImplementationArray{
             int size;
@@ -72,3 +74,14 @@
                 }
             }
         }
+        
+        typedef struct KeyValue{
+    		char* key;
+			char* value;
+			struct KeyValue* next;  //链表，解决key 冲突的问题
+		}key_value;
+			
+		typedef struct HashTable{
+			key_value** data;   //表结构，类似数组的形式
+			int size;
+		}hash_table;
