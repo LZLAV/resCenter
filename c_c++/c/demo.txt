@@ -8,7 +8,7 @@
     -hash_table
     -链表
     -分治法排序
-    -堆排序
+    -优先队列
     
     详细内容：
         typedef struct JWImplementationArray{
@@ -146,13 +146,19 @@
         }
 
         /**
-        *   堆排序
+        *   优先队列
+        *       堆是优先级队列（Priority queue）的底层数据结构，较常使用优先级队列而非直接使用堆处理问题。
+        *       堆可以用数组存储，插入、删除会触发节点 shift_down（下沉）、shift_up（上浮）操作，时间复杂度 O(logn)。
+        *   堆排序：
+        *       如果把数组塞进优先队列，再一个个删掉，那实际上按删掉的顺序就对数组排了个序，这种排序算法就是堆排序。这种算法自然地分为两步：
+        *           1. 先把数组调整成符合堆顺序，即构造堆
+        *           2. 每次把 a[1]和a[N--]交换，当 N 减到 1 时也就排好了序。
         */
         typedef struct MaxHeap{
             int size;
             int elements[kQueueCapacity+1];
             int capacity;
-        } MaxHeap;
+        } MaxHeap;	//大堆
 
         void shift_up(MaxHeap* heap,int i)
         {
@@ -282,3 +288,173 @@
         }
 
 
+互斥
+
+“挂起等待”和“唤醒等待线程”的操作如何实现？每个Mutex有一个等待队列，一个线程要在Mutex上挂起等待，首先在把自己加入等待队列中，然后置线程状态为睡眠，然后调用调度器函数切换到别的线程。一个线程要唤醒等待队列中的其它线程，只需从等待队列中取出一项，把它的状态从睡眠改为就绪，加入就绪队列，那么下次调度器函数执行时就有可能切换到被唤醒的线程。
+
+int pthread_mutex_init(pthread_mutex_t *restrict mutex,const pthread_mutexattr_t *restrict attr);   //初始化互斥量
+int pthread_mutex_destroy(pthread_mutex_t *mutex);      //销毁互斥量
+int pthread_mutex_lock(pthread_mutex_t *mutex);
+int pthread_mutex_trylock(pthread_mutex_t *mutex);
+int pthread_mutex_unlock(pthread_mutex_t *mutex);
+
+注意死锁情况：
+    1. 同一个线程先后两次调用 lock
+    2. 循环锁
+避免死锁：
+    1. 尽量避免同时获得多个锁
+    2. 尽量使用 pthread_mutex_trylock 代替 pthread_mutex_lock 调用
+
+
+条件变量
+    int pthread_cond_destroy(pthread_cond_t *cond);
+    int pthread_cond_init(pthread_cond_t *restrict cond,const pthread_condattr_t *restrict attr);
+    int pthread_cond_timewait(pthread_cond_t *restrict cond,pthread_mutex_t *restrict mutex,const struct timespec *restrict abstime);
+    int pthread_cond_wait(pthread_cond_t *restrict cond,pthread_mutex_t *restrict mutex);
+    int pthread_cond_broadcast(pthread_cond_t *cond);
+    int pthread_cond_signal(pthread_cond_t *cond);
+
+struct data{
+    int n;
+    struct data* next;
+};
+
+pthread_cond_t condv = PTHREAD_COND_INITIALIZER;
+pthread_mutex_t mlock = PTHREAD_MUTEX_INITIALIZER;
+struct data* phead = NULL;
+void producer(void* arg)
+{
+    printf("producer thread running.\n");
+    int count =0;
+    for(;;)
+    {
+        int n = rand()%100;
+        struct data* nd = (struct data*)malloc(sizeof(struct data));
+        nd->n = n;
+
+        pthread_mutex_lock(&mlock);
+        struct data* tmp = phead;
+        phead = nd;
+        nd->next = tmp;
+        pthread_mutex_unlock(&mlock);
+        pthread_cond_signal(&condv);
+
+        count+=n;
+        if(count > LIMIT)
+        {
+            break;
+        }
+        sleep(rand() %5);
+    }
+    printf("producer count=%d\n",count);
+}
+
+void consumer(void* arg)
+{
+    printf("consumer thread running.\n");
+    int count = 0;
+    for(;;)
+    {
+        pthread_mutex_lock(&mlock);
+        if(NULL == phead)
+        {
+            pthread_cond_wait(&condv,&mlock);   //释放锁，线程阻塞，唤醒后加锁返回
+        }else{
+            while(phead!=NULL)
+            {
+                count += phead->n;
+                struct data* tmp = phead;
+                phead = phead->next;
+                free(tmp);
+            }
+        }
+        pthread_mutex_unlock(&mlock);
+        if(count > LIMIT)
+        {
+            break;
+        }
+    }
+    printf("consumer count=%d\n",count);
+}
+
+int main(){
+    pthread_t tid1,tid2;
+    pthread_create(&tid1,NULL,(void*)producer,NULL);
+    pthread_create(&tid2,NULL,(void*)consumer,NULL);
+
+    pthread_join(tid1,NULL);
+    pthread_join(tid2,NULL);
+    return 0;
+}
+
+
+
+信号量
+    信号量适用于控制一个仅支持有限个用户的共享资源。用于保持在0 至指定最大值之间的一个计数值。当线程完成一次对该semaphore对象的等待时，该计数值减一；当线程完成一次对semaphore对象的释放时，计数值加一。当计数值为0时，线程挂起等待，直到计数值超过0。
+
+    信号量的执行逻辑：
+        当需要获取共享资源时，先检查信号量，如果值大于0，则值减1，访问共享资源，访问结束后，值加1，如果发现有被该信号量挂起的线程，则唤醒其中一个线程；如果检查到信号量为0，则挂起等待。
+    
+    信号量本质上是一个非负数的整数计数器，它也被用来控制对公共资源的访问。当公共资源增加的时候，调用信号量增加函数sem_post()对其进行增加，当公共资源减少的时候，调用函数sem_wait()来减少信号量。当信号量为0时，会阻塞 sem_wait(sem_t *sem)
+
+    int sem_init(sem_t *sem,int pshared,unsigned int value);
+    int sem_wait(sem_t *sem);
+    int sem_trywait(sem_t *sem);
+    int sem_post(sem_t *sem);
+    int sem_destroy(sem_t *sem);
+
+#include<semaphore.h>
+
+#define NUM 5
+
+int queue[NUM];
+sem_t psem,csem;
+
+void producer(void* arg)
+{
+    int pos = 0;
+    int num,count = 0;
+    for(int i=0;i<12;i++)
+    {
+        num = rand() %100;
+        count+=num;
+        sem_wait(&psem);        //信号量减一
+        queue[pos] = num;
+        sem_post(&csem);        //信号量加一
+        printf("producer:%d\n",num);
+        pos = (pos+1)%NUM;
+        sleep(rand()%2);
+    }
+    printf("producer count=%d\n",count);
+}
+
+void consumer(void* arg){
+    int pos = 0;
+    int num,count =0;
+    for(int i=0;i<12;i++)
+    {
+        sem_wait(&csem);
+        num = queue[pos];
+        sem_post(&psem);
+        printf("consumer:%d\n",num);
+        count+=num;
+        pos = (pos+1)%NUM;
+        sleep(rand()%3);
+    }
+    printf("consumer count=%d\n",count);
+}
+
+int main(){
+    sem_init(&psem,0,NUM);
+    sem_init(&csem,0,0);
+
+    pthread_t tid[2];
+    pthread_create(&tid[0],NULL,(void*)producer,NULL);
+    pthread_create(&tid[1],NULL,(void*)consumer,NULL);
+    pthread_join(tid[0],NULL);
+    pthread_join(tid[1],NULL);
+    sem_destroy(&psem);
+    sem_destroy(&csem);
+
+    return 0;
+}
