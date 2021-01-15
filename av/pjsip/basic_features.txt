@@ -130,6 +130,7 @@ pjsip_cfg_t
         t2              4s  //事务 T2 超时
         t4              5s  //non-INVITE 事务完成的时间
         td              32s //INVITE 事务完成的时间
+
     regc    //客户端注册设置
         check_contact   1
         add_xuid_param      //注册是否添加 x-uid
@@ -137,3 +138,18 @@ pjsip_cfg_t
         keep_alive_interval  90s   //tcp 保活包的时间间隔
     tls
         keep_alive_interval  90s    //tls 保活包的时间间隔
+
+
+opensl
+    init
+        SLresult result;
+        //Create engine
+        result = slCreateEngine(&pa->engineObject, 0, NULL, 0, NULL, NULL);
+        //Realize the engine
+        result = (*pa->engineObject)->Realize(pa->engineObject, SL_BOOLEAN_FALSE);
+        //Get the engine interface
+        result = (*pa->engineObject)->GetInterface(pa->engineObject,SL_IID_ENGINE,&pa->engineEngine);
+        //Create output mix
+        result = (*pa->engineEngine)->CreateOutputMix(pa->engineEngine,&pa->outputMixObject,0, NULL, NULL);
+        //Realize the output mix
+        result = (*pa->outputMixObject)->Realize(pa->outputMixObject,SL_BOOLEAN_FALSE);

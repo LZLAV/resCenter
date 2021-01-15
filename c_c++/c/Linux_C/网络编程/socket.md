@@ -563,3 +563,8 @@ if(recv(new_fd,buf,sizeof(buf),0) == -1)
 puts(buf);
 ```
 
+### 多路复用
+
+select 进行多路复用。
+
+多个套接字或多个文件之间多路复用

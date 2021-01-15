@@ -2,6 +2,16 @@
 #include<sys/socket.h>
 #include<stdio.h>
 
+/*
+  struct hostent{
+      char *h_name;     //主机规范名
+      char **h_aliases; //主机的别名
+      int h_addrtype;   // ip 地址的类型，ipv4(AF_INET) 该函数处理不了 ipv6
+      int h_length;     // ip地址的长度
+      char **h_addr_list;   //主机的ip 地址。是网络字节序，需通过 inet_ntop 函数转换
+  } 
+ * /
+
 int main(int argc,char **argv)
 {
     char *ptr,**pptr;

@@ -9,7 +9,6 @@
     -链表
     -分治法排序
     -优先队列
-    -多线程编程
     
     详细内容：
         typedef struct JWImplementationArray{
@@ -459,25 +458,3 @@ int main(){
 
     return 0;
 }
-
-        /**
-        * 队列，数组方式实现
-        */  
-        typedef struct JWQueueArrayImplementation{
-            int data[kQueuePositions];  // 1 is unusable position
-            int insert;     //入队的位置
-            int pop;        //出队的位置
-            int capacity;   //容量
-        } queue;
-
-        /**
-        * 队列，链表方式实现
-        */
-        typedef struct Node{
-            int value;
-            struct Node *next;
-        } node;
-        typedef struct Queue{
-            node *head;     //入队的位置
-            node *tail;     //出队的位置
-        } queue;
