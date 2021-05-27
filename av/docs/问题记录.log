@@ -1,0 +1,13 @@
+1. dlopen failed "libc++_shared.so"
+
+LLVM 的 libc++ 是 C++ 标准库，自 Lollipop 以来 Android 操作系统便一直使用该库，并且从 NDK r18 开始成为 NDK 中唯一可用的 STL。libc++ 的共享库为 libc++_shared.so，静态库为 libc++_static.a。
+
+指定 C++ 标准
+build.gradle中配置 cppFlags -std
+
+externalNativeBuild{
+	cmake{
+		appFlags "-frtti -fexceptions -std=c++14"
+		arguments '-DANDROID_STL = c++_shared'
+	}
+}

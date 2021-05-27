@@ -1,0 +1,57 @@
+要求
+
+	Android SDK
+
+	Android NDK
+
+	Android Studio
+
+开始准备
+	1. 获取源代码
+	2. 设置 config_site.h 
+		/* Activate Android specific settings in the 'config_site_sample.h' */
+		#define PJ_CONFIG_ANDROID 1
+		#include <pj/config_site_sample.h>
+	
+开始编译
+	1. 配置环境变量
+		export ANDROID_NDK_ROOT = /path_to_android_ndk_dir
+	2. 配置编译环境
+		./configure-android
+			参数(可使用 --help 查看)
+				--use-ndk-cflags
+	3. 编译
+		make dep & make clean && make
+	
+参数
+	TARGET_ABI = arm64-v8a
+	APP_PLATFORM = android-20
+	
+支持
+	v>=2.4 开始支持 Video
+		native capture
+		native OpenGL ES 2.0 renderer (API >=8)
+		H.264 codec （OpenH264）
+
+库支持
+	OpenH264
+		
+	libyuv
+		v>2.5.5 自动构建并启用
+		v>2.5.1 
+	
+	ffmpeg
+		
+配置
+	config_site.h
+	启用视频
+		#define PJMEDIA_HAS_VIDEO 1
+	
+		使用第三方视频库的话
+			./configure-android --with-openh264=/User/me/openh264/android
+	
+	添加视频捕获设备
+		将 PJSIP Android 捕获设备的 java 部分复制到应用程序的源目录
+		cp pjmedia/src/pjmedia-videodev/android/PjCamera*.java [your_app]/src/org/pjsip/
+	
+	
